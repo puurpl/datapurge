@@ -140,6 +140,12 @@ function renderSetup(container) {
                                 Only add more if you want to help brokers match your specific records.
                             </p>
                         </div>
+                        <div class="form-group mt-1">
+                            <label class="form-label" for="email_aliases">Additional Email Addresses</label>
+                            <textarea class="form-input" id="email_aliases" rows="2"
+                                placeholder="One per line — e.g. alias@example.com">${esc((existing?.email_aliases || []).join('\n'))}</textarea>
+                            <div class="form-hint">If you use different emails for different services, list them here so brokers can match all your records.</div>
+                        </div>
                         <div class="form-row mt-1">
                             <div class="form-group">
                                 <label class="form-label" for="phone">Phone</label>
@@ -193,9 +199,15 @@ function renderSetup(container) {
             country = 'US';
         }
 
+        const aliasText = container.querySelector('#email_aliases').value.trim();
+        const email_aliases = aliasText
+            ? aliasText.split(/[\n,]+/).map(e => e.trim()).filter(e => e)
+            : [];
+
         Store.setPII({
             full_name: container.querySelector('#full_name').value.trim(),
             email: container.querySelector('#email').value.trim(),
+            email_aliases,
             state,
             country,
             phone: container.querySelector('#phone').value.trim(),
