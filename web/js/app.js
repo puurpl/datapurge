@@ -126,43 +126,51 @@ function renderSetup(container) {
                         <div class="form-hint">Used to select the strongest legal template for your jurisdiction.</div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="phone">Phone</label>
-                            <input type="tel" class="form-input" id="phone"
-                                value="${esc(existing?.phone || '')}"
-                                placeholder="Optional">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="dob">Date of Birth</label>
-                            <input type="date" class="form-input" id="dob"
-                                value="${esc(existing?.dob || '')}">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="street">Street Address</label>
-                        <input type="text" class="form-input" id="street"
-                            value="${esc(existing?.street || '')}"
-                            placeholder="Optional — strengthens some requests">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="city">City</label>
-                            <input type="text" class="form-input" id="city"
-                                value="${esc(existing?.city || '')}">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="zip">ZIP / Postal Code</label>
-                            <input type="text" class="form-input" id="zip"
-                                value="${esc(existing?.zip || '')}">
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-primary btn-lg" style="width:100%">
                         Generate Opt-Out Emails
                     </button>
+
+                    <details class="mt-2" style="cursor: pointer;">
+                        <summary class="text-sm text-secondary">Optional: add more identifying info</summary>
+                        <div class="callout mt-1" style="text-align: left; padding: 1rem;">
+                            <p class="text-sm text-secondary" style="max-width: none;">
+                                <strong>Less is more.</strong> Email is an open protocol — additional PII
+                                (phone, address, DOB) in your opt-out email could expose data the broker
+                                didn't already have. Name + email is legally sufficient for a deletion request.
+                                Only add more if you want to help brokers match your specific records.
+                            </p>
+                        </div>
+                        <div class="form-row mt-1">
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Phone</label>
+                                <input type="tel" class="form-input" id="phone"
+                                    value="${esc(existing?.phone || '')}"
+                                    placeholder="Optional">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="dob">Date of Birth</label>
+                                <input type="date" class="form-input" id="dob"
+                                    value="${esc(existing?.dob || '')}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="street">Street Address</label>
+                            <input type="text" class="form-input" id="street"
+                                value="${esc(existing?.street || '')}">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="city">City</label>
+                                <input type="text" class="form-input" id="city"
+                                    value="${esc(existing?.city || '')}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="zip">ZIP / Postal Code</label>
+                                <input type="text" class="form-input" id="zip"
+                                    value="${esc(existing?.zip || '')}">
+                            </div>
+                        </div>
+                    </details>
                 </form>
             </div>
         </div>
