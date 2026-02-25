@@ -1,0 +1,73 @@
+id: anywho
+name: AnyWho
+domain: anywho.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.anywho.com/people/{first_name}+{last_name}/{state}"
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://suppression.peopleconnect.us/login"
+      required_fields: [email, full_name, dob]
+      steps:
+        - action: navigate
+          url: "https://suppression.peopleconnect.us/login"
+          description: "Go to PeopleConnect suppression center"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: verify_email
+          description: "Verify email via link from PeopleConnect (15 min expiry)"
+        - action: input
+          value: "{dob}"
+          description: "Enter date of birth"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full legal name"
+        - action: click
+          description: "Select your record and set to Suppressed"
+      template_id: null
+    - type: email
+      email_to: privacy@intelius.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Operated by Intelius/PeopleConnect. Opt-out through PeopleConnect Suppression Center covers AnyWho and all other PeopleConnect subsidiaries."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Subsidiary of Intelius/PeopleConnect. Single suppression covers all PeopleConnect brands. Source: Big Ass Data Broker Opt-Out List, Incogni"

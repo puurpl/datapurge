@@ -1,0 +1,55 @@
+id: first-advantage
+name: First Advantage
+domain: fadv.com
+aliases: [firstadvantage.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+  - property-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service, no public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@fadv.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA. CCPA and other data privacy laws do not apply to First Advantage lines of business governed by FCRA (employment background screening, resident screening). Marketing opt-out via privacy@fadv.com or employment.solutions@fadv.com. In some instances opting out may require employer authorization."
+
+legal:
+  ccpa: false
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+    - colorado
+    - connecticut
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated CRA. Global background screening provider. Acquired Sterling. Source: fadv.com privacy center."

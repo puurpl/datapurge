@@ -1,0 +1,87 @@
+id: searchpeoplefree
+name: SearchPeopleFree
+domain: searchpeoplefree.com
+aliases:
+  - searchpeoplefree.net
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.searchpeoplefree.com/find/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  listing_extraction:
+    selector: ".search-result a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.searchpeoplefree.com/opt-out"
+      required_fields: [full_name, email, city, state]
+      steps:
+        - action: navigate
+          url: "https://www.searchpeoplefree.com/opt-out"
+          description: "Go to SearchPeopleFree opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{city}, {state}"
+          description: "Enter your city and state"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email from SearchPeopleFree and click the 'Validate My Email' button"
+        - action: search_and_select
+          description: "On the redirected search page, enter your name and location, then click Search and select your listing for removal"
+      template_id: null
+    - type: email
+      email_to: support@searchpeoplefree.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Multi-step process: submit request, verify email, then search and select your listing on the redirected page. Also check searchpeoplefree.net which may have separate listings. Over 3 million monthly visitors."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Big Ass Data Broker Opt-Out List, Incogni. High-traffic people search with .com and .net variants."

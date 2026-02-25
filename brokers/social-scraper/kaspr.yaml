@@ -1,0 +1,62 @@
+id: kaspr
+name: Kaspr
+domain: kaspr.io
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+
+scan:
+  scannable: false
+  reason: "B2B contact finder via browser extension. Requires account to search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@kaspr.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Send email with subject line 'Opt-out Kaspr'"
+    - type: web_form
+      url: "https://kaspr.privacy.saymine.io/kaspr"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://kaspr.privacy.saymine.io/kaspr"
+          description: "Go to Kaspr privacy portal (hosted by Mine)"
+        - action: select
+          value: "Delete my data"
+          description: "Select 'Delete my data'"
+        - action: input
+          value: "{email}"
+          description: "Enter your contact details and email"
+        - action: submit
+          description: "Submit the deletion request"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 30
+  notes: "Fined 240,000 EUR by CNIL (France) for GDPR violations related to scraping contact details of people who limited LinkedIn visibility. Ordered to stop collecting data from people who chose to limit profile visibility. Scrapes LinkedIn profiles."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: kaspr.io/privacy-policy, help.kaspr.io, CNIL enforcement action. LinkedIn scraper fined by French DPA (CNIL) for scraping data from people who restricted their LinkedIn profile visibility. Owned by Cognism. Uses 'legitimate interest' as lawful basis under GDPR."

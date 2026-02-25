@@ -1,0 +1,87 @@
+id: callersmart
+name: CallerSmart
+domain: callersmart.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - phone
+  - address
+  - caller-id
+  - spam-rating
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.callersmart.com/phone-number/{phone}"
+  detection:
+    - method: selector_present
+      value: ".phone-result"
+      means: listed
+    - method: text_match
+      value: "No information found"
+      means: not_listed
+  listing_extraction:
+    selector: ".phone-result"
+    attribute: href
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.callersmart.com/do-not-sell"
+      required_fields: [full_name, email, phone, address, listing_url]
+      steps:
+        - action: navigate
+          url: "https://www.callersmart.com"
+          description: "Go to CallerSmart and search for your phone number"
+        - action: scroll_to_footer
+          description: "Scroll to the bottom of the page"
+        - action: click
+          description: "Click the 'Do not sell my personal data' link"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "Phone: {phone}, Name: {full_name}, Address: {address}, Profile URL: {listing_url}"
+          description: "In the message field, include your phone number, name, address, and profile URL"
+        - action: solve_captcha
+          description: "Complete the CAPTCHA"
+        - action: click
+          description: "Click Send"
+      template_id: null
+    - type: email
+      email_to: support@callersmart.com
+      required_fields: [full_name, phone, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Uses a contact form for opt-out via 'Do not sell my personal data' link in the footer. Include as much identifying information as possible in the message field. Phone-number-centric search site."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: Optery opt-out guides. Phone number lookup and caller ID service with crowd-sourced data."

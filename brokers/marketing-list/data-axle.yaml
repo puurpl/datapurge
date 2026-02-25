@@ -1,0 +1,56 @@
+id: data-axle
+name: Data Axle (formerly Infogroup / InfoUSA / Data.com)
+domain: data-axle.com
+aliases: [infogroup.com, infousa.com, dataaxleusa.com]
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - purchase-history
+  - property-records
+  - employment
+  - political-affiliation
+
+scan:
+  scannable: false
+  reason: "B2B marketing data provider. No consumer-facing search. Provides targeted mailing and email lists to businesses."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.data-axle.com/do-not-sell-my-data/"
+      required_fields: [full_name, email, address, phone]
+    - type: email
+      email_to: privacyteam@data-axle.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Formerly known as Infogroup, InfoUSA, and Data.com — rebranded to Data Axle. Has email addresses for 200M people, homeowner info for 110M+, household data for 165M+. Opt-out suppresses data (marked 'do not share') but retains it. Collects from 100+ sources including tax assessments, voter registration, utility connections."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: California Data Broker Registry (registered as Data Axle, Inc. f/k/a Infogroup Inc.), Privacy Rights Clearinghouse. One of the largest marketing list providers in the US."

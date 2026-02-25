@@ -1,0 +1,56 @@
+id: dun-bradstreet
+name: Dun & Bradstreet
+domain: dnb.com
+aliases: [dnbcb.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - employment
+  - financial
+  - income-estimates
+  - property-records
+
+scan:
+  scannable: false
+  reason: "B2B data aggregator focused on business data. No consumer-facing search. Consumer data collected for business contact intelligence."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.dnb.com/en-us/why-dnb/data-transparency/personal-data.html"
+      required_fields: [full_name, email, address, phone]
+    - type: email
+      email_to: custservprivacy@dnb.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-234-3867"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Privacy Choices form requires email verification after submission. D&B should respond within 15 days. CCPA opt-out also available by calling 1-855-549-8900."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, D&B privacy portal. Primarily B2B business data but holds personal data on business contacts and executives."

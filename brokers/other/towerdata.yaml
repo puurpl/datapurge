@@ -1,0 +1,66 @@
+id: towerdata
+name: TowerData (AtData)
+domain: towerdata.com
+aliases: [atdata.com]
+category: other
+data_types:
+  - name
+  - email
+  - address
+  - age
+  - income-estimates
+  - purchase-history
+  - political-affiliation
+
+scan:
+  scannable: false
+  reason: "B2B email intelligence and identity resolution platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.towerdata.com/ccpa-form"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.towerdata.com/ccpa-form"
+          description: "Go to TowerData CCPA request form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the CCPA request"
+    - type: email
+      email_to: privacy@towerdata.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "866-377-3630"
+      notes: "TowerData privacy request phone line"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Formerly known as TowerData, now operates as AtData. Email-based identity resolution and data enrichment. Links email addresses to demographic data including age, income, political affiliation, and purchase history."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registered as TowerData, Inc.), towerdata.com/ccpa-form, Optery opt-out guide. Email intelligence platform (formerly Rapleaf). Links email addresses to demographic profiles. Now operates as AtData. Physical address: 33 Irving Place, 3rd Floor, New York, NY 10003."

@@ -1,0 +1,80 @@
+id: addresses-com
+name: Addresses.com
+domain: addresses.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - neighbors
+  - previous-occupants
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.addresses.com/people/{first_name}+{last_name}/{state}"
+  detection:
+    - method: selector_present
+      value: ".result-item"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  listing_extraction:
+    selector: ".result-item a"
+    attribute: href
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.addresses.com/optout.php"
+      required_fields: [full_name, listing_url]
+      requires_listing_url: false
+      steps:
+        - action: navigate
+          url: "https://www.addresses.com/optout.php"
+          description: "Go to the Addresses.com opt-out page"
+        - action: input
+          selector: "input[name='name']"
+          value: "{full_name}"
+          description: "Enter your name as it appears on the listing"
+        - action: solve_captcha
+          description: "Complete the CAPTCHA verification"
+        - action: click
+          selector: "button[type='submit']"
+          description: "Click 'Remove Me'"
+      template_id: null
+    - type: email
+      email_to: privacy@intelius.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Owned by PeopleConnect (parent of Intelius). Opt-out through addresses.com/optout.php or PeopleConnect Suppression Center. Listings typically removed within 48-72 hours. May need to re-submit periodically as data refreshes."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Big Ass Data Broker Opt-Out List, Incogni. Part of PeopleConnect/Intelius network."

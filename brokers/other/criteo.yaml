@@ -1,0 +1,60 @@
+id: criteo
+name: Criteo
+domain: criteo.com
+aliases: []
+category: other
+data_types:
+  - device-ids
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "Ad-tech platform. No consumer-facing search. Tracks users via cookies and device IDs."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.criteo.com/privacy/your-rights/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.criteo.com/privacy/your-rights/"
+          description: "Go to Criteo Privacy Rights page"
+        - action: click
+          value: "Disable Criteo Services"
+          description: "Click the 'Disable Criteo Services' button to opt out of personalized ads"
+        - action: navigate
+          url: "https://www.criteo.com/privacy/"
+          description: "For data deletion, go to Criteo Privacy page"
+        - action: click
+          value: "Contact Form"
+          description: "Use the contact form for GDPR right to be forgotten"
+    - type: email
+      email_to: dpo@criteo.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Criteo is a major retargeting ad platform. 'Disable Criteo Services' button immediately stops personalized ads. For full data deletion, email dpo@criteo.com. GDPR adopted as worldwide standard. Criteo will provide an Excel spreadsheet of all personal data upon request."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: criteo.com/privacy, criteo.com/privacy/ccpa-privacy-policy. Major ad-tech retargeting platform (Paris-based, publicly traded). Tracks users across websites via cookies and device fingerprinting. GDPR and CCPA compliant. DPO contact: dpo@criteo.com."
