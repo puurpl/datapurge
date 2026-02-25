@@ -1,0 +1,37 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Environment
+.env
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets
+vault.key
+*.key
+
+# Runtime data
+logs/
+subscribers/
+reports/
+scans/
+proofs/
+letters/
+
+# Generated
+registry.json
+
+# OS
+.DS_Store
+Thumbs.db

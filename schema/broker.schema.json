@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataPurge Broker Definition",
+  "description": "Schema for data broker opt-out procedure definitions",
+  "type": "object",
+  "required": ["id", "name", "domain", "category", "optout", "legal"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique slug identifier (e.g., 'spokeo', 'whitepages-premium')"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable broker name"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Primary domain"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Other domains or brand names this broker operates under"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "people-search",
+        "data-aggregator",
+        "marketing-list",
+        "background-check",
+        "location-tracking",
+        "financial",
+        "social-scraper",
+        "public-records",
+        "other"
+      ]
+    },
+    "data_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "name", "address", "phone", "email", "age", "dob",
+          "relatives", "associates", "employment", "education",
+          "social-media", "photos", "criminal-records", "court-records",
+          "property-records", "financial", "location-history",
+          "ip-address", "device-ids", "purchase-history",
+          "political-affiliation", "religious-affiliation",
+          "health-inferences", "income-estimates"
+        ]
+      }
+    },
+    "scan": {
+      "type": "object",
+      "properties": {
+        "scannable": {"type": "boolean"},
+        "reason": {"type": "string"},
+        "method": {
+          "type": "string",
+          "enum": ["web_search", "api", "none"]
+        },
+        "search_url": {
+          "type": "string",
+          "description": "URL template with {first_name}, {last_name}, {city}, {state}, {email}, {phone} placeholders"
+        },
+        "detection": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": ["selector_present", "selector_absent", "text_match", "text_absent", "status_code"]
+              },
+              "value": {"type": "string"},
+              "means": {
+                "type": "string",
+                "enum": ["listed", "not_listed"]
+              }
+            }
+          }
+        },
+        "listing_extraction": {
+          "type": "object",
+          "properties": {
+            "selector": {"type": "string"},
+            "attribute": {"type": "string", "default": "href"}
+          }
+        },
+        "anti_bot": {
+          "type": "object",
+          "properties": {
+            "captcha": {"type": "boolean", "default": false},
+            "cloudflare": {"type": "boolean", "default": false},
+            "rate_limit_per_minute": {"type": "integer", "default": 5}
+          }
+        }
+      }
+    },
+    "optout": {
+      "type": "object",
+      "required": ["methods"],
+      "properties": {
+        "methods": {
+          "type": "array",
+          "description": "Available opt-out methods in priority order",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["email", "web_form", "api", "postal", "phone"]
+              },
+              "url": {"type": "string"},
+              "email_to": {"type": "string"},
+              "postal_address": {"type": "string"},
+              "phone_number": {"type": "string"},
+              "required_fields": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "requires_id": {"type": "boolean", "default": false},
+              "requires_listing_url": {"type": "boolean", "default": false},
+              "steps": {
+                "type": "array",
+                "description": "For web_form type: browser automation steps",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": ["navigate", "input", "click", "select", "wait_for", "verify_email", "captcha"]
+                    },
+                    "selector": {"type": "string"},
+                    "value": {"type": "string"},
+                    "url": {"type": "string"},
+                    "description": {"type": "string"}
+                  }
+                }
+              },
+              "template_id": {
+                "type": "string",
+                "description": "Which legal template to use for this method"
+              }
+            }
+          }
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard", "very_hard"]
+        },
+        "estimated_minutes": {"type": "integer"},
+        "processing_days": {"type": "integer"},
+        "legal_max_days": {"type": "integer"},
+        "notes": {"type": "string"}
+      }
+    },
+    "legal": {
+      "type": "object",
+      "properties": {
+        "ccpa": {"type": "boolean", "default": false},
+        "gdpr": {"type": "boolean", "default": false},
+        "registered_broker": {
+          "type": "object",
+          "description": "State data broker registries where this broker is registered",
+          "properties": {
+            "california": {"type": "boolean"},
+            "vermont": {"type": "boolean"},
+            "oregon": {"type": "boolean"},
+            "texas": {"type": "boolean"}
+          }
+        },
+        "state_laws": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "State privacy laws that apply"
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "properties": {
+        "typical_removal_days": {"type": "integer"},
+        "relisting_likelihood": {
+          "type": "string",
+          "enum": ["none", "low", "medium", "high", "certain"]
+        },
+        "recheck_interval_days": {"type": "integer", "default": 30}
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "added": {"type": "string", "format": "date"},
+        "last_verified": {"type": "string", "format": "date"},
+        "verified_by": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

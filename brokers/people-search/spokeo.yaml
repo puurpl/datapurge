@@ -1,0 +1,96 @@
+id: spokeo
+name: Spokeo
+domain: spokeo.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - associates
+  - employment
+  - social-media
+  - photos
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.spokeo.com/{first_name}-{last_name}/{state}/{city}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+    - method: text_match
+      value: "No results found"
+      means: not_listed
+  listing_extraction:
+    selector: ".result-card a.result-link"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.spokeo.com/optout"
+      required_fields: [listing_url, email]
+      requires_listing_url: true
+      steps:
+        - action: navigate
+          url: "https://www.spokeo.com/optout"
+          description: "Go to the Spokeo opt-out page"
+        - action: input
+          selector: "#opt-out-url"
+          value: "{listing_url}"
+          description: "Paste the URL of your Spokeo listing"
+        - action: input
+          selector: "#opt-out-email"
+          value: "{email}"
+          description: "Enter your email for confirmation"
+        - action: click
+          selector: "button[type='submit']"
+          description: "Click Remove This Listing"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+      template_id: null  # web form only, no email template needed
+    - type: email
+      email_to: customercare@spokeo.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Requires finding your specific listing URL first. Email confirmation required."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+    - connecticut
+    - texas
+    - oregon
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.95
+  notes: "One of the largest people-search sites. High re-listing rate."
