@@ -1,0 +1,66 @@
+id: transunion
+name: TransUnion (TLO / Neustar)
+domain: transunion.com
+aliases: [tlo.com, home.neustar, neustar.biz]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - employment
+  - criminal-records
+  - court-records
+  - financial
+  - property-records
+  - ip-address
+  - device-ids
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B data aggregator. Consumer credit reports handled separately. TLO and Neustar are B2B investigative and marketing platforms."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.transunion.com/consumer-privacy"
+      required_fields: [full_name, email, address]
+    - type: email
+      email_to: privacy@transunion.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-310-8783"
+      required_fields: [full_name]
+    - type: web_form
+      url: "https://www.home.neustar/privacy/opt-out"
+      required_fields: [full_name, email]
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "TransUnion acquired Neustar and TLO. Separate opt-outs may be needed for each subsidiary. Neustar privacy email: privacy@team.neustar. Use OptOutPrescreen.com for pre-approved credit offers."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, TransUnion/Neustar privacy portals. Multiple subsidiaries (TLO, Neustar) may require separate opt-out requests."

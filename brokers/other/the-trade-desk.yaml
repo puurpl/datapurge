@@ -1,0 +1,66 @@
+id: the-trade-desk
+name: The Trade Desk
+domain: thetradedesk.com
+aliases: [adsrvr.org]
+category: other
+data_types:
+  - device-ids
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic advertising platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://adsrvr.org/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://adsrvr.org/"
+          description: "Go to The Trade Desk Data Access Portal"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit data access or deletion request"
+    - type: web_form
+      url: "https://www.aboutads.info/choices"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.aboutads.info/choices"
+          description: "Go to DAA opt-out page to opt out of targeted ads"
+        - action: select
+          value: "The Trade Desk"
+          description: "Find and opt out of The Trade Desk"
+    - type: email
+      email_to: privacy@thetradedesk.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "The Trade Desk operates UID2 (Unified ID 2.0), an identity framework for advertising. Opt-out via adsrvr.org portal or DAA industry opt-out at aboutads.info/choices. Also supports NAI opt-out at networkadvertising.org/choices."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: thetradedesk.com, adsrvr.org, California Data Broker Registry. Largest independent demand-side platform (DSP) for programmatic advertising. Operates UID2 identity framework. Publicly traded (NASDAQ: TTD). Processes billions of ad impressions daily."

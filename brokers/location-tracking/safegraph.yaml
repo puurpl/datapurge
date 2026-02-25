@@ -1,0 +1,58 @@
+id: safegraph
+name: SafeGraph
+domain: safegraph.com
+aliases: []
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B location data platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.safegraph.com/do-not-sell-my-info"
+      required_fields: [email, device-ids]
+      steps:
+        - action: navigate
+          url: "https://www.safegraph.com/do-not-sell-my-info"
+          description: "Go to SafeGraph Do Not Sell page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{advertising_id}"
+          description: "Enter your mobile Advertising ID (MAID)"
+        - action: submit
+          description: "Submit the opt-out request"
+    - type: email
+      email_to: privacy@safegraph.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Requires your mobile Advertising ID (MAID) for opt-out. On Android: Settings > Google > Ads > Advertising ID. On iOS: Settings > Privacy > Tracking. Sold location data that was used to track visits to abortion clinics, sparking controversy."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: safegraph.com/ccpa-privacy-policy, California Data Broker Registry. Aggregates anonymized location data from mobile apps via SDK partners. Controversy over data being used to track visits to sensitive locations (Planned Parenthood, places of worship). Claims not to sell individual-level data but provides foot traffic analytics."

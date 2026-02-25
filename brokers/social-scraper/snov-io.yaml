@@ -1,0 +1,66 @@
+id: snov-io
+name: Snov.io
+domain: snov.io
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+
+scan:
+  scannable: false
+  reason: "B2B email finder and outreach platform. Requires account to search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://snov.io/do-not-sell"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://snov.io/"
+          description: "Go to Snov.io homepage"
+        - action: click
+          value: "Do Not Sell My Personal Information"
+          description: "Click 'Do Not Sell My Personal Information' link in footer"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete security captcha"
+        - action: submit
+          description: "Submit the Do Not Sell request"
+    - type: email
+      email_to: privacy@snov.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Uses a captcha on the opt-out form. DPO appointed through Privacity GmbH (EU/EEA representative). Collects email patterns from company websites and LinkedIn."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: snov.io/privacy-policy, snov.io/knowledgebase/gdpr. Email finder and sales automation platform. Scrapes email addresses from LinkedIn and company websites. Ukraine-based company. GDPR and CCPA compliant."

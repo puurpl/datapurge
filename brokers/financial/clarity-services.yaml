@@ -1,0 +1,55 @@
+id: clarity-services
+name: Clarity Services (Experian)
+domain: clarityservices.com
+aliases: [consumers.clarityservices.com]
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Consumer reporting agency. No public search. Consumers can request one free report every 12 months."
+
+optout:
+  methods:
+    - type: email
+      email_to: clarityconsumers@experian.com
+      required_fields: [full_name, email, dob, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "866-390-3118"
+      required_fields: [full_name, dob]
+      notes: "Call Clarity Consumer Support team to opt out of mailings or request data deletion"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated specialty CRA owned by Experian. Provides subprime consumer information and reports to lenders for thin-file/no-file consumer segments. Opt-out of receiving mailings via phone at 866-390-3118 or by mail to Clarity Services, Inc., PO Box 16, Allen, TX 75013. Data deletion requests subject to FCRA exemptions. One free report available every 12 months. Experian privacy portal can also be used for data deletion requests at 833-210-4615."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+    - connecticut
+    - texas
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "FCRA-regulated specialty CRA owned by Experian. Focuses on subprime/thin-file consumer segments. Registered on Privacy Rights Clearinghouse and California Data Broker Registry. FCRA obligations apply. Source: clarityservices.com, CFPB listing, Privacy Rights Clearinghouse."

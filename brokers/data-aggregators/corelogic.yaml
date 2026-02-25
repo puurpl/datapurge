@@ -1,0 +1,54 @@
+id: corelogic
+name: CoreLogic (Cotality)
+domain: corelogic.com
+aliases: [cotality.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - property-records
+  - financial
+  - income-estimates
+  - phone
+
+scan:
+  scannable: false
+  reason: "B2B real estate and property data aggregator. No consumer-facing search. Claims CCPA exemptions for most consumer data."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@corelogic.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-634-4149"
+      required_fields: [full_name, address]
+    - type: web_form
+      url: "https://www.corelogic.com/ccpa"
+      required_fields: [full_name, email, address]
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Rebranded to Cotality in 2025. Claims CCPA exemptions for most consumer data (only HR and B2B data subjects can exercise CCPA rights). Opt-out triggers 5-year suppression period. May deny requests from non-employees/non-B2B contacts."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: California Data Broker Registry, CoreLogic CCPA page. Rebranded to Cotality 2025. Claims broad CCPA exemptions — opt-out may be limited for general consumers."

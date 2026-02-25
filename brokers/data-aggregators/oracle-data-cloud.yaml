@@ -1,0 +1,57 @@
+id: oracle-data-cloud
+name: Oracle Data Cloud (BlueKai / Datalogix)
+domain: oracle.com
+aliases: [datacloudoptout.oracle.com, bluekai.com, datalogix.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - purchase-history
+  - income-estimates
+  - location-history
+  - ip-address
+  - device-ids
+  - social-media
+
+scan:
+  scannable: false
+  reason: "B2B data aggregator. No consumer-facing search. Oracle shut down Advertising services Sept 2024 but Data Cloud opt-out portal remains."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://datacloudoptout.oracle.com/optout"
+      required_fields: [full_name, email]
+    - type: email
+      email_to: secalert_us@oracle.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Oracle shut down Oracle Advertising services in Sept 2024 but the Data Cloud opt-out portal at datacloudoptout.oracle.com remains operational. Acquired BlueKai and Datalogix."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry, Oracle privacy portal. Oracle Advertising decommissioned Sept 2024 but Data Cloud opt-out still active."

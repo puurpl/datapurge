@@ -1,0 +1,71 @@
+id: fast-people-search
+name: FastPeopleSearch
+domain: fastpeoplesearch.com
+aliases: [fastpeoplesearch.info]
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - associates
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.fastpeoplesearch.com/name/{first_name}-{last_name}"
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.fastpeoplesearch.com/removal"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.fastpeoplesearch.com/removal"
+          description: "Go to FastPeopleSearch removal page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: checkbox
+          description: "Agree that you are the subject of the record"
+        - action: click
+          description: "Submit removal request"
+        - action: verify_email
+          description: "Click 'Click here to remove' button in verification email"
+      template_id: null
+    - type: email
+      email_to: support@fastpeoplesearch.zendesk.com
+      required_fields: [full_name, dob, address]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Straightforward removal. Email subject line should be 'Request for Deletion of Personal Data'. Can also call (866) 679-8725 or mail PO BOX 55071, Boston, MA 02205-5071."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Updates automatically so data may reappear. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

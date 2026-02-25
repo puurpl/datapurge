@@ -1,0 +1,60 @@
+id: hiya
+name: Hiya
+domain: hiya.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - phone
+  - caller-id
+  - spam-rating
+
+scan:
+  scannable: false
+  method: null
+  search_url: null
+  notes: "Hiya does not offer a public web search. Caller ID data is accessible through the Hiya app and integrated Samsung phone features."
+
+optout:
+  methods:
+    - type: account_action
+      description: "Open Hiya app > Settings > Privacy > Deactivate Account > Confirm"
+      steps:
+        - action: open_app
+          description: "Open the Hiya app on your smartphone"
+        - action: navigate
+          description: "Go to Settings > Privacy"
+        - action: click
+          description: "Select 'Deactivate Account'"
+        - action: confirm
+          description: "Click Yes to confirm deactivation"
+      template_id: null
+    - type: email
+      email_to: support@hiya.com
+      required_fields: [full_name, phone, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Deactivating your account does not guarantee data deletion from their database. Hiya sells caller profile information to telecom companies. Contact support@hiya.com to explicitly request data deletion under CCPA. Hiya is pre-installed on many Samsung phones."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Source: DoNotPay, Hiya Help Center. B2B caller ID provider integrated into Samsung and carrier apps. Account deactivation may not fully remove data."

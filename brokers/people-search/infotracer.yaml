@@ -1,0 +1,83 @@
+id: infotracer
+name: InfoTracer
+domain: infotracer.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - associates
+  - criminal-records
+  - court-records
+  - property-records
+  - social-media
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://infotracer.com/people-search/?fname={first_name}&lname={last_name}"
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://infotracer.com/optout/"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://infotracer.com/optout/"
+          description: "Go to InfoTracer opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your complete name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your residence address"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Click Confirm Email button in email from InfoTracer"
+      template_id: null
+    - type: email
+      email_to: privacy@infotracer.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-844-777-0503"
+      notes: "Privacy experts available 8am-6pm EST, 7 days a week"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 2
+  legal_max_days: 45
+  notes: "Typically removed within 24-48 hours. InfoTracer only uses submitted info for removal purpose. Compliance Team at privacy@infotracer.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 2
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Fast removal (24-48 hours). Phone support available 7 days/week. Source: State of Surveillance Master List, IntelTechniques Workbook"

@@ -1,0 +1,87 @@
+id: neighbor-report
+name: Neighbor Report
+domain: neighbor.report
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - property-records
+  - neighbors
+  - age
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://neighbor.report/people/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-result"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  listing_extraction:
+    selector: ".person-result a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://neighbor.report/remove"
+      required_fields: [listing_url, email]
+      requires_listing_url: true
+      steps:
+        - action: navigate
+          url: "https://neighbor.report"
+          description: "Search for your name on Neighbor Report"
+        - action: copy_url
+          description: "Copy the URL of your specific listing"
+        - action: navigate
+          url: "https://neighbor.report/remove"
+          description: "Go to the removal page"
+        - action: input
+          value: "{listing_url}"
+          description: "Enter the URL of your listing"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit removal request"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+      template_id: null
+    - type: email
+      email_to: support@neighbor.report
+      required_fields: [full_name, email, listing_url]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Address-focused people search site that also shows neighbors. Requires email verification. Find your listing first, copy the URL, then submit removal request."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Big Ass Data Broker Opt-Out List. Address and neighbor-focused people search."

@@ -1,0 +1,51 @@
+id: directmail
+name: DirectMail.com
+domain: directmail.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+
+scan:
+  scannable: false
+  reason: "B2B direct mail marketing services provider. No consumer-facing search. Licensed data reseller — does not compile or own data assets."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://directmail.com/mail_preference/"
+      required_fields: [full_name, address]
+    - type: email
+      email_to: support@directmail.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 45
+  legal_max_days: 45
+  notes: "National Do Not Mail List form at directmail.com/mail_preference/. Must fill out form and confirm via email. Removal is NOT immediate — can take weeks or months as they contact each mailer. DirectMail.com is a licensed data reseller, not a data compiler. Privacy policy is extremely brief and lacks consumer rights details."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: DirectMail.com privacy policy, JoinDeleteMe opt-out guide. 50+ year old company. Based in Prince Frederick, MD. Privacy policy acknowledged to be minimal."

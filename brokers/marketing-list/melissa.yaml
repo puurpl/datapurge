@@ -1,0 +1,60 @@
+id: melissa
+name: Melissa (Melissa Data)
+domain: melissa.com
+aliases: [melissadata.com]
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - property-records
+
+scan:
+  scannable: false
+  reason: "B2B data quality and marketing list provider. No consumer-facing search. Provides address verification, data enrichment, and mailing lists."
+
+optout:
+  methods:
+    - type: email
+      email_to: optout@melissa.com
+      required_fields: [full_name, email, address, phone]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: CCPArequest@melissa.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-635-4772"
+      required_fields: [full_name, address]
+    - type: web_form
+      url: "https://www.melissa.com/"
+      required_fields: [full_name, email, address]
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Two email paths: optout@melissa.com for general opt-out and CCPArequest@melissa.com for CCPA-specific requests. Include full name (with variations), mailing address, phone, and email. 'Do Not Sell or Share My Personal Information' link in website footer."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registered as Melissa Corporation), Melissa privacy policy, Optery opt-out guide. 20+ years in data solutions."

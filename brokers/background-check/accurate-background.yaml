@@ -1,0 +1,52 @@
+id: accurate-background
+name: Accurate Background
+domain: accurate.com
+aliases: [accuratebackground.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service, no public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: customer_service@accurate.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA. Largest privately held, minority-owned global background screening provider. Background check data subject to FCRA exemptions from CCPA deletion rights. Contact VP of Compliance for data protection requests."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated CRA. Listed on CFPB consumer reporting companies list. Source: accurate.com privacy policy."

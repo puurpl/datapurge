@@ -1,0 +1,59 @@
+id: us-data-corporation
+name: US Data Corporation
+domain: usdatacorporation.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+  - employment
+
+scan:
+  scannable: false
+  reason: "B2B marketing data and list provider. No consumer-facing search. Provides targeted marketing lists for businesses."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@usdatacorporation.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.usdatacorporation.com/"
+      required_fields: [full_name, email, address]
+    - type: phone
+      phone_number: "1-888-205-1623"
+      required_fields: [full_name]
+    - type: postal
+      postal_address: "US Data Corporation, 31330 Oak Crest Drive, Suite 102, Westlake Village, CA 91301"
+      required_fields: [full_name, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Online form options: Do Not Sell, Delete My Information, or Data Access request. Claims 98% of Americans and 17M+ business records. Based in Westlake Village, CA."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: US Data Corporation privacy page, JoinDeleteMe opt-out guide, PrivacyHawk. Marketing data agency offering highly targeted data marketing lists."

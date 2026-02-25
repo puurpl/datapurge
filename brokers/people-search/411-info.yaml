@@ -1,0 +1,79 @@
+id: 411-info
+name: 411.info
+domain: 411.info
+aliases:
+  - 411.com
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://411.info/people/?fn={first_name}&ln={last_name}"
+  detection:
+    - method: selector_present
+      value: ".people-result"
+      means: listed
+    - method: text_match
+      value: "No results found"
+      means: not_listed
+  listing_extraction:
+    selector: ".people-result a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://411.info/manage/"
+      required_fields: [full_name, phone, city, state]
+      steps:
+        - action: navigate
+          url: "https://411.info/manage/"
+          description: "Go to the 411.info manage page"
+        - action: input
+          selector: "input[name='phone']"
+          value: "{phone}"
+          description: "Enter your phone number or search by name and location"
+        - action: click
+          selector: ".remove-link"
+          description: "Click 'Click to Remove' on your listing"
+      template_id: null
+    - type: email
+      email_to: privacy@411.info
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Navigate to the manage page. Search by phone number or name/location. Click the blue 'Click to Remove' link. Removed data may persist in backups for up to 1 year."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Big Ass Data Broker Opt-Out List, Incogni. Also check 411.com which is related (owned by WhitePages/Neustar)."

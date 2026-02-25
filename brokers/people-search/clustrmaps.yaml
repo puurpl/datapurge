@@ -1,0 +1,88 @@
+id: clustrmaps
+name: ClustrMaps
+domain: clustrmaps.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - neighbors
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://clustrmaps.com/persons/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  listing_extraction:
+    selector: ".person-card a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://clustrmaps.com/bl/opt-out"
+      required_fields: [full_name, email, listing_url, address]
+      requires_listing_url: true
+      steps:
+        - action: navigate
+          url: "https://clustrmaps.com/bl/opt-out"
+          description: "Go to ClustrMaps opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{listing_url}"
+          description: "Enter the URL of your listing"
+        - action: input
+          value: "{address}"
+          description: "Enter your address"
+        - action: click
+          description: "Submit the opt-out form"
+      template_id: null
+    - type: email
+      email_to: optout@clustrmaps.com
+      required_fields: [full_name, email, listing_url]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 1
+  legal_max_days: 45
+  notes: "Database of 200 million people and 107 million addresses. Opt-out should be processed immediately. Clear browser cache after submitting to verify removal. Data may reappear as they continuously scrape the internet."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Big Ass Data Broker Opt-Out List. Massive database with address and neighbor data. Fast removal but high relisting rate."

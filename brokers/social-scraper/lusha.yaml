@@ -1,0 +1,67 @@
+id: lusha
+name: Lusha
+domain: lusha.com
+aliases: [lushaprivacy.com]
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+
+scan:
+  scannable: false
+  reason: "B2B sales intelligence platform. Requires account to search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.lusha.com/privacy-center/request-removal/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.lusha.com/privacy-center/request-removal/"
+          description: "Go to Lusha removal request page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the removal request"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+    - type: email
+      email_to: privacy@lusha.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-467-8688"
+      notes: "CCPA toll-free line. Use service code 2001#"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Automated removal form permanently deletes data. Lusha maintains a suppression list to prevent re-collection. Also has a 'Do Not Sell' link on homepage. Scrapes LinkedIn profiles extensively."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: lusha.com/privacy-center/request-removal, California Data Broker Registry. B2B contact data platform. GDPR, CCPA, SOC 2, and ISO27701 certified. Primary data source is LinkedIn profile scraping via browser extension. Suppression list prevents re-collection after opt-out."

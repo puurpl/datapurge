@@ -1,0 +1,46 @@
+id: teletrack
+name: Teletrack
+domain: teletrack.com
+aliases: [consumers.teletrack.com]
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Consumer reporting agency. No public search. Consumers can request one free report every 12 months."
+
+optout:
+  methods:
+    - type: phone
+      phone_number: "877-309-5226"
+      required_fields: [full_name, dob, address]
+      notes: "Call to have name and address removed from prescreen lists for 5 years"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 5
+  legal_max_days: 30
+  notes: "FCRA-regulated specialty consumer reporting agency. Opt-out removes name from prescreen lists for unsolicited credit/insurance offers for 5 years. For permanent opt-out, download form from website and mail to: Teletrack Opt-Out Request, PO Box 740008, Atlanta, GA 30374. Disputes of inaccurate information handled separately under FCRA. No specific privacy email found. Free report available every 12 months and must be provided within 15 days of request."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated specialty CRA focused on non-prime lending. Previously subject to FTC enforcement action. FCRA obligations apply. Source: consumers.teletrack.com, CFPB consumer reporting companies list."
