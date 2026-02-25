@@ -3,34 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataPurge</title>
-    <meta name="description" content="Generate and send legal data deletion requests to data brokers. Your data never leaves your browser.">
+    <title>DataPurge — Send Data Broker Opt-Out Requests</title>
+    <meta name="description" content="Generate and send legal data deletion requests to data brokers using CCPA, GDPR, and state privacy laws. Browse the broker directory, track your progress, and remove your personal information.">
+    <meta name="keywords" content="data broker opt out tool, send deletion request, CCPA opt out, GDPR erasure request, remove personal data, data broker directory, privacy tool">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://datapurge.iamnottheproduct.com/app.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DataPurge — Send Data Broker Opt-Out Requests">
+    <meta property="og:description" content="Generate legal deletion requests for data brokers. Browse the directory, send opt-out emails, track your progress. Free and private.">
+    <meta property="og:url" content="https://datapurge.iamnottheproduct.com/app.html">
+    <meta property="og:site_name" content="DataPurge">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="DataPurge — Data Broker Opt-Out Tool">
+    <meta name="twitter:description" content="Generate legal deletion requests for data brokers. Free, private, open-source.">
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#2563eb">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="index.html" class="nav-brand">DataPurge</a>
-            <div class="nav-tabs">
-                <a href="#queue" class="nav-tab">Queue</a>
-                <a href="#brokers" class="nav-tab">Brokers</a>
-                <a href="#progress" class="nav-tab">Progress</a>
+    <header>
+        <nav class="nav" aria-label="App navigation">
+            <div class="nav-inner">
+                <a href="index.html" class="nav-brand">DataPurge</a>
+                <div class="nav-tabs" role="tablist">
+                    <a href="#queue" class="nav-tab" role="tab">Queue</a>
+                    <a href="#brokers" class="nav-tab" role="tab">Brokers</a>
+                    <a href="#progress" class="nav-tab" role="tab">Progress</a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Views -->
     <main class="container">
-        <div class="view" id="view-setup"></div>
-        <div class="view" id="view-queue" hidden></div>
-        <div class="view" id="view-brokers" hidden></div>
-        <div class="view" id="view-progress" hidden></div>
+        <div class="view" id="view-setup" role="tabpanel"></div>
+        <div class="view" id="view-queue" hidden role="tabpanel"></div>
+        <div class="view" id="view-brokers" hidden role="tabpanel"></div>
+        <div class="view" id="view-progress" hidden role="tabpanel"></div>
     </main>
 
     <!-- Toast container -->
-    <div id="toast" class="toast"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
     <script type="module" src="js/app.js"></script>
 </body>
