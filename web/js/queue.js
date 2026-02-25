@@ -104,12 +104,8 @@ function renderMassMode(container) {
 
     const brokers = getEmailableBrokers();
 
-    // Build mailto with BCC (some clients support this)
-    const params = new URLSearchParams();
-    params.set('bcc', mass.bccString);
-    params.set('subject', mass.subject);
-    params.set('body', mass.body);
-    const mailtoLink = `mailto:?${params.toString()}`;
+    // Build mailto with BCC — use encodeURIComponent (not URLSearchParams, which encodes spaces as +)
+    const mailtoLink = `mailto:?bcc=${encodeURIComponent(mass.bccString)}&subject=${encodeURIComponent(mass.subject)}&body=${encodeURIComponent(mass.body)}`;
 
     container.innerHTML = `
         <h2 class="mb-2">Send to All Brokers at Once</h2>
@@ -126,50 +122,62 @@ function renderMassMode(container) {
 
         <div class="card mt-2">
             <div class="card-header">
-                <div class="card-title">Step 1: Copy the BCC addresses</div>
+                <div class="card-title">Open in your email client</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                ${mass.count} unique broker privacy email addresses. Paste into the BCC field of a new email.
+                One click — opens a new email with all ${mass.count} broker addresses in BCC, subject and body pre-filled.
             </p>
-            <div class="email-preview">
-                <button class="email-preview-toggle" id="toggle-bcc">
-                    <span>Show all ${mass.count} addresses</span>
-                    <span>&#9662;</span>
-                </button>
-                <div class="email-preview-content" id="bcc-list">${esc(mass.bccString)}</div>
-            </div>
-            <div class="mt-1">
-                <button class="btn btn-primary" id="btn-copy-bcc">Copy All BCC Addresses</button>
-            </div>
+            <a href="${mailtoLink}" class="btn btn-primary btn-lg" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
+                Send to ${mass.count} Brokers
+            </a>
+            <p class="text-sm text-secondary mt-1">
+                After sending, come back and mark them as done below.
+            </p>
         </div>
 
-        <div class="card mt-2">
-            <div class="card-header">
-                <div class="card-title">Step 2: Copy the email</div>
+        <details class="mt-2">
+            <summary class="text-sm text-secondary" style="cursor:pointer;">Email client didn't work? Copy manually instead</summary>
+            <div class="card mt-1">
+                <div class="card-header">
+                    <div class="card-title">BCC addresses</div>
+                </div>
+                <p class="text-sm text-secondary mb-1">
+                    Paste into the BCC field of a new email.
+                </p>
+                <div class="email-preview">
+                    <button class="email-preview-toggle" id="toggle-bcc">
+                        <span>Show all ${mass.count} addresses</span>
+                        <span>&#9662;</span>
+                    </button>
+                    <div class="email-preview-content" id="bcc-list">${esc(mass.bccString)}</div>
+                </div>
+                <div class="mt-1">
+                    <button class="btn btn-outline" id="btn-copy-bcc">Copy All BCC Addresses</button>
+                </div>
             </div>
-            <p class="text-sm text-secondary mb-1">
-                Subject line and body with your info filled in. Only contains your name and email — no phone, address, or DOB.
-            </p>
-            <div class="email-preview">
-                <button class="email-preview-toggle" id="toggle-body">
-                    <span>Preview email</span>
-                    <span>&#9662;</span>
-                </button>
-                <div class="email-preview-content" id="email-body"><strong>Subject:</strong> ${esc(mass.subject)}
+
+            <div class="card mt-1">
+                <div class="card-header">
+                    <div class="card-title">Email subject + body</div>
+                </div>
+                <div class="email-preview">
+                    <button class="email-preview-toggle" id="toggle-body">
+                        <span>Preview email</span>
+                        <span>&#9662;</span>
+                    </button>
+                    <div class="email-preview-content" id="email-body"><strong>Subject:</strong> ${esc(mass.subject)}
 
 ${esc(mass.body)}</div>
+                </div>
+                <div class="mt-1">
+                    <button class="btn btn-outline" id="btn-copy-email">Copy Subject + Body</button>
+                </div>
             </div>
-            <div class="mt-1 btn-group">
-                <button class="btn btn-primary" id="btn-copy-email">Copy Subject + Body</button>
-                <a href="${mailtoLink}" class="btn btn-outline" target="_blank" rel="noopener">
-                    Try mailto: (may not support BCC)
-                </a>
-            </div>
-        </div>
+        </details>
 
         <div class="card mt-2">
             <div class="card-header">
-                <div class="card-title">Step 3: Send and mark done</div>
+                <div class="card-title">Mark as done</div>
             </div>
             <p class="text-sm text-secondary mb-1">
                 After you've sent the email, click below to mark all brokers as contacted.
@@ -183,8 +191,7 @@ ${esc(mass.body)}</div>
                 <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
             </div>
             <p class="text-sm text-secondary">
-                Some email clients may not support large BCC lists. You can also send one-by-one
-                for a stronger paper trail per broker.
+                Send one-by-one for a stronger paper trail per broker.
             </p>
         </div>
 
