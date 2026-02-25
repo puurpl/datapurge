@@ -1,0 +1,172 @@
+{
+  "templates": {
+    "ccpa_maximum": {
+      "id": "ccpa_maximum",
+      "name": "CCPA/CPRA Maximum Pressure",
+      "legal_basis": "ccpa",
+      "applicable_when": "Broker does business in California OR processes CA residents' data",
+      "subject": "CCPA/CPRA Data Deletion Request, Right to Know, and Withdrawal of Consent \u2014 {full_name}",
+      "body": "To the Privacy Officer or Data Protection Contact:\n\nI am exercising my rights under the California Consumer Privacy Act\n(CCPA) as amended by the California Privacy Rights Act (CPRA),\nCal. Civ. Code \u00a7\u00a7 1798.100\u20131798.199.100.\n\nThis communication constitutes THREE separate requests:\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nREQUEST 1: RIGHT TO DELETE (Cal. Civ. Code \u00a7 1798.105)\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nI request that you delete ALL personal information you have collected\nabout me, including but not limited to:\n\n\u2014 Full name and any aliases or name variations\n\u2014 Current and historical physical addresses\n\u2014 Email addresses\n\u2014 Phone numbers\n\u2014 Date of birth and age\n\u2014 Employment history\n\u2014 Education history\n\u2014 Names of relatives and associates\n\u2014 Social media profiles\n\u2014 Photographs\n\u2014 Court and public records\n\u2014 Financial information and income estimates\n\u2014 Political affiliations and inferences\n\u2014 Any other personal information as defined by Cal. Civ. Code \u00a7 1798.140(v)\n\nI further request that you direct any service providers or third parties\nto whom you have disclosed my personal information to delete it as well,\nper Cal. Civ. Code \u00a7 1798.105(c).\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nREQUEST 2: RIGHT TO KNOW (Cal. Civ. Code \u00a7 1798.110)\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nI request that you disclose:\n\na) The categories of personal information you have collected about me\nb) The categories of sources from which my personal information was collected\nc) The business or commercial purpose for collecting my personal information\nd) The categories of third parties to whom you have disclosed, sold, or\n   shared my personal information\ne) The specific pieces of personal information you have collected about me\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nREQUEST 3: OPT-OUT & WITHDRAWAL OF CONSENT\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nPursuant to Cal. Civ. Code \u00a7 1798.120:\n\nI opt out of the sale of my personal information.\nI opt out of the sharing of my personal information for cross-context\nbehavioral advertising.\n\nAdditionally, I EXPLICITLY WITHDRAW ANY AND ALL CONSENT \u2014 express or\nimplied, past, present, or future \u2014 for your organization to:\n\n\u2014 Collect my personal information from any source\n\u2014 Process my personal information for any purpose\n\u2014 Sell, share, license, or otherwise disclose my personal information\n  to any third party\n\u2014 Create, maintain, or update any profile or record about me\n\u2014 Use my personal information for any inference, derivation, or profiling\n\nThis withdrawal of consent is unconditional, irrevocable, and applies\nin perpetuity. I do not consent to any future collection, processing,\nsale, or sharing of my personal information by your organization,\nregardless of the source from which you may obtain it.\n\nNOTE: I understand that withdrawal of consent may not be legally\nbinding in all jurisdictions at this time. I am establishing a clear,\ndocumented record of my wishes. Any future processing of my personal\ninformation by your organization will occur AGAINST my explicitly\nstated objection, which may be relevant under current or future\nprivacy legislation.\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nIDENTIFYING INFORMATION\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nFull Name: {full_name}\nEmail: {email}\nPhone: {phone}\nAddress: {address}\nDate of Birth: {dob}\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nCOMPLIANCE REQUIREMENTS\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nUnder the CCPA/CPRA, you are required to:\n\u2014 Respond to this request within 45 calendar days\n\u2014 Confirm the specific personal information deleted\n\u2014 Identify all third parties notified of the deletion\n\u2014 Provide the disclosures requested in Request 2\n\nFailure to comply may result in enforcement action by the California\nPrivacy Protection Agency and/or civil penalties of up to $7,500 per\nintentional violation (Cal. Civ. Code \u00a7 1798.155).\n\nThis communication is being archived with timestamp verification\nfor potential future legal reference.\n\nSincerely,\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email"
+      ],
+      "optional_fields": [
+        "phone",
+        "address",
+        "dob"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    },
+    "gdpr_maximum": {
+      "id": "gdpr_maximum",
+      "name": "GDPR Maximum Pressure",
+      "legal_basis": "gdpr",
+      "applicable_when": "Broker processes EU/UK resident data or offers services in EU/UK",
+      "subject": "GDPR Articles 15, 17, and 21 \u2014 Data Subject Rights Request \u2014 {full_name}",
+      "body": "To the Data Protection Officer:\n\nI am exercising my rights under the General Data Protection Regulation\n(EU) 2016/679 (\"GDPR\") and, where applicable, the UK GDPR.\n\nThis communication constitutes the following requests:\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n1. RIGHT OF ACCESS (Article 15)\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nI request a copy of all personal data you hold about me, including:\n\u2014 The purposes of processing\n\u2014 The categories of personal data concerned\n\u2014 The recipients to whom my data has been disclosed\n\u2014 The envisaged retention period\n\u2014 The source of the data (where not collected directly from me)\n\u2014 The existence of automated decision-making, including profiling\n\u2014 Where data is transferred to a third country, the safeguards applied\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n2. RIGHT TO ERASURE (Article 17)\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nI request the erasure of all personal data you hold about me.\nThe grounds for this request include:\n\u2014 The data is no longer necessary for the purpose for which it was collected\n\u2014 I withdraw my consent (Article 6(1)(a))\n\u2014 I object to the processing (Article 21) and there are no overriding\n  legitimate grounds\n\u2014 The personal data has been unlawfully processed (I did not consent\n  to its collection)\n\nPer Article 17(2), where you have made the personal data public, I\nrequest that you inform all recipients of this erasure request.\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n3. RIGHT TO OBJECT (Article 21)\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nI object to ALL processing of my personal data, including but not\nlimited to processing for:\n\u2014 Direct marketing (Article 21(2)) \u2014 this objection is absolute\n\u2014 Profiling related to direct marketing (Article 21(2))\n\u2014 Any processing based on legitimate interests (Article 6(1)(f))\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n4. EXPLICIT WITHDRAWAL OF CONSENT\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nPer Article 7(3), I hereby withdraw any and all consent \u2014 express\nor implied \u2014 for the processing of my personal data by your\norganization, for any purpose, now and in the future.\n\nI DO NOT CONSENT to any future collection, processing, storage,\ntransmission, sale, licensing, or disclosure of my personal data\nby your organization, from any source, for any purpose.\n\nThis withdrawal is documented and timestamped. Any subsequent\nprocessing will occur without a valid legal basis under Article 6\nand may constitute a violation subject to administrative fines\nof up to \u20ac20,000,000 or 4% of annual worldwide turnover\n(Article 83(5)).\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n5. REQUEST FOR DOCUMENTATION\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nUpon completion of erasure, I request written confirmation including:\n\u2014 The specific categories of data that were erased\n\u2014 The date erasure was completed\n\u2014 A list of ALL third parties who were notified of the erasure\n\u2014 Confirmation that automated systems have been updated to\n  prevent future re-collection of my data\n\nIdentifying Information:\nFull Name: {full_name}\nEmail: {email}\nAddress: {address}\n\nYou are required to respond within one calendar month per\nArticle 12(3). This communication is archived for potential\nsubmission to the relevant supervisory authority.\n\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email"
+      ],
+      "optional_fields": [
+        "address"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    },
+    "us_omnibus": {
+      "id": "us_omnibus",
+      "name": "US Omnibus \u2014 All Applicable State Laws",
+      "legal_basis": "us_state",
+      "applicable_when": "US-based broker, any state",
+      "subject": "Personal Data Deletion Request and Withdrawal of Consent \u2014 {full_name}",
+      "body": "To the Privacy Officer:\n\nI am writing to exercise my privacy rights under all applicable\nfederal and state laws, including but not limited to:\n\n\u2014 California Consumer Privacy Act / California Privacy Rights Act\n  (Cal. Civ. Code \u00a7\u00a7 1798.100\u20131798.199.100)\n\u2014 Virginia Consumer Data Protection Act (Va. Code \u00a7\u00a7 59.1-575\u201359.1-585)\n\u2014 Colorado Privacy Act (C.R.S. \u00a7\u00a7 6-1-1301\u20136-1-1313)\n\u2014 Connecticut Data Privacy Act (Conn. Gen. Stat. \u00a7\u00a7 42-515\u201342-525)\n\u2014 Utah Consumer Privacy Act (Utah Code \u00a7\u00a7 13-61-101\u201313-61-404)\n\u2014 Iowa Consumer Data Protection Act (Iowa Code ch. 715D)\n\u2014 Indiana Consumer Data Protection Act (Ind. Code \u00a7\u00a7 24-15-1\u201324-15-9)\n\u2014 Tennessee Information Protection Act (Tenn. Code \u00a7\u00a7 47-18-3201\u20133213)\n\u2014 Montana Consumer Data Privacy Act (Mont. Code \u00a7\u00a7 30-14-2801\u20132817)\n\u2014 Texas Data Privacy and Security Act (Tex. Bus. & Com. Code ch. 541)\n\u2014 Oregon Consumer Privacy Act (ORS \u00a7\u00a7 646A.570\u2013646A.604)\n\u2014 Delaware Personal Data Privacy Act (Del. Code tit. 6, ch. 12D)\n\u2014 New Jersey Data Privacy Act (N.J.S.A. \u00a7\u00a7 56:8-166\u201356:8-181)\n\u2014 New Hampshire Privacy Act (RSA 507-H)\n\u2014 Nebraska Data Privacy Act (Neb. Rev. Stat. \u00a7\u00a7 87-1101\u201387-1116)\n\u2014 Minnesota Consumer Data Privacy Act (Minn. Stat. ch. 325O)\n\u2014 Maryland Online Data Privacy Act (Md. Code, Com. Law \u00a7\u00a7 14-4601\u20134614)\n\u2014 Any other state, federal, or local privacy legislation that may apply\n\nI hereby:\n\n1. REQUEST DELETION of all personal information you hold about me\n2. REQUEST DISCLOSURE of what data you held, where you obtained it,\n   and to whom you have disclosed it\n3. OPT OUT of the sale and sharing of my personal information\n4. WITHDRAW ALL CONSENT for future collection, processing, storage,\n   sale, sharing, or any other use of my personal information\n\nI EXPLICITLY DO NOT CONSENT \u2014 now or in the future \u2014 to your\norganization collecting, purchasing, licensing, scraping, inferring,\nor otherwise obtaining my personal information from any source.\nI do not consent to your organization creating, maintaining, or\nupdating any record, profile, or database entry about me.\n\nThis objection is unconditional and irrevocable. It applies to data\nobtained from any source including but not limited to public records,\ncommercial data providers, web scraping, social media, and any other\nmeans. The absence of current legal enforceability for this objection\nin certain jurisdictions does not diminish my clearly expressed intent.\n\nIdentifying Information:\nFull Name: {full_name}\nEmail: {email}\nPhone: {phone}\nAddress: {address}\n\nPlease confirm deletion and disclosure in writing within 30 days.\nThis communication is timestamped and archived.\n\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email"
+      ],
+      "optional_fields": [
+        "phone",
+        "address"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    },
+    "noncompliance_notice": {
+      "id": "noncompliance_notice",
+      "name": "Non-Compliance Notice",
+      "legal_basis": "any",
+      "applicable_when": "Broker failed to respond within legal deadline",
+      "subject": "SECOND NOTICE \u2014 Failure to Comply with Data Deletion Request \u2014 {full_name}",
+      "body": "To the Privacy Officer:\n\nOn {original_request_date}, I submitted a legally valid data deletion\nrequest to your organization regarding my personal information. As of\ntoday's date, {days_elapsed} days have elapsed.\n\nUnder applicable law, you were required to respond within\n{legal_deadline_days} days. You have failed to do so.\n\nI am documenting this non-compliance. Please be advised:\n\n1. I am filing a complaint with the relevant regulatory authority:\n   \u2014 California Privacy Protection Agency (if CCPA applies)\n   \u2014 Relevant state Attorney General\n   \u2014 Federal Trade Commission\n   \u2014 Information Commissioner's Office (if GDPR/UK GDPR applies)\n   \u2014 Relevant EU supervisory authority\n\n2. My original request remains in full force. I continue to demand:\n   \u2014 Complete deletion of all personal information\n   \u2014 Disclosure of data held and third parties it was shared with\n   \u2014 Written confirmation of deletion\n\n3. All previous consent withdrawals and objections remain in effect.\n\n4. Continued processing of my personal information after receiving my\n   deletion request and failing to comply constitutes willful violation\n   and may result in enhanced penalties.\n\nThis is a final notice before regulatory complaint.\n\nOriginal Request Date: {original_request_date}\nDays Elapsed: {days_elapsed}\nReference: {request_reference_id}\n\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email",
+        "original_request_date",
+        "days_elapsed",
+        "legal_deadline_days"
+      ],
+      "optional_fields": [
+        "request_reference_id"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    },
+    "relisting_challenge": {
+      "id": "relisting_challenge",
+      "name": "Re-listing Challenge \u2014 Documented Willful Violation",
+      "legal_basis": "any",
+      "applicable_when": "Broker re-listed data after previous deletion",
+      "subject": "NOTICE OF WILLFUL RE-LISTING OF PERSONAL DATA \u2014 {full_name} \u2014 Deletion #{relist_count}",
+      "body": "To the Privacy Officer and Legal Department:\n\nI have confirmed that your organization has RE-LISTED my personal\ninformation after a previous deletion that was confirmed/completed\non {previous_deletion_date}.\n\nThis is re-listing occurrence #{relist_count}.\n\nDocumented history:\n{deletion_history}\n\nThis pattern of re-listing personal information after receiving and\nprocessing deletion requests raises serious concerns regarding:\n\n1. WILLFUL NON-COMPLIANCE: Repeatedly re-acquiring and publishing\n   personal information belonging to an individual who has explicitly\n   requested deletion and withdrawn consent suggests intentional\n   disregard for privacy rights.\n\n2. ENHANCED PENALTIES: Under CCPA, intentional violations carry\n   penalties of up to $7,500 per violation. Each re-listing after\n   a deletion request may constitute a separate intentional violation.\n\n3. ABSENCE OF CONSENT: As documented in my previous communications\n   (dates: {previous_request_dates}), I have EXPLICITLY WITHDRAWN\n   ALL CONSENT for collection, processing, and publication of my\n   personal information. Your organization has re-collected and\n   re-published my data AGAINST my documented objection.\n\nI AGAIN demand:\n\u2014 Immediate deletion of all personal information\n\u2014 Disclosure of the source from which you re-acquired my data\n\u2014 Implementation of technical measures to prevent future re-listing\n\u2014 Written confirmation that suppression controls are in place\n\nI am documenting this re-listing with screenshots and archived web\npages as evidence. This record is being maintained for potential\nregulatory complaint and/or legal action.\n\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email",
+        "previous_deletion_date",
+        "relist_count",
+        "deletion_history",
+        "previous_request_dates"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    },
+    "preemptive_blanket": {
+      "id": "preemptive_blanket",
+      "name": "Pre-emptive Blanket Objection",
+      "legal_basis": "any",
+      "applicable_when": "Always \u2014 sent regardless of whether presence is confirmed",
+      "subject": "Data Deletion Request, Opt-Out, and Pre-emptive Objection to Processing \u2014 {full_name}",
+      "body": "To the Privacy Officer:\n\nWhether or not your organization currently holds my personal\ninformation, I am writing to:\n\n1. REQUEST DELETION of any personal information you currently hold\n   about me under all applicable privacy laws.\n\n2. OPT OUT of the sale and sharing of my personal information under\n   CCPA \u00a7 1798.120 and equivalent state provisions.\n\n3. OBJECT to all processing of my personal information under GDPR\n   Article 21 (where applicable).\n\n4. WITHDRAW ALL CONSENT \u2014 express or implied, past, present, or\n   future \u2014 for your organization to collect, process, store, sell,\n   share, or otherwise use my personal information, from any source,\n   for any purpose.\n\n5. PRE-EMPTIVELY OBJECT to any future acquisition, collection,\n   purchase, licensing, scraping, or inference of my personal\n   information by your organization.\n\nI understand that this pre-emptive objection may not carry legal\nforce in all jurisdictions at this time. I am establishing a clear,\ntimestamped record of my wishes. This record may become legally\nrelevant as privacy legislation continues to evolve.\n\nIf you currently hold no data about me, I request written\nconfirmation of that fact and ask that this objection be recorded\nin your systems to prevent future collection.\n\nIf you do hold data about me, please process the deletion request\nabove and respond within the timeframe required by applicable law.\n\nIdentifying Information:\nFull Name: {full_name}\nEmail: {email}\n\nThis communication is archived with timestamp verification.\n\n{full_name}\nDate: {date}\n",
+      "required_fields": [
+        "full_name",
+        "email"
+      ],
+      "optional_fields": [
+        "phone",
+        "address",
+        "dob"
+      ],
+      "auto_fields": [
+        "date"
+      ]
+    }
+  },
+  "state_law_priority": {
+    "california": "ccpa_maximum",
+    "virginia": "us_omnibus",
+    "colorado": "us_omnibus",
+    "connecticut": "us_omnibus",
+    "utah": "us_omnibus",
+    "iowa": "us_omnibus",
+    "indiana": "us_omnibus",
+    "tennessee": "us_omnibus",
+    "montana": "us_omnibus",
+    "texas": "us_omnibus",
+    "oregon": "us_omnibus",
+    "delaware": "us_omnibus",
+    "new jersey": "us_omnibus",
+    "new hampshire": "us_omnibus",
+    "nebraska": "us_omnibus",
+    "minnesota": "us_omnibus",
+    "maryland": "us_omnibus"
+  },
+  "eu_countries": [
+    "AT",
+    "BE",
+    "BG",
+    "CY",
+    "CZ",
+    "DE",
+    "DK",
+    "EE",
+    "ES",
+    "FI",
+    "FR",
+    "GR",
+    "HR",
+    "HU",
+    "IE",
+    "IS",
+    "IT",
+    "LI",
+    "LT",
+    "LU",
+    "LV",
+    "MT",
+    "NL",
+    "NO",
+    "PL",
+    "PT",
+    "RO",
+    "SE",
+    "SI",
+    "SK"
+  ]
+}

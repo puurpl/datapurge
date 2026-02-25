@@ -29,8 +29,8 @@ scans/
 proofs/
 letters/
 
-# Generated
-registry.json
+# Generated (root only — web/data/*.json is tracked)
+/registry.json
 
 # OS
 .DS_Store

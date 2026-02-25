@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataPurge — Take Back Your Data</title>
+    <meta name="description" content="Free, open-source tool to send legal data deletion requests to every data broker that holds your information. Your data never leaves your browser.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Take back your data.</h1>
+            <p class="subtitle">
+                Hundreds of data brokers sell your personal information. DataPurge generates
+                legally-backed deletion requests and sends them with one click. Free, open-source,
+                and your data never leaves your browser.
+            </p>
+            <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center mb-2">How it works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Enter your info</h3>
+                    <p>Name, email, and state. Stored only in your browser's session memory &mdash; never transmitted anywhere.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>We generate emails</h3>
+                    <p>Legally-aggressive opt-out emails citing CCPA, GDPR, and every applicable state privacy law. Pre-filled and ready to send.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Click to send</h3>
+                    <p>Each email opens in your email client with everything filled in. Hit send. Move to the next broker. Done.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy callout -->
+    <section class="section">
+        <div class="container-narrow">
+            <div class="callout">
+                <div class="callout-icon">&#128274;</div>
+                <h3>Your data never leaves your browser</h3>
+                <p>
+                    No accounts. No tracking. No cookies. Your personal information is stored
+                    in your browser's session memory and disappears when you close the tab.
+                    We serve templates &mdash; your browser fills them in. That's it.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section>
+        <div class="container">
+            <div class="stats-bar" id="stats-bar">
+                <div class="stat">
+                    <div class="stat-value" id="stat-brokers">7</div>
+                    <div class="stat-label">Data brokers tracked</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Legal templates</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">17+</div>
+                    <div class="stat-label">State laws cited</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What they hold -->
+    <section class="section">
+        <div class="container-narrow">
+            <h2 class="text-center mb-2">What data brokers hold on you</h2>
+            <p class="text-center text-secondary mb-2">
+                Companies you've never heard of buy, aggregate, and sell your personal data
+                to anyone willing to pay. Here's what they typically collect:
+            </p>
+            <div class="tag-list" style="justify-content: center; gap: 0.5rem;">
+                <span class="tag">Full name</span>
+                <span class="tag">Home address</span>
+                <span class="tag">Phone number</span>
+                <span class="tag">Email address</span>
+                <span class="tag">Date of birth</span>
+                <span class="tag">Relatives</span>
+                <span class="tag">Employment history</span>
+                <span class="tag">Income estimates</span>
+                <span class="tag">Political affiliation</span>
+                <span class="tag">Social media profiles</span>
+                <span class="tag">Photos</span>
+                <span class="tag">Criminal records</span>
+                <span class="tag">Property records</span>
+                <span class="tag">Location history</span>
+                <span class="tag">Purchase history</span>
+                <span class="tag">Health inferences</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section">
+        <div class="container-narrow text-center">
+            <h2>Ready to opt out?</h2>
+            <p class="text-secondary mt-1 mb-2">
+                It takes about 2 minutes to set up. Then it's one click per broker.
+            </p>
+            <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://github.com/puurpl/opt-out" target="_blank" rel="noopener">GitHub</a>
+                <a href="app.html#brokers">Browse Brokers</a>
+                <a href="app.html#report">Report a Broker</a>
+            </div>
+            <p>AGPL-3.0 &mdash; Broker data is CC0 public domain. Built to make data brokers expensive.</p>
+        </div>
+    </footer>
+
+    <!-- Dynamic stats from registry -->
+    <script>
+        fetch('data/registry.json')
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById('stat-brokers').textContent = d.broker_count;
+            })
+            .catch(() => {});
+    </script>
+</body>
+</html>
