@@ -1,0 +1,53 @@
+id: bombora
+name: Bombora
+domain: bombora.com
+aliases: []
+category: other
+data_types:
+  - device-ids
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B intent data platform. No consumer-facing search. Tracks business content consumption."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://bombora.com/opt-out/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://bombora.com/opt-out/"
+          description: "Go to Bombora opt-out page"
+        - action: click
+          description: "Click opt-out button to stop online interaction tracking by Bombora and partners"
+    - type: email
+      email_to: privacy@bombora.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Bombora provides B2B 'intent data' that tracks what topics businesses are researching. Opt-out stops tracking of online interactions. CCPA rights include opt-out of sale and sharing of personal information."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: bombora.com/privacy-policy, bombora.com/opt-out. B2B intent data company that tracks business content consumption patterns across a cooperative of 5,000+ B2B websites. Data used by sales and marketing teams to identify companies researching specific topics."

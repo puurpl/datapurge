@@ -1,0 +1,50 @@
+id: lotame
+name: Lotame (now part of Epsilon)
+domain: lotame.com
+aliases: [epsilon.com]
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B audience management and data management platform. No consumer-facing search. Merged into Epsilon Oct 2025."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@lotame.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.lotame.com/privacy/information-privacy-choices-services/"
+      required_fields: [email]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Lotame merged into Epsilon Data Management LLC effective Oct 1, 2025. Epsilon now provides Lotame products under the Lotame name. Privacy Manager processes opt-outs within hours; Panorama ID may take up to 7 days to expire."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: California Data Broker Registry. Lotame Solutions Inc merged into Epsilon Data Management LLC effective Oct 1, 2025. Lotame brand continues under Epsilon."

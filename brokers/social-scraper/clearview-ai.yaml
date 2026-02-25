@@ -1,0 +1,66 @@
+id: clearview-ai
+name: Clearview AI
+domain: clearview.ai
+aliases: [app.clearview.ai]
+category: social-scraper
+data_types:
+  - name
+  - photos
+  - social-media
+  - employment
+
+scan:
+  scannable: false
+  reason: "Law enforcement tool. No consumer-facing search. Requires submitting photo to check."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://app.clearview.ai/privacy/requests"
+      required_fields: [full_name, email, photo]
+      steps:
+        - action: navigate
+          url: "https://app.clearview.ai/privacy/requests"
+          description: "Go to Clearview AI privacy request form"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out/deletion request type"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: upload
+          value: "{photo}"
+          description: "Upload a clear photo of your face for matching"
+        - action: submit
+          description: "Submit the privacy request"
+    - type: email
+      email_to: privacy@clearview.ai
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 45
+  legal_max_days: 45
+  notes: "Requires uploading a photo of yourself for facial recognition matching. Available to residents of CA, CO, CT, IL, UT, VA. High-priority target due to mass facial recognition surveillance. Clearview scrapes billions of photos from social media and the open web."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, illinois, utah]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: clearview.ai/privacy-and-requests, California Data Broker Registry. Clearview scrapes photos from social media including Facebook, Instagram, LinkedIn, Twitter. Multiple lawsuits and fines globally (GDPR fines in UK, Italy, France, Greece). BIPA lawsuit settlement in Illinois. Sells primarily to law enforcement."

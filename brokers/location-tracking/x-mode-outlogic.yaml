@@ -1,0 +1,55 @@
+id: x-mode-outlogic
+name: X-Mode Social (Outlogic)
+domain: outlogic.io
+aliases: [xmode.io]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B location data broker. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://xmode.io/optout-donotsell/"
+      required_fields: [device-ids]
+      steps:
+        - action: navigate
+          url: "https://xmode.io/optout-donotsell/"
+          description: "Go to X-Mode CCPA opt-out / Do Not Sell form"
+        - action: input
+          value: "{advertising_id}"
+          description: "Enter your Device ID (Advertising ID or Installation ID)"
+        - action: submit
+          description: "Submit the opt-out request"
+    - type: email
+      email_to: privacy@outlogic.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FTC ordered X-Mode/Outlogic to stop selling sensitive location data (April 2024). Company sold data that could track visits to abortion clinics, places of worship, domestic violence shelters. Failed to honor Android opt-out requests. Requires Device ID (MAID or Installation ID) for opt-out. Sells data to government contractors and law enforcement."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: outlogic.io/privacy-policy, FTC enforcement action (Jan 2024, finalized Apr 2024). FTC prohibited from selling sensitive location data. Sold location data to hundreds of clients including government contractors and law enforcement. Collected data via own apps and third-party SDK partners. Rebranded from X-Mode Social to Outlogic."

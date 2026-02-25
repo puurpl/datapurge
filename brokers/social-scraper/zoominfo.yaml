@@ -1,0 +1,73 @@
+id: zoominfo
+name: ZoomInfo
+domain: zoominfo.com
+aliases: [privacyrequest.zoominfo.com]
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+  - education
+
+scan:
+  scannable: false
+  reason: "B2B sales intelligence platform. Requires paid subscription to search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyrequest.zoominfo.com/remove/verify"
+      required_fields: [email, phone]
+      steps:
+        - action: navigate
+          url: "https://privacyrequest.zoominfo.com/remove/verify"
+          description: "Go to ZoomInfo Privacy Center removal page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{phone}"
+          description: "Enter your phone number"
+        - action: click
+          description: "Click 'Request Removal' to receive verification code"
+        - action: verify_email
+          description: "Check email for 6-digit verification code from ZoomInfo"
+        - action: input
+          value: "{verification_code}"
+          description: "Enter the 6-digit code"
+        - action: click
+          description: "Click Confirm to complete removal"
+    - type: email
+      email_to: privacy@zoominfo.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "833-901-0859"
+      notes: "ZoomInfo privacy request phone line"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Requires email verification with 6-digit code. Full name is optional on removal form. Profile removed from website and subscription products. Opt-out shared with ZoomInfo customers. Heavily scrapes LinkedIn."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: privacyrequest.zoominfo.com, zoominfo.com/trust-center/your-privacy, California Data Broker Registry. Largest B2B contact database. Scrapes LinkedIn, company websites, SEC filings, job boards. Claims GDPR and CCPA compliance."

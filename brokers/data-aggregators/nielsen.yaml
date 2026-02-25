@@ -1,0 +1,56 @@
+id: nielsen
+name: Nielsen Marketing Cloud
+domain: nielsen.com
+aliases: [sites.nielsen.com, exelate.com, nielseniq.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - email
+  - age
+  - purchase-history
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B audience measurement and marketing data platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.nielsen.com/legal/optout-page/"
+      required_fields: [email]
+    - type: web_form
+      url: "https://sites.nielsen.com/legal/privacy-statement/exelate-privacy-policy/opt-in-opt-out/"
+      required_fields: [email]
+    - type: email
+      email_to: privacy.department@nielsen.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Nielsen Marketing Cloud opt-out removes all information associated with email. NielsenIQ (NIQ) is a separate entity — contact connect.privacy@nielseniq.com for NIQ data."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registered as Nielsen Marketing Cloud), Nielsen privacy portal. Nielsen and NielsenIQ are now separate companies."

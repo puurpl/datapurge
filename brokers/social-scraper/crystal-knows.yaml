@@ -1,0 +1,45 @@
+id: crystal-knows
+name: Crystal Knows
+domain: crystalknows.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - employment
+  - social-media
+
+scan:
+  scannable: false
+  reason: "Personality prediction platform. Requires account to search profiles."
+
+optout:
+  methods:
+    - type: email
+      email_to: hello@crystalknows.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Email hello@crystalknows.com to request deletion of account and all associated data. Crystal deletes personal information and private data, though some latency may exist for backup storage. GDPR, CCPA, and SOC2 compliant. Analyzes writing style and public LinkedIn profiles to predict DISC personality types."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: crystalknows.com/privacy, crystalknows.com/gdpr. Personality AI platform that predicts DISC personality types from LinkedIn profiles and writing samples. Does not store sensitive PII externally. Scrapes LinkedIn for profile data and analyzes writing style."

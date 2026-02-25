@@ -1,0 +1,62 @@
+id: pimeyes
+name: PimEyes
+domain: pimeyes.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - photos
+  - social-media
+
+scan:
+  scannable: false
+  reason: "Requires paid subscription for full results. Facial recognition reverse image search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://pimeyes.com/en/opt-out-request-form"
+      required_fields: [email, photo]
+      steps:
+        - action: navigate
+          url: "https://pimeyes.com/en/opt-out-request-form"
+          description: "Go to PimEyes opt-out request form"
+        - action: upload
+          value: "{photo}"
+          description: "Upload a photo of yourself"
+        - action: upload
+          value: "{id_scan}"
+          description: "Upload an anonymized ID scan for verification"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the opt-out request"
+    - type: email
+      email_to: privacy@pimeyes.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 4
+  legal_max_days: 30
+  notes: "Requires uploading a photo and anonymized ID scan. Data retained up to 96 hours after opt-out for processing, then permanently deleted. GDPR complaints filed by Big Brother Watch (UK)."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 4
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: pimeyes.com/en/opt-out-request-form, pimeyes.com/en/privacy-policy. Facial recognition search engine that indexes publicly available photos from the open web. Based in Poland (Belize-registered). Subject to GDPR enforcement actions."

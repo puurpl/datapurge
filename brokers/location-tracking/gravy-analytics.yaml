@@ -1,0 +1,58 @@
+id: gravy-analytics
+name: Gravy Analytics
+domain: gravyanalytics.com
+aliases: []
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B location intelligence platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://gravyanalytics.com/opt-out-do-not-sell"
+      required_fields: [device-ids]
+      steps:
+        - action: navigate
+          url: "https://gravyanalytics.com/opt-out-do-not-sell"
+          description: "Go to Gravy Analytics Opt-Out/Do Not Sell page"
+        - action: input
+          value: "{advertising_id}"
+          description: "Enter your mobile Advertising ID (MAID)"
+        - action: submit
+          description: "Submit the opt-out request"
+    - type: email
+      email_to: privacy@gravyanalytics.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-855-545-5623"
+      notes: "Gravy Analytics CCPA toll-free line"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Requires mobile Advertising ID for opt-out. Suffered a major data breach in January 2025 exposing location data of millions of users. Sold location data to law enforcement and government agencies via contractors."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: gravyanalytics.com/privacy-policy, gravyanalytics.com/opt-out-do-not-sell. Location analytics company. Major data breach in January 2025 exposed precise location data. Known to sell data to government contractors and law enforcement agencies. Parent company Unacast acquired Gravy Analytics."

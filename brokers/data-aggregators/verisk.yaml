@@ -1,0 +1,56 @@
+id: verisk
+name: Verisk (Infutor)
+domain: verisk.com
+aliases: [infutor.com, privacy.infutor.com, marketing.verisk.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - property-records
+  - financial
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B data analytics and marketing solutions provider. No consumer-facing search. Consumer opt-out via Infutor privacy portal."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacy.infutor.com/s/optout-form"
+      required_fields: [full_name, email, address]
+    - type: email
+      email_to: privacy@verisk.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Verisk acquired Infutor Data Solutions. Consumer opt-out portal at privacy.infutor.com. Identity verification may be required. Removal within 45 days per CCPA."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, new-jersey, utah]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry, Verisk/Infutor privacy portal. Verisk acquired Infutor Data Solutions. State data privacy notice covers CA, CO, CT, NJ, UT, VA and others."
