@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "datapurge"
+version = "0.1.0"
+description = "Open-source data broker deletion service"
+readme = "README.md"
+license = {text = "AGPL-3.0-or-later"}
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.40.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pyyaml>=6.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.0",
+    "typer>=0.12.0",
+    "rich>=13.0",
+    "jsonschema>=4.20",
+]
+
+[project.optional-dependencies]
+client = [
+    "playwright>=1.40",
+    "pyage>=0.1",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5.0",
+]
+
+[project.scripts]
+datapurge = "client.cli:app"
+datapurge-agent = "server.agent:main"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

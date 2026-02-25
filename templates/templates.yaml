@@ -1,0 +1,495 @@
+# DataPurge Legal Templates
+#
+# STRATEGY: These templates are designed to do more than just request deletion.
+# They create documented paper trails, explicitly withdraw consent for future
+# processing, demand records of data sharing, and establish legal exposure for
+# the broker if they fail to comply or re-list data.
+#
+# Every template includes:
+# 1. Deletion demand (the obvious part)
+# 2. Explicit withdrawal of consent for ALL future processing
+# 3. Demand for disclosure of who they've shared data with
+# 4. Demand for confirmation of deletion with specifics
+# 5. Notice that the communication is being archived
+# 6. Reference to every applicable law, even tangentially
+#
+# The consent withdrawal may be "meaningless" today for some brokers in some
+# jurisdictions. But it creates a timestamped record. If laws change — and
+# they ARE changing, rapidly — that record becomes evidence of willful
+# disregard for an individual's expressed wishes.
+
+templates:
+
+  # ===========================================================================
+  # CCPA/CPRA (California) — Strongest US template
+  # ===========================================================================
+  ccpa_maximum:
+    id: "ccpa_maximum"
+    name: "CCPA/CPRA Maximum Pressure"
+    legal_basis: "ccpa"
+    applicable_when: "Broker does business in California OR processes CA residents' data"
+    
+    subject: "CCPA/CPRA Data Deletion Request, Right to Know, and Withdrawal of Consent — {full_name}"
+    
+    body: |
+      To the Privacy Officer or Data Protection Contact:
+
+      I am exercising my rights under the California Consumer Privacy Act
+      (CCPA) as amended by the California Privacy Rights Act (CPRA),
+      Cal. Civ. Code §§ 1798.100–1798.199.100.
+
+      This communication constitutes THREE separate requests:
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      REQUEST 1: RIGHT TO DELETE (Cal. Civ. Code § 1798.105)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      I request that you delete ALL personal information you have collected
+      about me, including but not limited to:
+
+      — Full name and any aliases or name variations
+      — Current and historical physical addresses
+      — Email addresses
+      — Phone numbers
+      — Date of birth and age
+      — Employment history
+      — Education history
+      — Names of relatives and associates
+      — Social media profiles
+      — Photographs
+      — Court and public records
+      — Financial information and income estimates
+      — Political affiliations and inferences
+      — Any other personal information as defined by Cal. Civ. Code § 1798.140(v)
+
+      I further request that you direct any service providers or third parties
+      to whom you have disclosed my personal information to delete it as well,
+      per Cal. Civ. Code § 1798.105(c).
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      REQUEST 2: RIGHT TO KNOW (Cal. Civ. Code § 1798.110)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      I request that you disclose:
+
+      a) The categories of personal information you have collected about me
+      b) The categories of sources from which my personal information was collected
+      c) The business or commercial purpose for collecting my personal information
+      d) The categories of third parties to whom you have disclosed, sold, or
+         shared my personal information
+      e) The specific pieces of personal information you have collected about me
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      REQUEST 3: OPT-OUT & WITHDRAWAL OF CONSENT
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Pursuant to Cal. Civ. Code § 1798.120:
+
+      I opt out of the sale of my personal information.
+      I opt out of the sharing of my personal information for cross-context
+      behavioral advertising.
+
+      Additionally, I EXPLICITLY WITHDRAW ANY AND ALL CONSENT — express or
+      implied, past, present, or future — for your organization to:
+
+      — Collect my personal information from any source
+      — Process my personal information for any purpose
+      — Sell, share, license, or otherwise disclose my personal information
+        to any third party
+      — Create, maintain, or update any profile or record about me
+      — Use my personal information for any inference, derivation, or profiling
+
+      This withdrawal of consent is unconditional, irrevocable, and applies
+      in perpetuity. I do not consent to any future collection, processing,
+      sale, or sharing of my personal information by your organization,
+      regardless of the source from which you may obtain it.
+
+      NOTE: I understand that withdrawal of consent may not be legally
+      binding in all jurisdictions at this time. I am establishing a clear,
+      documented record of my wishes. Any future processing of my personal
+      information by your organization will occur AGAINST my explicitly
+      stated objection, which may be relevant under current or future
+      privacy legislation.
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      IDENTIFYING INFORMATION
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Full Name: {full_name}
+      Email: {email}
+      Phone: {phone}
+      Address: {address}
+      Date of Birth: {dob}
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      COMPLIANCE REQUIREMENTS
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Under the CCPA/CPRA, you are required to:
+      — Respond to this request within 45 calendar days
+      — Confirm the specific personal information deleted
+      — Identify all third parties notified of the deletion
+      — Provide the disclosures requested in Request 2
+
+      Failure to comply may result in enforcement action by the California
+      Privacy Protection Agency and/or civil penalties of up to $7,500 per
+      intentional violation (Cal. Civ. Code § 1798.155).
+
+      This communication is being archived with timestamp verification
+      for potential future legal reference.
+
+      Sincerely,
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email"]
+    optional_fields: ["phone", "address", "dob"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # GDPR (EU/UK) — Nuclear option
+  # ===========================================================================
+  gdpr_maximum:
+    id: "gdpr_maximum"
+    name: "GDPR Maximum Pressure"
+    legal_basis: "gdpr"
+    applicable_when: "Broker processes EU/UK resident data or offers services in EU/UK"
+
+    subject: "GDPR Articles 15, 17, and 21 — Data Subject Rights Request — {full_name}"
+
+    body: |
+      To the Data Protection Officer:
+
+      I am exercising my rights under the General Data Protection Regulation
+      (EU) 2016/679 ("GDPR") and, where applicable, the UK GDPR.
+
+      This communication constitutes the following requests:
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      1. RIGHT OF ACCESS (Article 15)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      I request a copy of all personal data you hold about me, including:
+      — The purposes of processing
+      — The categories of personal data concerned
+      — The recipients to whom my data has been disclosed
+      — The envisaged retention period
+      — The source of the data (where not collected directly from me)
+      — The existence of automated decision-making, including profiling
+      — Where data is transferred to a third country, the safeguards applied
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      2. RIGHT TO ERASURE (Article 17)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      I request the erasure of all personal data you hold about me.
+      The grounds for this request include:
+      — The data is no longer necessary for the purpose for which it was collected
+      — I withdraw my consent (Article 6(1)(a))
+      — I object to the processing (Article 21) and there are no overriding
+        legitimate grounds
+      — The personal data has been unlawfully processed (I did not consent
+        to its collection)
+
+      Per Article 17(2), where you have made the personal data public, I
+      request that you inform all recipients of this erasure request.
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      3. RIGHT TO OBJECT (Article 21)
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      I object to ALL processing of my personal data, including but not
+      limited to processing for:
+      — Direct marketing (Article 21(2)) — this objection is absolute
+      — Profiling related to direct marketing (Article 21(2))
+      — Any processing based on legitimate interests (Article 6(1)(f))
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      4. EXPLICIT WITHDRAWAL OF CONSENT
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Per Article 7(3), I hereby withdraw any and all consent — express
+      or implied — for the processing of my personal data by your
+      organization, for any purpose, now and in the future.
+
+      I DO NOT CONSENT to any future collection, processing, storage,
+      transmission, sale, licensing, or disclosure of my personal data
+      by your organization, from any source, for any purpose.
+
+      This withdrawal is documented and timestamped. Any subsequent
+      processing will occur without a valid legal basis under Article 6
+      and may constitute a violation subject to administrative fines
+      of up to €20,000,000 or 4% of annual worldwide turnover
+      (Article 83(5)).
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      5. REQUEST FOR DOCUMENTATION
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Upon completion of erasure, I request written confirmation including:
+      — The specific categories of data that were erased
+      — The date erasure was completed
+      — A list of ALL third parties who were notified of the erasure
+      — Confirmation that automated systems have been updated to
+        prevent future re-collection of my data
+
+      Identifying Information:
+      Full Name: {full_name}
+      Email: {email}
+      Address: {address}
+
+      You are required to respond within one calendar month per
+      Article 12(3). This communication is archived for potential
+      submission to the relevant supervisory authority.
+
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email"]
+    optional_fields: ["address"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # Generic US — Covers all state laws, casts widest net
+  # ===========================================================================
+  us_omnibus:
+    id: "us_omnibus"
+    name: "US Omnibus — All Applicable State Laws"
+    legal_basis: "us_state"
+    applicable_when: "US-based broker, any state"
+
+    subject: "Personal Data Deletion Request and Withdrawal of Consent — {full_name}"
+
+    body: |
+      To the Privacy Officer:
+
+      I am writing to exercise my privacy rights under all applicable
+      federal and state laws, including but not limited to:
+
+      — California Consumer Privacy Act / California Privacy Rights Act
+        (Cal. Civ. Code §§ 1798.100–1798.199.100)
+      — Virginia Consumer Data Protection Act (Va. Code §§ 59.1-575–59.1-585)
+      — Colorado Privacy Act (C.R.S. §§ 6-1-1301–6-1-1313)
+      — Connecticut Data Privacy Act (Conn. Gen. Stat. §§ 42-515–42-525)
+      — Utah Consumer Privacy Act (Utah Code §§ 13-61-101–13-61-404)
+      — Iowa Consumer Data Protection Act (Iowa Code ch. 715D)
+      — Indiana Consumer Data Protection Act (Ind. Code §§ 24-15-1–24-15-9)
+      — Tennessee Information Protection Act (Tenn. Code §§ 47-18-3201–3213)
+      — Montana Consumer Data Privacy Act (Mont. Code §§ 30-14-2801–2817)
+      — Texas Data Privacy and Security Act (Tex. Bus. & Com. Code ch. 541)
+      — Oregon Consumer Privacy Act (ORS §§ 646A.570–646A.604)
+      — Delaware Personal Data Privacy Act (Del. Code tit. 6, ch. 12D)
+      — New Jersey Data Privacy Act (N.J.S.A. §§ 56:8-166–56:8-181)
+      — New Hampshire Privacy Act (RSA 507-H)
+      — Nebraska Data Privacy Act (Neb. Rev. Stat. §§ 87-1101–87-1116)
+      — Minnesota Consumer Data Privacy Act (Minn. Stat. ch. 325O)
+      — Maryland Online Data Privacy Act (Md. Code, Com. Law §§ 14-4601–4614)
+      — Any other state, federal, or local privacy legislation that may apply
+
+      I hereby:
+
+      1. REQUEST DELETION of all personal information you hold about me
+      2. REQUEST DISCLOSURE of what data you held, where you obtained it,
+         and to whom you have disclosed it
+      3. OPT OUT of the sale and sharing of my personal information
+      4. WITHDRAW ALL CONSENT for future collection, processing, storage,
+         sale, sharing, or any other use of my personal information
+
+      I EXPLICITLY DO NOT CONSENT — now or in the future — to your
+      organization collecting, purchasing, licensing, scraping, inferring,
+      or otherwise obtaining my personal information from any source.
+      I do not consent to your organization creating, maintaining, or
+      updating any record, profile, or database entry about me.
+
+      This objection is unconditional and irrevocable. It applies to data
+      obtained from any source including but not limited to public records,
+      commercial data providers, web scraping, social media, and any other
+      means. The absence of current legal enforceability for this objection
+      in certain jurisdictions does not diminish my clearly expressed intent.
+
+      Identifying Information:
+      Full Name: {full_name}
+      Email: {email}
+      Phone: {phone}
+      Address: {address}
+
+      Please confirm deletion and disclosure in writing within 30 days.
+      This communication is timestamped and archived.
+
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email"]
+    optional_fields: ["phone", "address"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # Follow-up: Non-compliance notice (sent after deadline passes)
+  # ===========================================================================
+  noncompliance_notice:
+    id: "noncompliance_notice"
+    name: "Non-Compliance Notice"
+    legal_basis: "any"
+    applicable_when: "Broker failed to respond within legal deadline"
+
+    subject: "SECOND NOTICE — Failure to Comply with Data Deletion Request — {full_name}"
+
+    body: |
+      To the Privacy Officer:
+
+      On {original_request_date}, I submitted a legally valid data deletion
+      request to your organization regarding my personal information. As of
+      today's date, {days_elapsed} days have elapsed.
+
+      Under applicable law, you were required to respond within
+      {legal_deadline_days} days. You have failed to do so.
+
+      I am documenting this non-compliance. Please be advised:
+
+      1. I am filing a complaint with the relevant regulatory authority:
+         — California Privacy Protection Agency (if CCPA applies)
+         — Relevant state Attorney General
+         — Federal Trade Commission
+         — Information Commissioner's Office (if GDPR/UK GDPR applies)
+         — Relevant EU supervisory authority
+
+      2. My original request remains in full force. I continue to demand:
+         — Complete deletion of all personal information
+         — Disclosure of data held and third parties it was shared with
+         — Written confirmation of deletion
+
+      3. All previous consent withdrawals and objections remain in effect.
+
+      4. Continued processing of my personal information after receiving my
+         deletion request and failing to comply constitutes willful violation
+         and may result in enhanced penalties.
+
+      This is a final notice before regulatory complaint.
+
+      Original Request Date: {original_request_date}
+      Days Elapsed: {days_elapsed}
+      Reference: {request_reference_id}
+
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email", "original_request_date", "days_elapsed", "legal_deadline_days"]
+    optional_fields: ["request_reference_id"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # Re-listing challenge (sent when broker re-adds data after deletion)
+  # ===========================================================================
+  relisting_challenge:
+    id: "relisting_challenge"
+    name: "Re-listing Challenge — Documented Willful Violation"
+    legal_basis: "any"
+    applicable_when: "Broker re-listed data after previous deletion"
+
+    subject: "NOTICE OF WILLFUL RE-LISTING OF PERSONAL DATA — {full_name} — Deletion #{relist_count}"
+
+    body: |
+      To the Privacy Officer and Legal Department:
+
+      I have confirmed that your organization has RE-LISTED my personal
+      information after a previous deletion that was confirmed/completed
+      on {previous_deletion_date}.
+
+      This is re-listing occurrence #{relist_count}.
+
+      Documented history:
+      {deletion_history}
+
+      This pattern of re-listing personal information after receiving and
+      processing deletion requests raises serious concerns regarding:
+
+      1. WILLFUL NON-COMPLIANCE: Repeatedly re-acquiring and publishing
+         personal information belonging to an individual who has explicitly
+         requested deletion and withdrawn consent suggests intentional
+         disregard for privacy rights.
+
+      2. ENHANCED PENALTIES: Under CCPA, intentional violations carry
+         penalties of up to $7,500 per violation. Each re-listing after
+         a deletion request may constitute a separate intentional violation.
+
+      3. ABSENCE OF CONSENT: As documented in my previous communications
+         (dates: {previous_request_dates}), I have EXPLICITLY WITHDRAWN
+         ALL CONSENT for collection, processing, and publication of my
+         personal information. Your organization has re-collected and
+         re-published my data AGAINST my documented objection.
+
+      I AGAIN demand:
+      — Immediate deletion of all personal information
+      — Disclosure of the source from which you re-acquired my data
+      — Implementation of technical measures to prevent future re-listing
+      — Written confirmation that suppression controls are in place
+
+      I am documenting this re-listing with screenshots and archived web
+      pages as evidence. This record is being maintained for potential
+      regulatory complaint and/or legal action.
+
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email", "previous_deletion_date", "relist_count", "deletion_history", "previous_request_dates"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # Pre-emptive: No-presence blanket request
+  # ===========================================================================
+  preemptive_blanket:
+    id: "preemptive_blanket"
+    name: "Pre-emptive Blanket Objection"
+    legal_basis: "any"
+    applicable_when: "Always — sent regardless of whether presence is confirmed"
+
+    subject: "Data Deletion Request, Opt-Out, and Pre-emptive Objection to Processing — {full_name}"
+
+    body: |
+      To the Privacy Officer:
+
+      Whether or not your organization currently holds my personal
+      information, I am writing to:
+
+      1. REQUEST DELETION of any personal information you currently hold
+         about me under all applicable privacy laws.
+
+      2. OPT OUT of the sale and sharing of my personal information under
+         CCPA § 1798.120 and equivalent state provisions.
+
+      3. OBJECT to all processing of my personal information under GDPR
+         Article 21 (where applicable).
+
+      4. WITHDRAW ALL CONSENT — express or implied, past, present, or
+         future — for your organization to collect, process, store, sell,
+         share, or otherwise use my personal information, from any source,
+         for any purpose.
+
+      5. PRE-EMPTIVELY OBJECT to any future acquisition, collection,
+         purchase, licensing, scraping, or inference of my personal
+         information by your organization.
+
+      I understand that this pre-emptive objection may not carry legal
+      force in all jurisdictions at this time. I am establishing a clear,
+      timestamped record of my wishes. This record may become legally
+      relevant as privacy legislation continues to evolve.
+
+      If you currently hold no data about me, I request written
+      confirmation of that fact and ask that this objection be recorded
+      in your systems to prevent future collection.
+
+      If you do hold data about me, please process the deletion request
+      above and respond within the timeframe required by applicable law.
+
+      Identifying Information:
+      Full Name: {full_name}
+      Email: {email}
+
+      This communication is archived with timestamp verification.
+
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email"]
+    optional_fields: ["phone", "address", "dob"]
+    auto_fields: ["date"]
