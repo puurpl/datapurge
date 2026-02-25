@@ -1,0 +1,82 @@
+id: whitepages
+name: Whitepages
+domain: whitepages.com
+aliases: [whitepages.com, premium.whitepages.com]
+category: people-search
+data_types: [name, address, phone, email, age, relatives, associates, criminal-records, property-records]
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.whitepages.com/name/{first_name}-{last_name}/{city}-{state}"
+  detection:
+    - method: selector_present
+      value: ".serp-card"
+      means: listed
+    - method: text_match
+      value: "We didn't find"
+      means: not_listed
+  listing_extraction:
+    selector: ".serp-card a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.whitepages.com/suppression-requests"
+      required_fields: [listing_url, phone]
+      requires_listing_url: true
+      steps:
+        - action: navigate
+          url: "https://www.whitepages.com/suppression-requests"
+          description: "Go to Whitepages suppression request page"
+        - action: input
+          selector: "#listing-url"
+          value: "{listing_url}"
+          description: "Enter the URL of your listing"
+        - action: click
+          selector: ".remove-btn"
+          description: "Click to proceed with removal"
+        - action: captcha
+          description: "Complete reCAPTCHA verification"
+        - action: input
+          selector: "#phone-number"
+          value: "{phone}"
+          description: "Enter phone number for verification call"
+        - action: click
+          selector: "#call-now"
+          description: "Receive automated verification call with code"
+      template_id: null
+    - type: email
+      email_to: support@whitepages.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 5
+  legal_max_days: 45
+  notes: "Requires phone verification call. May need to remove from multiple listings."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.90
+  notes: "Phone verification makes automation harder. CAPTCHA present."

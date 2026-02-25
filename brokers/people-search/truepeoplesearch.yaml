@@ -1,0 +1,68 @@
+id: truepeoplesearch
+name: TruePeopleSearch
+domain: truepeoplesearch.com
+aliases: []
+category: people-search
+data_types: [name, address, phone, email, age, relatives, associates]
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.truepeoplesearch.com/results?name={first_name}%20{last_name}&citystatezip={city}%20{state}"
+  detection:
+    - method: selector_present
+      value: ".card-summary"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  anti_bot:
+    captcha: true
+    cloudflare: true
+    rate_limit_per_minute: 1
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.truepeoplesearch.com/removal"
+      required_fields: [listing_url]
+      requires_listing_url: true
+      steps:
+        - action: navigate
+          url: "{listing_url}"
+          description: "Go to your specific listing page"
+        - action: click
+          selector: "a[href*='removal']"
+          description: "Click the Remove This Record link"
+        - action: captcha
+          description: "Complete CAPTCHA"
+        - action: click
+          selector: ".remove-confirm"
+          description: "Confirm removal"
+      template_id: null
+    - type: email
+      email_to: contact@truepeoplesearch.com
+      required_fields: [full_name, email]
+      template_id: preemptive_blanket
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 1
+  legal_max_days: 45
+
+legal:
+  ccpa: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, texas]
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: high
+  recheck_interval_days: 14
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.85
+  notes: "Fast removal but very high re-listing rate. CAPTCHA required for web form."

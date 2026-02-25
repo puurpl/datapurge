@@ -1,0 +1,66 @@
+id: radaris
+name: Radaris
+domain: radaris.com
+aliases: []
+category: people-search
+data_types: [name, address, phone, email, age, relatives, court-records, property-records, photos]
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://radaris.com/p/{first_name}/{last_name}/"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://radaris.com/control/privacy"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://radaris.com/control/privacy"
+          description: "Go to Radaris privacy control page"
+        - action: input
+          selector: "#name"
+          value: "{full_name}"
+        - action: input
+          selector: "#email"
+          value: "{email}"
+        - action: click
+          selector: "button.submit"
+        - action: verify_email
+          description: "Verify via email"
+      template_id: null
+    - type: email
+      email_to: support@radaris.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+
+legal:
+  ccpa: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.85
