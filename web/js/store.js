@@ -37,11 +37,20 @@ export const Store = {
     getTemplateFields() {
         const pii = this.getPII();
         if (!pii) return null;
+
+        // Build additional_emails line if aliases exist
+        const aliases = (pii.email_aliases || []).filter(e => e);
+        let additional_emails = '';
+        if (aliases.length > 0) {
+            additional_emails = 'Additional email addresses: ' + aliases.join(', ');
+        }
+
         return {
             full_name: pii.full_name || '',
             first_name: pii.first_name || '',
             last_name: pii.last_name || '',
             email: pii.email || '',
+            additional_emails,
             phone: pii.phone || '',
             address: pii.address || '',
             street: pii.street || '',
