@@ -1,0 +1,70 @@
+id: sagestream
+name: SageStream
+domain: sagestreamllc.com
+aliases: []
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Consumer reporting agency. No public search. Consumers can request their own consumer report."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://forms.sagestreamllc.com/#/opt-self"
+      required_fields: [full_name, dob, address]
+      steps:
+        - action: navigate
+          url: "https://forms.sagestreamllc.com/#/opt-self"
+          description: "Go to SageStream online opt-out form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{dob}"
+          description: "Enter date of birth"
+        - action: input
+          value: "{address}"
+          description: "Enter current address"
+        - action: submit
+          description: "Submit opt-out request"
+      template_id: null
+    - type: email
+      email_to: privacy@sagestreamllc.com
+      required_fields: [full_name, email, dob, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "888-395-0277"
+      required_fields: [full_name, dob]
+      notes: "Call Monday-Friday 9AM-5PM PT to request opt-out"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 5
+  legal_max_days: 45
+  notes: "FCRA-regulated specialty consumer reporting agency, subsidiary of LexisNexis Risk Solutions. Opt-out removes name from prescreen lists for unsolicited credit/insurance offers. Processed within 5 working days, though full removal from client databases may take up to 45 days. Security freeze available via LexisNexis portal. Even after opt-out, data may be retained for legal compliance."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: medium
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated specialty CRA. Subsidiary of LexisNexis Risk Solutions. Registered on Privacy Rights Clearinghouse. FCRA obligations apply. Source: sagestreamllc.com, Privacy Rights Clearinghouse, CFPB listing."

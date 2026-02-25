@@ -1,0 +1,52 @@
+id: exact-data
+name: Exact Data
+domain: exactdata.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B marketing list provider. No consumer-facing search. Sells targeted email and mailing lists to businesses."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacyteam@data-axle.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.exactdata.com/privacy-policy.html"
+      required_fields: [full_name, email]
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Exact Data is owned by Data Axle. Privacy requests directed to Data Axle privacy team. May retain data even after opt-out for compliance, fraud prevention, and dispute resolution purposes. Identity verification including government ID may be required."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Exact Data privacy policy. Owned by Data Axle — privacy requests go through Data Axle privacy team at privacyteam@data-axle.com."

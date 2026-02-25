@@ -1,0 +1,62 @@
+id: equifax
+name: Equifax
+domain: equifax.com
+aliases: [myprivacy.equifax.com, optoutprescreen.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - employment
+  - financial
+  - income-estimates
+  - property-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "B2B credit reporting and data aggregator. Consumer credit reports handled via separate Equifax consumer portal. Marketing data opt-out handled separately."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://myprivacy.equifax.com/opt-in-opt-out/personal-info"
+      required_fields: [full_name, email, address]
+    - type: web_form
+      url: "https://www.equifax.com/personal/my-privacy/"
+      required_fields: [full_name, email]
+    - type: web_form
+      url: "https://www.optoutprescreen.com/"
+      required_fields: [full_name, address, dob]
+    - type: email
+      email_to: privacy@equifax.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Multiple opt-out paths needed. OptOutPrescreen.com handles pre-approved credit/insurance offers (shared with Experian, TransUnion, Innovis). Online opt-out lasts 5 years; permanent opt-out requires postal mail. Equifax myPrivacy portal for marketing data."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, Equifax privacy portal. Major credit bureau — data broker under Texas law. 2017 breach exposed 147M records."

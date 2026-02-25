@@ -1,0 +1,61 @@
+id: liveramp
+name: LiveRamp
+domain: liveramp.com
+aliases: [optout.liveramp.com, my-privacy-choices.liveramp.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B data collaboration platform. No consumer-facing search. Provides identity resolution and audience data to advertisers."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://liveramp.com/privacy/my-privacy-choices"
+      required_fields: [full_name, email]
+    - type: web_form
+      url: "https://optout.liveramp.com/"
+      required_fields: [full_name, email]
+    - type: phone
+      phone_number: "1-844-678-0045"
+      required_fields: [full_name, email]
+    - type: email
+      email_to: privacy@liveramp.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 15
+  legal_max_days: 45
+  notes: "LiveRamp stores opt-out in a database and checks all future uploads against it. Opt-out completed within 15 business days. Deletion requests within 45 days. Available to all US residents regardless of state."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: California Data Broker Registry, LiveRamp privacy portal. Major data collaboration platform — enables identity resolution across devices and channels. DAA member."

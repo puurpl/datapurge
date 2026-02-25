@@ -1,0 +1,67 @@
+id: hunter-io
+name: Hunter.io
+domain: hunter.io
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - employment
+  - social-media
+
+scan:
+  scannable: false
+  reason: "Email discovery API. Requires account to search. Can check via hunter.io/email-verifier."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://hunter.io/claim"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://hunter.io/claim"
+          description: "Go to Hunter.io claim page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Click 'Claim the email address'"
+        - action: verify_email
+          description: "Check email for verification from Hunter"
+        - action: select
+          value: "Delete the data associated with this email address"
+          description: "Select the delete option"
+        - action: submit
+          description: "Confirm deletion"
+    - type: email
+      email_to: privacy@hunter.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "+1-844-940-0955"
+      notes: "Hunter.io toll-free privacy request line"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 5
+  legal_max_days: 45
+  notes: "Claim page gives full control over your data. Can update or entirely remove indexed data. Scrapes company websites and public sources for email patterns."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: hunter.io/privacy-policy, hunter.io/gdpr. Email discovery and verification tool. Indexes professional email addresses from publicly accessible web pages. Does not scrape LinkedIn directly but collects email patterns from company websites."

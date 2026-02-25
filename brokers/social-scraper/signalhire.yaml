@@ -1,0 +1,71 @@
+id: signalhire
+name: SignalHire
+domain: signalhire.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - education
+
+scan:
+  scannable: false
+  reason: "B2B contact search tool. Requires account to search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.signalhire.com/opt-out"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.signalhire.com/opt-out"
+          description: "Go to SignalHire opt-out page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the opt-out request"
+    - type: web_form
+      url: "https://www.signalhire.com/do-not-sell/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.signalhire.com/do-not-sell/"
+          description: "Go to SignalHire Do Not Sell page (CA/VA residents)"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the Do Not Sell request"
+    - type: email
+      email_to: support@signalhire.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Separate forms for opt-out and Do Not Sell (CA/VA). After opt-out, SignalHire retains email on suppression list only. All other data deleted or anonymized. Scrapes LinkedIn profiles."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: signalhire.com/privacy, signalhire.com/opt-out, signalhire.com/do-not-sell. B2B contact finder. Scrapes LinkedIn and other professional networks via browser extension. CCPA and GDPR compliant."

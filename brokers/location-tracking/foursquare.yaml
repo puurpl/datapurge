@@ -1,0 +1,75 @@
+id: foursquare
+name: Foursquare (Factual)
+domain: foursquare.com
+aliases: [factual.com, location.foursquare.com]
+category: location-tracking
+data_types:
+  - name
+  - email
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B location intelligence platform. Consumer data collected via apps (Foursquare City Guide, Swarm) and SDK partners."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://foursquare.com/data-requests/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://foursquare.com/data-requests/"
+          description: "Go to Foursquare data requests page"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out of sale / data deletion"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the privacy request"
+    - type: web_form
+      url: "https://foursquare.atlassian.net/servicedesk/customer/portal/25"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://foursquare.atlassian.net/servicedesk/customer/portal/25"
+          description: "Go to Foursquare Privacy Portal (via Atlassian)"
+        - action: select
+          value: "deletion"
+          description: "Select personal data deletion request"
+        - action: input
+          value: "{email}"
+          description: "Enter your email"
+        - action: submit
+          description: "Submit the deletion request"
+    - type: email
+      email_to: privacy@foursquare.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Foursquare acquired Factual in 2020, consolidating two major location data companies. Opt-out of sale, sharing, targeted advertising, and sensitive data use all available. May share data with law enforcement in response to court orders. Claims to never sell GPS data to government entities."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: foursquare.com/legal/privacy-center, California Data Broker Registry (registered as Foursquare Labs, Inc.). Merged with Factual in 2020. Major location intelligence provider. Collects location data from own apps and via SDK embedded in third-party apps. May disclose data to law enforcement via court orders but claims not to sell GPS data to government."

@@ -1,0 +1,76 @@
+id: rocketreach
+name: RocketReach
+domain: rocketreach.co
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - education
+
+scan:
+  scannable: false
+  reason: "B2B contact search. Requires account for full results."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://rocketreach.co/remove-profile"
+      required_fields: [full_name, email, employment]
+      steps:
+        - action: navigate
+          url: "https://rocketreach.co/"
+          description: "Go to RocketReach homepage"
+        - action: click
+          value: "Do Not Sell My Info"
+          description: "Click 'Do Not Sell My Info' in footer or use Claim Profile"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{employment}"
+          description: "Enter the company you currently work for"
+        - action: input
+          value: "{email}"
+          description: "Enter a valid professional or personal email"
+        - action: submit
+          description: "Submit the removal request"
+        - action: verify_email
+          description: "Check email for verification link from RocketReach"
+        - action: select
+          value: "Remove My Profile"
+          description: "Select Remove My Profile option and confirm"
+    - type: email
+      email_to: privacy@rocketreach.co
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "+1-833-212-3828"
+      notes: "RocketReach privacy request phone line"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 45
+  legal_max_days: 45
+  notes: "Requires email verification. Profile URL or LinkedIn URL can be included. After verification, choose 'Remove My Profile' from options (Update, Download Data, Remove). Scrapes LinkedIn profiles."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: rocketreach.co/privacy, rocketreach.co/ccpa_general, Big Ass Data Broker Opt-Out List. B2B contact database with 700M+ profiles. Scrapes LinkedIn, company websites, and public data sources."

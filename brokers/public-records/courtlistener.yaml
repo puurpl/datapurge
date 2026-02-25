@@ -1,0 +1,56 @@
+id: courtlistener
+name: CourtListener
+domain: courtlistener.com
+aliases: [free.law]
+category: public-records
+data_types:
+  - name
+  - court-records
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.courtlistener.com/?q={first_name}+{last_name}&type=r"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+    - method: text_match
+      value: "0 Results"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: email
+      email_to: info@free.law
+      required_fields: [full_name, email, case_url]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Non-profit operated by Free Law Project. Will generally block search engines from indexing specific pages upon written request (de-indexing via robots meta tag or x-robots-tag HTTP header). Will NOT remove information from the site itself unless presented with a court sealing/removal order. CCPA does not apply to non-profits or public records. Legal matters can be sent to legal@free.law."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Non-profit free legal search engine by Free Law Project. Open source (github.com/freelawproject/courtlistener). CCPA does not apply. De-indexing from search engines is the primary remedy. Source: CourtListener terms of service, Free Law Project contact page."

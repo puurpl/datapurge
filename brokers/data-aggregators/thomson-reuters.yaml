@@ -1,0 +1,61 @@
+id: thomson-reuters
+name: Thomson Reuters CLEAR
+domain: thomsonreuters.com
+aliases: [clear.thomsonreuters.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - associates
+  - employment
+  - criminal-records
+  - court-records
+  - property-records
+  - financial
+
+scan:
+  scannable: false
+  reason: "B2B investigative intelligence platform. No consumer-facing search. Used by 3,400+ law enforcement agencies."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyportal.onetrust.com/webform/dbf5ae8a-0a6a-4f4b-b527-7f94d0de6bbc/170d8ef9-9f1c-45f6-b338-9f3fb30c801e"
+      required_fields: [full_name, email, address, dob]
+    - type: email
+      email_to: privacy.enquiries@thomsonreuters.com
+      required_fields: [full_name, email, address, dob]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-633-7656"
+      required_fields: [full_name]
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Subject of $27.5M privacy class action settlement (2025) over secret collection of 40M Californians' data. Settlement requires TR to no longer require driver's license for CA residents to remove data. Email verification required after form submission."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, Thomson Reuters privacy portal. $27.5M class action settlement approved 2025. CLEAR aggregates data from thousands of sources for investigative intelligence."

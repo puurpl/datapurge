@@ -1,0 +1,67 @@
+id: adstra
+name: Adstra
+domain: adstradata.com
+aliases: []
+category: other
+data_types:
+  - name
+  - email
+  - address
+  - phone
+  - age
+  - income-estimates
+  - purchase-history
+  - political-affiliation
+
+scan:
+  scannable: false
+  reason: "B2B data and identity platform. No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyportal.onetrust.com/webform/3d2d5e0c-bd98-46b8-906c-ede68a6f6a80/69d6c663-3181-48e8-8749-804f09d33f12"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://privacyportal.onetrust.com/webform/3d2d5e0c-bd98-46b8-906c-ede68a6f6a80/69d6c663-3181-48e8-8749-804f09d33f12"
+          description: "Go to Adstra privacy request form (hosted by OneTrust)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your first and last name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your city, state, and zip code"
+        - action: submit
+          description: "Submit the deletion request"
+    - type: email
+      email_to: privacy@adstradata.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Uses OneTrust portal for privacy requests. Requires full address information (city, state, zip) in addition to name and email. Formerly known as ALC (American List Counsel)."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Optery opt-out guide, California Data Broker Registry. Identity resolution and data enrichment company (formerly ALC/American List Counsel). Provides demographic, psychographic, and purchase data for marketing. Uses OneTrust for privacy request management."

@@ -1,0 +1,65 @@
+id: nctue
+name: National Consumer Telecom & Utilities Exchange (NCTUE)
+domain: nctue.com
+aliases: [nctueconsumerportal.com]
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Consumer reporting agency for telecom/utility data. No public search. Consumers can request one free disclosure report every 12 months."
+
+optout:
+  methods:
+    - type: phone
+      phone_number: "888-327-4376"
+      required_fields: [full_name, dob, address]
+      notes: "Call to opt out of pre-approved credit offers using NCTUE data"
+    - type: web_form
+      url: "https://nctueconsumerportal.com"
+      required_fields: [full_name, dob, address]
+      steps:
+        - action: navigate
+          url: "https://nctueconsumerportal.com"
+          description: "Go to NCTUE consumer portal for security freeze"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{dob}"
+          description: "Enter date of birth"
+        - action: input
+          value: "{address}"
+          description: "Enter current address"
+        - action: submit
+          description: "Submit security freeze request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 15
+  processing_days: 5
+  legal_max_days: 30
+  notes: "FCRA-regulated specialty consumer reporting agency for telecom, pay TV, security, internet, and utility payment data. Member-exclusive data exchange. Security freeze available via consumer portal (nctueconsumerportal.com) or by calling 866-349-5355. Opt-out of pre-approved credit offers at 888-327-4376 or by mail to Exchange Service Center - NCTUE / Opt Out, PO Box 105398, Atlanta, GA 30348-5398. Disputes via mail to PO Box 105398 or call 866-343-2821. No specific privacy email found."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated specialty CRA for telecom/utility payment data. FCRA obligations apply. Managed by Equifax. Source: nctue.com, CFPB consumer reporting companies list, Privacy Rights Clearinghouse."

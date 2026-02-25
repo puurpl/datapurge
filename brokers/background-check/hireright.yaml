@@ -1,0 +1,57 @@
+id: hireright
+name: HireRight
+domain: hireright.com
+aliases: []
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service, no public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: dpo@hireright.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.hireright.com/legal/do-not-sell-my-personal-information"
+      required_fields: [full_name, email]
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA. CCPA does not apply to background screening data. HireRight abides by opt-out provisions of CCPA for non-screening data. Privacy requests go to DPO at dpo@hireright.com. Has GDPR obligations for EU/UK data subjects."
+
+legal:
+  ccpa: false
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+    - colorado
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated CRA. Listed on CFPB consumer reporting companies list. Source: HireRight legal pages, datarequests.org."

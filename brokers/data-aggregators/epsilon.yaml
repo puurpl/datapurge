@@ -1,0 +1,63 @@
+id: epsilon
+name: Epsilon Data Management
+domain: epsilon.com
+aliases: [legal.epsilon.com, conversant.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - purchase-history
+  - income-estimates
+  - political-affiliation
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B data aggregator and marketing platform. No consumer-facing search. Must submit preemptive opt-out."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://legal.epsilon.com/dsr/"
+      required_fields: [full_name, email]
+    - type: email
+      email_to: privacy@epsilon.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-267-3861"
+      required_fields: [full_name, email]
+    - type: postal
+      postal_address: "Epsilon, PO Box 1478, Broomfield, CO 80038, Attn: Privacy"
+      required_fields: [full_name, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Holds data on 200+ million US consumers. DSR portal supports opt-out of sale, sharing, targeted advertising, and profiling. Lotame merged into Epsilon Oct 2025."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: California Data Broker Registry, Epsilon privacy portal. Lotame Solutions merged into Epsilon Data Management LLC effective Oct 2025."

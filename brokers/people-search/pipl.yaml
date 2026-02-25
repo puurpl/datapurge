@@ -1,0 +1,58 @@
+id: pipl
+name: Pipl
+domain: pipl.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - social-media
+  - photos
+  - employment
+  - education
+
+scan:
+  scannable: false
+  method: none
+  search_url: null
+  notes: "Pipl has changed its business model to B2B only. No public search interface."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@pipl.com
+      required_fields: [full_name, email, phone]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-877-616-1115"
+      notes: "Dedicated opt-out line"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "B2B identity resolution service. May request identity verification (utility bill or redacted ID). Opt-out places a suppression flag rather than deleting data. Response expected within 14-30 business days. Alternative phone: 1-(415)-373-0180."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Now primarily B2B identity resolution. Suppression flag does not delete data, just hides from results. May require ID verification. Source: Big Ass Data Broker Opt-Out List, IntelTechniques Workbook"

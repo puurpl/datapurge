@@ -1,0 +1,87 @@
+id: numberguru
+name: NumberGuru
+domain: numberguru.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - phone
+  - address
+  - caller-id
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.numberguru.com/phone/{phone}"
+  detection:
+    - method: selector_present
+      value: ".phone-info"
+      means: listed
+    - method: text_match
+      value: "No information"
+      means: not_listed
+  listing_extraction:
+    selector: ".phone-info a"
+    attribute: href
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.numberguru.com/do-not-sell"
+      required_fields: [full_name, email, state]
+      steps:
+        - action: navigate
+          url: "https://www.numberguru.com"
+          description: "Go to NumberGuru"
+        - action: scroll_to_footer
+          description: "Scroll to the bottom of the page"
+        - action: click
+          description: "Click 'Do Not Sell My Personal Information' link"
+        - action: redirect_notice
+          description: "You will be redirected to the BeenVerified opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your first name and last name"
+        - action: select
+          value: "{state}"
+          description: "Select your state from the drop-down"
+        - action: click
+          description: "Click the green 'Search' button"
+        - action: select_listing
+          description: "Find and select your listing from the results"
+        - action: verify_email
+          description: "Check inbox for confirmation email from BeenVerified and click 'Verify Opt-Out'"
+      template_id: null
+    - type: email
+      email_to: support@beenverified.com
+      required_fields: [full_name, phone, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Owned by BeenVerified. Opt-out redirects to BeenVerified's suppression center. If you have already opted out of BeenVerified, your NumberGuru data should also be suppressed. Phone-number-focused people search."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Optery, OneRep. Owned by BeenVerified. Opt-out flows through BeenVerified suppression system."

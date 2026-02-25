@@ -1,0 +1,80 @@
+id: instant-checkmate
+name: Instant Checkmate
+domain: instantcheckmate.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - associates
+  - criminal-records
+  - court-records
+  - property-records
+  - social-media
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.instantcheckmate.com/people/{first_name}-{last_name}"
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://suppression.peopleconnect.us/login"
+      required_fields: [email, full_name, dob]
+      steps:
+        - action: navigate
+          url: "https://suppression.peopleconnect.us/login"
+          description: "Go to PeopleConnect suppression center"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: verify_email
+          description: "Verify email via link sent by PeopleConnect (15 min expiry)"
+        - action: input
+          value: "{dob}"
+          description: "Enter date of birth"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full legal name"
+        - action: click
+          description: "Select your record and set to Suppressed"
+      template_id: null
+    - type: email
+      email_to: privacy@instantcheckmate.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 10
+  legal_max_days: 45
+  notes: "Part of PeopleConnect network. Suppression via PeopleConnect covers Intelius, TruthFinder, US Search, ZabaSearch, AnyWho, Addresses.com, and more."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 10
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Owned by PeopleConnect. Single suppression covers all PeopleConnect brands. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

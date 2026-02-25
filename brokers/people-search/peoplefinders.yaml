@@ -1,0 +1,80 @@
+id: peoplefinders
+name: PeopleFinders
+domain: peoplefinders.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - associates
+  - criminal-records
+  - court-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.peoplefinders.com/people/{first_name}-{last_name}/{state}"
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.peoplefinders.com/opt-out"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.peoplefinders.com/opt-out"
+          description: "Go to PeopleFinders opt-out page"
+        - action: click
+          description: "Click Next under Public Record Removal"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email"
+        - action: captcha
+          description: "Complete CAPTCHA"
+        - action: click
+          description: "Click Send Request"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+      template_id: null
+    - type: email
+      email_to: privacy@peoplefinders.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 9
+  legal_max_days: 45
+  notes: "CAPTCHA required. Email verification needed. May take 3-9 days to process."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 9
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Major people-search site. Data may reappear after 6-12 months. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

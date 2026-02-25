@@ -1,0 +1,64 @@
+id: contactout
+name: ContactOut
+domain: contactout.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+
+scan:
+  scannable: false
+  reason: "B2B contact search platform. Requires account to search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://contactout.com/optout"
+      required_fields: [email, listing_url]
+      steps:
+        - action: navigate
+          url: "https://contactout.com/"
+          description: "Go to ContactOut website"
+        - action: navigate
+          url: "https://contactout.com/optout"
+          description: "Go to opt-out page"
+        - action: input
+          value: "{listing_url}"
+          description: "Paste the URL of your listing on ContactOut"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit the opt-out form"
+    - type: email
+      email_to: privacy@contactout.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 7
+  legal_max_days: 45
+  notes: "May need to find your listing URL in the ContactOut directory first. Removal typically takes 5-7 days. Data commonly reappears as ContactOut continuously scrapes public records and LinkedIn. Scrapes LinkedIn profiles."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: contactout.com, Optery opt-out guide. Scrapes email addresses and phone numbers from LinkedIn profiles of 300M+ professionals at 30M+ companies. High relisting rate due to continuous scraping."
