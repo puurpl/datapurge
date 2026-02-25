@@ -3,130 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataPurge — Take Back Your Data</title>
-    <meta name="description" content="Free, open-source tool to send legal data deletion requests to every data broker that holds your information. Your data never leaves your browser.">
+    <title>DataPurge — Free Data Broker Opt-Out Tool | Remove Your Personal Info</title>
+    <meta name="description" content="Remove your personal information from data brokers for free. DataPurge generates legally-backed CCPA, GDPR, and state privacy law deletion requests. Open-source, no signup, your data never leaves your browser.">
+    <meta name="keywords" content="data broker opt out, remove personal information, CCPA deletion request, GDPR erasure, privacy rights, data removal tool, opt out of data brokers, Spokeo opt out, Whitepages removal, people search removal, free data removal">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://datapurge.iamnottheproduct.com/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DataPurge — Free Data Broker Opt-Out Tool">
+    <meta property="og:description" content="Remove your personal information from data brokers for free. Generates legally-backed deletion requests citing CCPA, GDPR, and 17+ state privacy laws. No signup required.">
+    <meta property="og:url" content="https://datapurge.iamnottheproduct.com/">
+    <meta property="og:site_name" content="DataPurge">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="DataPurge — Free Data Broker Opt-Out Tool">
+    <meta name="twitter:description" content="Remove your personal info from data brokers. Generates legal deletion requests citing CCPA, GDPR, and 17+ state privacy laws. Free, open-source, no signup.">
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="DataPurge Contributors">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+    <!-- Structured Data: WebSite -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "DataPurge",
+        "url": "https://datapurge.iamnottheproduct.com/",
+        "description": "Free, open-source tool to send legal data deletion requests to data brokers. Generates CCPA, GDPR, and state privacy law opt-out emails.",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://datapurge.iamnottheproduct.com/app.html#brokers",
+            "query": "required"
+        }
+    }
+    </script>
+
+    <!-- Structured Data: SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DataPurge",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "description": "Generate and send legally-backed data deletion requests to data brokers. Supports CCPA, GDPR, and 17+ US state privacy laws.",
+        "url": "https://datapurge.iamnottheproduct.com/",
+        "license": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "isAccessibleForFree": true
+    }
+    </script>
+
+    <!-- Structured Data: HowTo -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Remove Your Personal Information from Data Brokers",
+        "description": "Use DataPurge to send legal data deletion requests to data brokers in three simple steps.",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Enter your information",
+                "text": "Provide your name, email, and state. This information is stored only in your browser session memory and is never transmitted to any server."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Review generated opt-out emails",
+                "text": "DataPurge generates legally-aggressive opt-out emails citing CCPA, GDPR, and every applicable state privacy law, pre-filled and ready to send."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Send deletion requests",
+                "text": "Click to open each email in your email client with everything filled in. Hit send, move to the next broker."
+            }
+        ],
+        "totalTime": "PT5M",
+        "tool": {
+            "@type": "HowToTool",
+            "name": "Web browser with email client"
+        }
+    }
+    </script>
+
+    <!-- Structured Data: FAQPage -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Is DataPurge really free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. DataPurge is 100% free and open-source under the AGPL-3.0 license. There are no paid tiers, no accounts, and no data collection."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Does DataPurge store my personal information?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Your personal information is stored only in your browser's session memory and disappears when you close the tab. DataPurge serves email templates with placeholders — your browser fills them in locally. Nothing is ever sent to our servers."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What laws does DataPurge cite in deletion requests?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "DataPurge generates emails citing CCPA/CPRA (California), GDPR (EU/UK), and privacy laws from 17+ US states including Virginia, Colorado, Connecticut, Texas, Oregon, and more. The strongest applicable template is automatically selected based on your location."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What are data brokers?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Data brokers are companies that collect, aggregate, and sell personal information such as names, addresses, phone numbers, email addresses, employment history, income estimates, and more. Examples include Spokeo, Whitepages, Acxiom, BeenVerified, and hundreds of others."
+                }
+            }
+        ]
+    }
+    </script>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="container">
-            <h1>Take back your data.</h1>
-            <p class="subtitle">
-                Hundreds of data brokers sell your personal information. DataPurge generates
-                legally-backed deletion requests and sends them with one click. Free, open-source,
-                and your data never leaves your browser.
-            </p>
-            <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
-        </div>
-    </section>
-
-    <!-- How it works -->
-    <section class="section">
-        <div class="container">
-            <h2 class="text-center mb-2">How it works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Enter your info</h3>
-                    <p>Name, email, and state. Stored only in your browser's session memory &mdash; never transmitted anywhere.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>We generate emails</h3>
-                    <p>Legally-aggressive opt-out emails citing CCPA, GDPR, and every applicable state privacy law. Pre-filled and ready to send.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Click to send</h3>
-                    <p>Each email opens in your email client with everything filled in. Hit send. Move to the next broker. Done.</p>
+    <!-- Header -->
+    <header>
+        <nav class="nav" aria-label="Main navigation">
+            <div class="nav-inner">
+                <a href="/" class="nav-brand">DataPurge</a>
+                <div class="nav-tabs">
+                    <a href="app.html#queue" class="nav-tab">Start</a>
+                    <a href="app.html#brokers" class="nav-tab">Brokers</a>
+                    <a href="https://github.com/puurpl/opt-out" class="nav-tab" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </nav>
+    </header>
 
-    <!-- Privacy callout -->
-    <section class="section">
-        <div class="container-narrow">
-            <div class="callout">
-                <div class="callout-icon">&#128274;</div>
-                <h3>Your data never leaves your browser</h3>
-                <p>
-                    No accounts. No tracking. No cookies. Your personal information is stored
-                    in your browser's session memory and disappears when you close the tab.
-                    We serve templates &mdash; your browser fills them in. That's it.
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <h1>Take back your data.</h1>
+                <p class="subtitle">
+                    Hundreds of data brokers sell your personal information. DataPurge generates
+                    legally-backed deletion requests and sends them with one click. Free, open-source,
+                    and your data never leaves your browser.
                 </p>
+                <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Stats -->
-    <section>
-        <div class="container">
-            <div class="stats-bar" id="stats-bar">
-                <div class="stat">
-                    <div class="stat-value" id="stat-brokers">7</div>
-                    <div class="stat-label">Data brokers tracked</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">6</div>
-                    <div class="stat-label">Legal templates</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">17+</div>
-                    <div class="stat-label">State laws cited</div>
+        <!-- How it works -->
+        <section class="section" id="how-it-works">
+            <div class="container">
+                <h2 class="text-center mb-2">How to remove your data from brokers</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">1</div>
+                        <h3>Enter your info</h3>
+                        <p>Name, email, and state. Stored only in your browser's session memory &mdash; never transmitted anywhere.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">2</div>
+                        <h3>We generate opt-out emails</h3>
+                        <p>Legally-aggressive deletion requests citing CCPA, GDPR, and every applicable state privacy law. Pre-filled and ready to send.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number" aria-hidden="true">3</div>
+                        <h3>Click to send</h3>
+                        <p>Each email opens in your email client with everything filled in. Hit send. Move to the next broker. Done.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- What they hold -->
-    <section class="section">
-        <div class="container-narrow">
-            <h2 class="text-center mb-2">What data brokers hold on you</h2>
-            <p class="text-center text-secondary mb-2">
-                Companies you've never heard of buy, aggregate, and sell your personal data
-                to anyone willing to pay. Here's what they typically collect:
-            </p>
-            <div class="tag-list" style="justify-content: center; gap: 0.5rem;">
-                <span class="tag">Full name</span>
-                <span class="tag">Home address</span>
-                <span class="tag">Phone number</span>
-                <span class="tag">Email address</span>
-                <span class="tag">Date of birth</span>
-                <span class="tag">Relatives</span>
-                <span class="tag">Employment history</span>
-                <span class="tag">Income estimates</span>
-                <span class="tag">Political affiliation</span>
-                <span class="tag">Social media profiles</span>
-                <span class="tag">Photos</span>
-                <span class="tag">Criminal records</span>
-                <span class="tag">Property records</span>
-                <span class="tag">Location history</span>
-                <span class="tag">Purchase history</span>
-                <span class="tag">Health inferences</span>
+        <!-- Privacy callout -->
+        <section class="section" id="privacy">
+            <div class="container-narrow">
+                <div class="callout">
+                    <div class="callout-icon" aria-hidden="true">&#128274;</div>
+                    <h3>Your data never leaves your browser</h3>
+                    <p>
+                        No accounts. No tracking. No cookies. Your personal information is stored
+                        in your browser's session memory and disappears when you close the tab.
+                        We serve templates &mdash; your browser fills them in. That's it.
+                    </p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA -->
-    <section class="section">
-        <div class="container-narrow text-center">
-            <h2>Ready to opt out?</h2>
-            <p class="text-secondary mt-1 mb-2">
-                It takes about 2 minutes to set up. Then it's one click per broker.
-            </p>
-            <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
-        </div>
-    </section>
+        <!-- Stats -->
+        <section id="stats" aria-label="Registry statistics">
+            <div class="container">
+                <div class="stats-bar" id="stats-bar">
+                    <div class="stat">
+                        <div class="stat-value" id="stat-brokers">7</div>
+                        <div class="stat-label">Data brokers tracked</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Legal templates</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">17+</div>
+                        <div class="stat-label">State privacy laws cited</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What they hold -->
+        <section class="section" id="data-types">
+            <div class="container-narrow">
+                <h2 class="text-center mb-2">What data brokers hold on you</h2>
+                <p class="text-center text-secondary mb-2">
+                    Companies you've never heard of buy, aggregate, and sell your personal data
+                    to anyone willing to pay. Here's what they typically collect:
+                </p>
+                <div class="tag-list" style="justify-content: center; gap: 0.5rem;">
+                    <span class="tag">Full name</span>
+                    <span class="tag">Home address</span>
+                    <span class="tag">Phone number</span>
+                    <span class="tag">Email address</span>
+                    <span class="tag">Date of birth</span>
+                    <span class="tag">Relatives</span>
+                    <span class="tag">Employment history</span>
+                    <span class="tag">Income estimates</span>
+                    <span class="tag">Political affiliation</span>
+                    <span class="tag">Social media profiles</span>
+                    <span class="tag">Photos</span>
+                    <span class="tag">Criminal records</span>
+                    <span class="tag">Property records</span>
+                    <span class="tag">Location history</span>
+                    <span class="tag">Purchase history</span>
+                    <span class="tag">Health inferences</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="section" id="get-started">
+            <div class="container-narrow text-center">
+                <h2>Ready to opt out of data brokers?</h2>
+                <p class="text-secondary mt-1 mb-2">
+                    It takes about 2 minutes to set up. Then it's one click per broker.
+                </p>
+                <a href="app.html" class="btn btn-primary btn-lg">Start Purging</a>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-links">
                 <a href="https://github.com/puurpl/opt-out" target="_blank" rel="noopener">GitHub</a>
-                <a href="app.html#brokers">Browse Brokers</a>
+                <a href="app.html#brokers">Browse Data Brokers</a>
                 <a href="app.html#report">Report a Broker</a>
             </div>
             <p>AGPL-3.0 &mdash; Broker data is CC0 public domain. Built to make data brokers expensive.</p>
