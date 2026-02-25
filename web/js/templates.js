@@ -46,10 +46,14 @@ export const Templates = {
     },
 
     interpolate(text, fields) {
-        return text.replace(/\{(\w+)\}/g, (match, key) => {
+        // First pass: replace placeholders
+        let result = text.replace(/\{(\w+)\}/g, (match, key) => {
             const val = fields[key];
-            return (val !== undefined && val !== '') ? String(val) : match;
+            return (val !== undefined && val !== '') ? String(val) : '';
         });
+        // Clean up blank lines left by empty optional fields
+        result = result.replace(/\n\s*\n\s*\n/g, '\n\n');
+        return result;
     },
 
     fill(templateId, userFields, broker) {

@@ -474,6 +474,16 @@ templates:
       timestamped record of my wishes. This record may become legally
       relevant as privacy legislation continues to evolve.
 
+      Your organization bears the burden of conducting a reasonable
+      search of all systems, databases, and records — including data
+      obtained from third parties — to identify any personal information
+      associated with the identifiers provided below. A claim that a
+      record pertains to a different individual of the same name does
+      not satisfy this obligation; under CCPA § 1798.105, GDPR Article
+      17, and equivalent state privacy laws, you must either delete the
+      matching records or provide a verifiable, documented basis for
+      your determination that they do not belong to me.
+
       If you currently hold no data about me, I request written
       confirmation of that fact and ask that this objection be recorded
       in your systems to prevent future collection.
@@ -484,6 +494,7 @@ templates:
       Identifying Information:
       Full Name: {full_name}
       Email: {email}
+      {additional_emails}
 
       This communication is archived with timestamp verification.
 
@@ -491,5 +502,5 @@ templates:
       Date: {date}
 
     required_fields: ["full_name", "email"]
-    optional_fields: ["phone", "address", "dob"]
+    optional_fields: ["phone", "address", "dob", "additional_emails"]
     auto_fields: ["date"]
