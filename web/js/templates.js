@@ -73,9 +73,6 @@ export const Templates = {
     },
 
     generateMailtoLink(sendTo, subject, body) {
-        const params = new URLSearchParams();
-        params.set('subject', subject);
-        params.set('body', body);
-        return `mailto:${sendTo}?${params.toString()}`;
+        return `mailto:${sendTo}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     },
 };
