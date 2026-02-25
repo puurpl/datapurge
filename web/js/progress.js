@@ -87,11 +87,15 @@ export const Progress = {
                         .map(([id, p]) => {
                             const broker = brokers.find(b => b.id === id);
                             const name = broker ? broker.name : id;
+                            const emailTo = broker?.optout?.methods?.find(m => m.type === 'email')?.email_to || '';
                             const dateStr = new Date(p.sentAt).toLocaleDateString('en-US', {
                                 year: 'numeric', month: 'short', day: 'numeric',
                             });
                             return `<div class="progress-item">
-                                <span class="progress-item-name">${esc(name)}</span>
+                                <div>
+                                    <span class="progress-item-name">${esc(name)}</span>
+                                    ${emailTo ? `<span class="text-sm text-muted"> &mdash; ${esc(emailTo)}</span>` : ''}
+                                </div>
                                 <span class="progress-item-date">${dateStr}</span>
                             </div>`;
                         }).join('')
@@ -99,16 +103,51 @@ export const Progress = {
             </div>
 
             <div class="mt-3 btn-group">
-                <button class="btn btn-outline btn-sm" id="btn-export">Export Progress</button>
+                <button class="btn btn-outline btn-sm" id="btn-export-txt">Export as Text</button>
+                <button class="btn btn-outline btn-sm" id="btn-export-json">Export as JSON</button>
                 <label class="btn btn-outline btn-sm" style="cursor:pointer">
-                    Import Progress
+                    Import JSON
                     <input type="file" accept=".json" id="btn-import" class="sr-only">
                 </label>
                 <button class="btn btn-danger btn-sm" id="btn-clear">Clear All Data</button>
             </div>
         `;
 
-        container.querySelector('#btn-export').addEventListener('click', () => {
+        container.querySelector('#btn-export-txt').addEventListener('click', () => {
+            const lines = ['DataPurge — Opt-Out Request Log', `Exported: ${new Date().toLocaleString()}`, ''];
+            const sorted = entries.sort((a, b) => new Date(a[1].sentAt) - new Date(b[1].sentAt));
+            sorted.forEach(([id, p]) => {
+                const broker = brokers.find(b => b.id === id);
+                const name = broker ? broker.name : id;
+                const domain = broker ? broker.domain : '';
+                const email = broker?.optout?.methods?.find(m => m.type === 'email')?.email_to || '';
+                const dateStr = new Date(p.sentAt).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                });
+                lines.push(`- ${dateStr}: Sent opt-out request to ${name} (${domain}) via ${email}`);
+            });
+            lines.push('', `Total: ${entries.length} requests sent`);
+            if (overdue.length > 0) {
+                lines.push('', 'Overdue (past legal response deadline):');
+                overdue.forEach(([id, p]) => {
+                    const broker = brokers.find(b => b.id === id);
+                    const name = broker ? broker.name : id;
+                    const days = Math.floor((now - new Date(p.sentAt).getTime()) / 86400000);
+                    lines.push(`  - ${name}: ${days} days overdue`);
+                });
+            }
+            const text = lines.join('\n');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `datapurge-log-${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Log exported');
+        });
+
+        container.querySelector('#btn-export-json').addEventListener('click', () => {
             const blob = new Blob([Store.exportProgress()], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
