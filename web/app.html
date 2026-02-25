@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataPurge</title>
+    <meta name="description" content="Generate and send legal data deletion requests to data brokers. Your data never leaves your browser.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">DataPurge</a>
+            <div class="nav-tabs">
+                <a href="#queue" class="nav-tab">Queue</a>
+                <a href="#brokers" class="nav-tab">Brokers</a>
+                <a href="#progress" class="nav-tab">Progress</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Views -->
+    <main class="container">
+        <div class="view" id="view-setup"></div>
+        <div class="view" id="view-queue" hidden></div>
+        <div class="view" id="view-brokers" hidden></div>
+        <div class="view" id="view-progress" hidden></div>
+    </main>
+
+    <!-- Toast container -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

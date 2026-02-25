@@ -1,0 +1,922 @@
+{
+  "version": "20260225",
+  "updated_at": "2026-02-25T15:17:13.938451",
+  "broker_count": 7,
+  "brokers": [
+    {
+      "id": "acxiom",
+      "name": "Acxiom (now Kinesso)",
+      "domain": "acxiom.com",
+      "category": "data-aggregator",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "dob",
+        "income-estimates",
+        "purchase-history",
+        "political-affiliation",
+        "religious-affiliation",
+        "health-inferences",
+        "location-history"
+      ],
+      "aliases": [
+        "kinesso.com",
+        "liveramp.com",
+        "aboutthedata.com"
+      ],
+      "scan": {
+        "scannable": false,
+        "reason": "B2B data aggregator. No consumer-facing search. Must request preemptively."
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://isapps.acxiom.com/optout/optout.aspx",
+            "required_fields": [
+              "full_name",
+              "email",
+              "address"
+            ],
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://isapps.acxiom.com/optout/optout.aspx",
+                "description": "Go to Acxiom opt-out portal"
+              },
+              {
+                "action": "input",
+                "selector": "#firstName",
+                "value": "{first_name}",
+                "description": "Enter first name"
+              },
+              {
+                "action": "input",
+                "selector": "#lastName",
+                "value": "{last_name}",
+                "description": "Enter last name"
+              },
+              {
+                "action": "input",
+                "selector": "#email",
+                "value": "{email}",
+                "description": "Enter email"
+              },
+              {
+                "action": "input",
+                "selector": "#address",
+                "value": "{street}",
+                "description": "Enter street address"
+              },
+              {
+                "action": "input",
+                "selector": "#city",
+                "value": "{city}",
+                "description": "Enter city"
+              },
+              {
+                "action": "select",
+                "selector": "#state",
+                "value": "{state}",
+                "description": "Select state"
+              },
+              {
+                "action": "input",
+                "selector": "#zip",
+                "value": "{zip}",
+                "description": "Enter ZIP code"
+              },
+              {
+                "action": "click",
+                "selector": "#submitBtn",
+                "description": "Submit opt-out request"
+              },
+              {
+                "action": "verify_email",
+                "description": "Check email for confirmation"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "consumeradvo@acxiom.com",
+            "required_fields": [
+              "full_name",
+              "email",
+              "address"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 5,
+        "processing_days": 14,
+        "legal_max_days": 45,
+        "notes": "One of the largest data brokers globally. Holds data on ~2.5 billion consumers."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": true,
+        "registered_broker": {
+          "california": true,
+          "vermont": true,
+          "oregon": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut",
+          "texas",
+          "oregon"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 21,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 60
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.85,
+        "notes": "Rebranded from Acxiom to Kinesso but opt-out portal still on acxiom.com domain."
+      }
+    },
+    {
+      "id": "beenverified",
+      "name": "BeenVerified",
+      "domain": "beenverified.com",
+      "category": "people-search",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "dob",
+        "relatives",
+        "criminal-records",
+        "property-records",
+        "social-media"
+      ],
+      "aliases": [],
+      "scan": {
+        "scannable": true,
+        "method": "web_search",
+        "search_url": "https://www.beenverified.com/people/{first_name}-{last_name}/{state}/",
+        "detection": [
+          {
+            "method": "selector_present",
+            "value": ".people-list-item",
+            "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "0 Results Found",
+            "means": "not_listed"
+          }
+        ],
+        "anti_bot": {
+          "captcha": false,
+          "cloudflare": true,
+          "rate_limit_per_minute": 2
+        }
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://www.beenverified.com/app/optout/search",
+            "required_fields": [
+              "first_name",
+              "last_name",
+              "state"
+            ],
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://www.beenverified.com/app/optout/search",
+                "description": "Go to BeenVerified opt-out search"
+              },
+              {
+                "action": "input",
+                "selector": "#firstName",
+                "value": "{first_name}"
+              },
+              {
+                "action": "input",
+                "selector": "#lastName",
+                "value": "{last_name}"
+              },
+              {
+                "action": "select",
+                "selector": "#state",
+                "value": "{state}"
+              },
+              {
+                "action": "click",
+                "selector": "button[type='submit']"
+              },
+              {
+                "action": "wait_for",
+                "selector": ".search-results"
+              },
+              {
+                "action": "click",
+                "selector": ".result-item .opt-out-btn",
+                "description": "Select your listing and click opt-out"
+              },
+              {
+                "action": "input",
+                "selector": "#email",
+                "value": "{email}"
+              },
+              {
+                "action": "click",
+                "selector": "#confirm-optout"
+              },
+              {
+                "action": "verify_email",
+                "description": "Confirm via email link"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "support@beenverified.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 5,
+        "processing_days": 3,
+        "legal_max_days": 45,
+        "notes": "Web form requires finding specific listing. Email fallback works."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": false,
+        "registered_broker": {
+          "california": true,
+          "vermont": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut",
+          "texas"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 7,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 30
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "lexisnexis",
+      "name": "LexisNexis",
+      "domain": "lexisnexis.com",
+      "category": "data-aggregator",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "dob",
+        "relatives",
+        "employment",
+        "criminal-records",
+        "court-records",
+        "financial",
+        "property-records"
+      ],
+      "aliases": [
+        "risk.lexisnexis.com",
+        "accurint.com"
+      ],
+      "scan": {
+        "scannable": false,
+        "reason": "B2B data aggregator. No public consumer search."
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://optout.lexisnexis.com/",
+            "required_fields": [
+              "full_name",
+              "email",
+              "address",
+              "dob"
+            ],
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://optout.lexisnexis.com/"
+              },
+              {
+                "action": "input",
+                "selector": "#firstName",
+                "value": "{first_name}"
+              },
+              {
+                "action": "input",
+                "selector": "#lastName",
+                "value": "{last_name}"
+              },
+              {
+                "action": "input",
+                "selector": "#email",
+                "value": "{email}"
+              },
+              {
+                "action": "input",
+                "selector": "#address",
+                "value": "{street}"
+              },
+              {
+                "action": "input",
+                "selector": "#city",
+                "value": "{city}"
+              },
+              {
+                "action": "select",
+                "selector": "#state",
+                "value": "{state}"
+              },
+              {
+                "action": "input",
+                "selector": "#zip",
+                "value": "{zip}"
+              },
+              {
+                "action": "click",
+                "selector": "#submit"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "privacy.information.mgr@lexisnexis.com",
+            "required_fields": [
+              "full_name",
+              "email",
+              "address"
+            ],
+            "template_id": "ccpa_maximum"
+          },
+          {
+            "type": "postal",
+            "postal_address": "LexisNexis Consumer Center, P.O. Box 105108, Atlanta, GA 30348-5108",
+            "required_fields": [
+              "full_name",
+              "address",
+              "dob"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "hard",
+        "estimated_minutes": 10,
+        "processing_days": 30,
+        "legal_max_days": 45,
+        "notes": "One of the largest data aggregators. May require ID verification. Very slow processing."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": true,
+        "registered_broker": {
+          "california": true,
+          "vermont": true,
+          "oregon": true,
+          "texas": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut",
+          "texas",
+          "oregon",
+          "maryland"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 30,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 90
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.8,
+        "notes": "Extremely large data holdings. Subsidiaries include Accurint. Slow but generally compliant."
+      }
+    },
+    {
+      "id": "radaris",
+      "name": "Radaris",
+      "domain": "radaris.com",
+      "category": "people-search",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "relatives",
+        "court-records",
+        "property-records",
+        "photos"
+      ],
+      "aliases": [],
+      "scan": {
+        "scannable": true,
+        "method": "web_search",
+        "search_url": "https://radaris.com/p/{first_name}/{last_name}/",
+        "detection": [
+          {
+            "method": "selector_present",
+            "value": ".person-card",
+            "means": "listed"
+          }
+        ],
+        "anti_bot": {
+          "captcha": false,
+          "cloudflare": true,
+          "rate_limit_per_minute": 2
+        }
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://radaris.com/control/privacy",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://radaris.com/control/privacy",
+                "description": "Go to Radaris privacy control page"
+              },
+              {
+                "action": "input",
+                "selector": "#name",
+                "value": "{full_name}"
+              },
+              {
+                "action": "input",
+                "selector": "#email",
+                "value": "{email}"
+              },
+              {
+                "action": "click",
+                "selector": "button.submit"
+              },
+              {
+                "action": "verify_email",
+                "description": "Verify via email"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "support@radaris.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 5,
+        "processing_days": 7,
+        "legal_max_days": 45
+      },
+      "legal": {
+        "ccpa": true,
+        "registered_broker": {
+          "california": true,
+          "vermont": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "texas",
+          "oregon"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 14,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 30
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.85
+      }
+    },
+    {
+      "id": "spokeo",
+      "name": "Spokeo",
+      "domain": "spokeo.com",
+      "category": "people-search",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "dob",
+        "relatives",
+        "associates",
+        "employment",
+        "social-media",
+        "photos"
+      ],
+      "aliases": [],
+      "scan": {
+        "scannable": true,
+        "method": "web_search",
+        "search_url": "https://www.spokeo.com/{first_name}-{last_name}/{state}/{city}",
+        "detection": [
+          {
+            "method": "selector_present",
+            "value": ".result-card",
+            "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "No results found",
+            "means": "not_listed"
+          }
+        ],
+        "listing_extraction": {
+          "selector": ".result-card a.result-link",
+          "attribute": "href"
+        },
+        "anti_bot": {
+          "captcha": false,
+          "cloudflare": true,
+          "rate_limit_per_minute": 2
+        }
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://www.spokeo.com/optout",
+            "required_fields": [
+              "listing_url",
+              "email"
+            ],
+            "requires_listing_url": true,
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://www.spokeo.com/optout",
+                "description": "Go to the Spokeo opt-out page"
+              },
+              {
+                "action": "input",
+                "selector": "#opt-out-url",
+                "value": "{listing_url}",
+                "description": "Paste the URL of your Spokeo listing"
+              },
+              {
+                "action": "input",
+                "selector": "#opt-out-email",
+                "value": "{email}",
+                "description": "Enter your email for confirmation"
+              },
+              {
+                "action": "click",
+                "selector": "button[type='submit']",
+                "description": "Click Remove This Listing"
+              },
+              {
+                "action": "verify_email",
+                "description": "Check email for confirmation link and click it"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "customercare@spokeo.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 5,
+        "processing_days": 3,
+        "legal_max_days": 45,
+        "notes": "Requires finding your specific listing URL first. Email confirmation required."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": false,
+        "registered_broker": {
+          "california": true,
+          "vermont": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut",
+          "texas",
+          "oregon"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 7,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 30
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.95,
+        "notes": "One of the largest people-search sites. High re-listing rate."
+      }
+    },
+    {
+      "id": "truepeoplesearch",
+      "name": "TruePeopleSearch",
+      "domain": "truepeoplesearch.com",
+      "category": "people-search",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "relatives",
+        "associates"
+      ],
+      "aliases": [],
+      "scan": {
+        "scannable": true,
+        "method": "web_search",
+        "search_url": "https://www.truepeoplesearch.com/results?name={first_name}%20{last_name}&citystatezip={city}%20{state}",
+        "detection": [
+          {
+            "method": "selector_present",
+            "value": ".card-summary",
+            "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "No results",
+            "means": "not_listed"
+          }
+        ],
+        "anti_bot": {
+          "captcha": true,
+          "cloudflare": true,
+          "rate_limit_per_minute": 1
+        }
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://www.truepeoplesearch.com/removal",
+            "required_fields": [
+              "listing_url"
+            ],
+            "requires_listing_url": true,
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "{listing_url}",
+                "description": "Go to your specific listing page"
+              },
+              {
+                "action": "click",
+                "selector": "a[href*='removal']",
+                "description": "Click the Remove This Record link"
+              },
+              {
+                "action": "captcha",
+                "description": "Complete CAPTCHA"
+              },
+              {
+                "action": "click",
+                "selector": ".remove-confirm",
+                "description": "Confirm removal"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "contact@truepeoplesearch.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "preemptive_blanket"
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 5,
+        "processing_days": 1,
+        "legal_max_days": 45
+      },
+      "legal": {
+        "ccpa": true,
+        "registered_broker": {
+          "california": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "texas"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 1,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 14
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.85,
+        "notes": "Fast removal but very high re-listing rate. CAPTCHA required for web form."
+      }
+    },
+    {
+      "id": "whitepages",
+      "name": "Whitepages",
+      "domain": "whitepages.com",
+      "category": "people-search",
+      "data_types": [
+        "name",
+        "address",
+        "phone",
+        "email",
+        "age",
+        "relatives",
+        "associates",
+        "criminal-records",
+        "property-records"
+      ],
+      "aliases": [
+        "whitepages.com",
+        "premium.whitepages.com"
+      ],
+      "scan": {
+        "scannable": true,
+        "method": "web_search",
+        "search_url": "https://www.whitepages.com/name/{first_name}-{last_name}/{city}-{state}",
+        "detection": [
+          {
+            "method": "selector_present",
+            "value": ".serp-card",
+            "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "We didn't find",
+            "means": "not_listed"
+          }
+        ],
+        "listing_extraction": {
+          "selector": ".serp-card a",
+          "attribute": "href"
+        },
+        "anti_bot": {
+          "captcha": false,
+          "cloudflare": true,
+          "rate_limit_per_minute": 3
+        }
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "web_form",
+            "url": "https://www.whitepages.com/suppression-requests",
+            "required_fields": [
+              "listing_url",
+              "phone"
+            ],
+            "requires_listing_url": true,
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://www.whitepages.com/suppression-requests",
+                "description": "Go to Whitepages suppression request page"
+              },
+              {
+                "action": "input",
+                "selector": "#listing-url",
+                "value": "{listing_url}",
+                "description": "Enter the URL of your listing"
+              },
+              {
+                "action": "click",
+                "selector": ".remove-btn",
+                "description": "Click to proceed with removal"
+              },
+              {
+                "action": "captcha",
+                "description": "Complete reCAPTCHA verification"
+              },
+              {
+                "action": "input",
+                "selector": "#phone-number",
+                "value": "{phone}",
+                "description": "Enter phone number for verification call"
+              },
+              {
+                "action": "click",
+                "selector": "#call-now",
+                "description": "Receive automated verification call with code"
+              }
+            ],
+            "template_id": null
+          },
+          {
+            "type": "email",
+            "email_to": "support@whitepages.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum"
+          }
+        ],
+        "difficulty": "hard",
+        "estimated_minutes": 10,
+        "processing_days": 5,
+        "legal_max_days": 45,
+        "notes": "Requires phone verification call. May need to remove from multiple listings."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": false,
+        "registered_broker": {
+          "california": true,
+          "vermont": true
+        },
+        "state_laws": [
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut",
+          "texas"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 7,
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 30
+      },
+      "meta": {
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
+        "verified_by": "manual",
+        "confidence": 0.9,
+        "notes": "Phone verification makes automation harder. CAPTCHA present."
+      }
+    }
+  ]
+}
