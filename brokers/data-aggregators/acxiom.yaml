@@ -1,0 +1,96 @@
+id: acxiom
+name: Acxiom (now Kinesso)
+domain: acxiom.com
+aliases: [kinesso.com, liveramp.com, aboutthedata.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - purchase-history
+  - political-affiliation
+  - religious-affiliation
+  - health-inferences
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B data aggregator. No consumer-facing search. Must request preemptively."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://isapps.acxiom.com/optout/optout.aspx"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://isapps.acxiom.com/optout/optout.aspx"
+          description: "Go to Acxiom opt-out portal"
+        - action: input
+          selector: "#firstName"
+          value: "{first_name}"
+          description: "Enter first name"
+        - action: input
+          selector: "#lastName"
+          value: "{last_name}"
+          description: "Enter last name"
+        - action: input
+          selector: "#email"
+          value: "{email}"
+          description: "Enter email"
+        - action: input
+          selector: "#address"
+          value: "{street}"
+          description: "Enter street address"
+        - action: input
+          selector: "#city"
+          value: "{city}"
+          description: "Enter city"
+        - action: select
+          selector: "#state"
+          value: "{state}"
+          description: "Select state"
+        - action: input
+          selector: "#zip"
+          value: "{zip}"
+          description: "Enter ZIP code"
+        - action: click
+          selector: "#submitBtn"
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for confirmation"
+      template_id: null
+    - type: email
+      email_to: consumeradvo@acxiom.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "One of the largest data brokers globally. Holds data on ~2.5 billion consumers."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+    oregon: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 21
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.85
+  notes: "Rebranded from Acxiom to Kinesso but opt-out portal still on acxiom.com domain."

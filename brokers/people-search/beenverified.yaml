@@ -1,0 +1,84 @@
+id: beenverified
+name: BeenVerified
+domain: beenverified.com
+aliases: []
+category: people-search
+data_types: [name, address, phone, email, age, dob, relatives, criminal-records, property-records, social-media]
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.beenverified.com/people/{first_name}-{last_name}/{state}/"
+  detection:
+    - method: selector_present
+      value: ".people-list-item"
+      means: listed
+    - method: text_match
+      value: "0 Results Found"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.beenverified.com/app/optout/search"
+      required_fields: [first_name, last_name, state]
+      steps:
+        - action: navigate
+          url: "https://www.beenverified.com/app/optout/search"
+          description: "Go to BeenVerified opt-out search"
+        - action: input
+          selector: "#firstName"
+          value: "{first_name}"
+        - action: input
+          selector: "#lastName"
+          value: "{last_name}"
+        - action: select
+          selector: "#state"
+          value: "{state}"
+        - action: click
+          selector: "button[type='submit']"
+        - action: wait_for
+          selector: ".search-results"
+        - action: click
+          selector: ".result-item .opt-out-btn"
+          description: "Select your listing and click opt-out"
+        - action: input
+          selector: "#email"
+          value: "{email}"
+        - action: click
+          selector: "#confirm-optout"
+        - action: verify_email
+          description: "Confirm via email link"
+      template_id: null
+    - type: email
+      email_to: support@beenverified.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Web form requires finding specific listing. Email fallback works."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-25"
+  last_verified: "2026-02-25"
+  verified_by: manual
+  confidence: 0.90
