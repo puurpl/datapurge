@@ -135,6 +135,14 @@ templates:
       Privacy Protection Agency and/or civil penalties of up to $7,500 per
       intentional violation (Cal. Civ. Code § 1798.155).
 
+      This request is made under all privacy laws applicable to your
+      organization based on your place of incorporation, headquarters,
+      registration, and operations — in addition to those applicable
+      based on my residence. Similar obligations may arise under the
+      GDPR (if you are established in or target the EU/UK), the
+      California Delete Act, and the privacy laws of every state and
+      country in which you operate.
+
       This communication is being archived with timestamp verification
       for potential future legal reference.
 
@@ -239,8 +247,15 @@ templates:
       Address: {address}
 
       You are required to respond within one calendar month per
-      Article 12(3). This communication is archived for potential
-      submission to the relevant supervisory authority.
+      Article 12(3). This request is made under all privacy laws
+      applicable to your organization based on your place of
+      establishment and operations — in addition to those applicable
+      based on my residence. If your organization does business in
+      California or other US states with privacy laws, those
+      obligations apply concurrently with the GDPR.
+
+      This communication is archived for potential submission to the
+      relevant supervisory authority.
 
       {full_name}
       Date: {date}
@@ -312,6 +327,16 @@ templates:
       Email: {email}
       Phone: {phone}
       Address: {address}
+
+      This request is made under all privacy laws applicable to your
+      organization based on your place of incorporation, headquarters,
+      registration, and operations — in addition to those applicable
+      based on my residence. If your organization is established in or
+      does business in the European Union or United Kingdom, the GDPR
+      and UK GDPR apply concurrently. If your organization is
+      established in or does business in California, the California
+      Delete Act's registration and deletion requirements apply,
+      including $200 per day penalties for unfulfilled requests.
 
       Please confirm deletion and disclosure in writing within 30 days.
       This communication is timestamped and archived.
@@ -531,6 +556,19 @@ templates:
       require me to use a specific web form, create an account, or
       use any proprietary portal as a precondition for processing
       this request.
+
+      This request is made under all privacy laws applicable to your
+      organization based on your place of incorporation, headquarters,
+      registration, and operations — in addition to those applicable
+      based on my residence. If your organization is established in
+      or does business in the European Union, the GDPR applies to all
+      personal data you process regardless of the data subject's
+      location (GDPR Article 3(1)). If your organization is
+      established in or does business in California, the CCPA applies
+      to all California residents' data and subjects you to the
+      California Delete Act's registration and deletion requirements.
+      Similar obligations may arise under the privacy laws of every
+      state and country in which you operate.
 
       Identifying Information:
       Full Name: {full_name}
