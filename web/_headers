@@ -3,3 +3,23 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/embed.html
+  ! X-Frame-Options
+  Content-Security-Policy: frame-ancestors *;
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Allow cross-origin loading for self-hosted embeds
+/js/*
+  Access-Control-Allow-Origin: *
+
+/css/*
+  Access-Control-Allow-Origin: *
+
+/data/*
+  Access-Control-Allow-Origin: *
+
+/icon.svg
+  Access-Control-Allow-Origin: *

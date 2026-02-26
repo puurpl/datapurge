@@ -1,6 +1,7 @@
-const CACHE_NAME = 'datapurge-v1';
+const CACHE_NAME = 'datapurge-v2';
 const ASSETS = [
     '/app.html',
+    '/embed.html',
     '/css/style.css',
     '/js/app.js',
     '/js/store.js',
