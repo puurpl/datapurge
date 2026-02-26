@@ -73,7 +73,7 @@ The self-hosted file loads CSS, JavaScript, and data from `datapurge.iamnotthepr
 To host everything locally (no external requests):
 
 ```bash
-git clone https://github.com/puurpl/opt-out.git
+git clone https://github.com/puurpl/datapurge.git
 cd opt-out
 pip install pyyaml && python3 build.py
 # Serve the web/ directory from your web server
@@ -111,7 +111,7 @@ You are free to embed DataPurge on any website under these terms:
 
 6. **No malware or deception.** Do not embed DataPurge on sites that distribute malware, engage in phishing, or deceive users.
 
-7. **License.** DataPurge is released under the [MIT License](https://github.com/puurpl/opt-out/blob/main/LICENSE). The broker YAML database is CC0 (public domain).
+7. **License.** DataPurge is released under the [MIT License](https://github.com/puurpl/datapurge/blob/main/LICENSE). The broker YAML database is CC0 (public domain).
 
 **Violations** — We reserve the right to block embeds that violate these terms via `Content-Security-Policy` restrictions.
 
@@ -120,9 +120,9 @@ You are free to embed DataPurge on any website under these terms:
 DataPurge is free and open-source. If it's useful to you or your visitors, consider supporting continued development:
 
 - [Buy Me a Coffee](https://buymeacoffee.com/puurpl)
-- [Star the repo on GitHub](https://github.com/puurpl/opt-out)
-- [Contribute a broker](https://github.com/puurpl/opt-out/blob/main/README.md#contributing-a-broker) to the registry
+- [Star the repo on GitHub](https://github.com/puurpl/datapurge)
+- [Contribute a broker](https://github.com/puurpl/datapurge/blob/main/README.md#contributing-a-broker) to the registry
 
 ## Questions
 
-Open an issue at [github.com/puurpl/opt-out/issues](https://github.com/puurpl/opt-out/issues) or email privacy@iamnottheproduct.com.
+Open an issue at [github.com/puurpl/datapurge/issues](https://github.com/puurpl/datapurge/issues) or email privacy@iamnottheproduct.com.

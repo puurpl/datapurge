@@ -7,6 +7,7 @@ import { Templates } from './templates.js';
 import { Queue } from './queue.js';
 import { Brokers } from './brokers.js';
 import { Progress } from './progress.js';
+import { Share } from './share.js';
 
 const US_STATES = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -72,6 +73,7 @@ function initView(name, el) {
         case 'queue': Queue.render(el); break;
         case 'brokers': Brokers.render(el); break;
         case 'progress': Progress.render(el, Queue.getRegistryData()); break;
+        case 'share': Share.render(el); break;
     }
 }
 
