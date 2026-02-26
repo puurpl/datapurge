@@ -9,6 +9,7 @@ const ASSETS = [
     '/js/queue.js',
     '/js/brokers.js',
     '/js/progress.js',
+    '/js/share.js',
     '/data/registry.json',
     '/data/templates.json',
     '/icon.svg',
