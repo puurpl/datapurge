@@ -66,6 +66,14 @@ templates:
       to whom you have disclosed my personal information to delete it as well,
       per Cal. Civ. Code § 1798.105(c).
 
+      If your search identifies multiple entries that could reasonably
+      pertain to me — including partial matches, variant spellings, or
+      records linked to different addresses or identifiers — I exercise
+      my right to know (§ 1798.110) to review those entries so I can
+      confirm that every record pertaining to me is deleted. Do not
+      unilaterally determine which records are or are not mine without
+      providing me the opportunity to verify.
+
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       REQUEST 2: RIGHT TO KNOW (Cal. Civ. Code § 1798.110)
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -202,6 +210,14 @@ templates:
       Per Article 17(2), where you have made the personal data public, I
       request that you inform all recipients of this erasure request.
 
+      If your search identifies multiple entries that could reasonably
+      pertain to me — including partial matches, variant spellings, or
+      records linked to different identifiers — I exercise my right of
+      access (Article 15) to review those entries so I can confirm that
+      every record pertaining to me is erased. Do not unilaterally
+      determine which records are or are not mine without providing me
+      the opportunity to verify.
+
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       3. RIGHT TO OBJECT (Article 21)
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -321,6 +337,14 @@ templates:
       commercial data providers, web scraping, social media, and any other
       means. The absence of current legal enforceability for this objection
       in certain jurisdictions does not diminish my clearly expressed intent.
+
+      If your search identifies multiple entries that could reasonably
+      pertain to me — including partial matches, variant spellings, or
+      records linked to different addresses or identifiers — I exercise
+      my right to access and review those entries so I can confirm that
+      every record pertaining to me is deleted. Do not unilaterally
+      determine which records are or are not mine without providing me
+      the opportunity to verify.
 
       Identifying Information:
       Full Name: {full_name}
@@ -508,6 +532,15 @@ templates:
       17, and equivalent state privacy laws, you must either delete the
       matching records or provide a verifiable, documented basis for
       your determination that they do not belong to me.
+
+      If your search identifies multiple entries that could reasonably
+      pertain to me — including partial matches, variant spellings,
+      or records linked to different addresses or identifiers — I
+      exercise my right of access (CCPA § 1798.110, GDPR Article 15)
+      to review those entries so I can confirm that every record
+      pertaining to me is deleted. Do not unilaterally determine which
+      records are or are not mine without providing me the opportunity
+      to verify.
 
       I require the following responses in writing to {email}:
 
