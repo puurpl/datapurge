@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2563eb"/>
+  <g transform="translate(256,256)">
+    <!-- Shield shape -->
+    <path d="M0-160 C80-160 140-120 160-80 L160 40 C160 120 80 180 0 200 C-80 180 -160 120 -160 40 L-160-80 C-140-120 -80-160 0-160Z" fill="white" opacity="0.95"/>
+    <!-- X mark (delete/purge) -->
+    <g stroke="#2563eb" stroke-width="28" stroke-linecap="round">
+      <line x1="-50" y1="-40" x2="50" y2="60"/>
+      <line x1="50" y1="-40" x2="-50" y2="60"/>
+    </g>
+  </g>
+</svg>

@@ -53,7 +53,6 @@ function route() {
         el.hidden = false;
         initView(hash, el);
     } else {
-        // Default to setup
         document.getElementById('view-setup').hidden = false;
         initView('setup', document.getElementById('view-setup'));
     }
@@ -62,6 +61,9 @@ function route() {
     document.querySelectorAll('.nav-tab').forEach(a => {
         a.classList.toggle('active', a.getAttribute('href') === `#${hash}`);
     });
+
+    // Update profile switcher
+    renderProfileSwitcher();
 }
 
 function initView(name, el) {
@@ -73,24 +75,89 @@ function initView(name, el) {
     }
 }
 
+// --- Profile Switcher (in nav) ---
+
+function renderProfileSwitcher() {
+    let switcher = document.getElementById('profile-switcher');
+    if (!switcher) return;
+
+    const profiles = Store.getProfiles();
+    const activeId = Store.getActiveProfileId();
+
+    if (profiles.length <= 1 && !Store.hasPII()) {
+        switcher.innerHTML = '';
+        return;
+    }
+
+    switcher.innerHTML = `
+        <select id="profile-select" class="profile-select" title="Switch profile">
+            ${profiles.map(p => `
+                <option value="${esc(p.id)}" ${p.id === activeId ? 'selected' : ''}>
+                    ${esc(p.label || 'Profile')}
+                </option>
+            `).join('')}
+            <option value="__new__">+ New Profile</option>
+        </select>
+    `;
+
+    switcher.querySelector('#profile-select').addEventListener('change', (e) => {
+        if (e.target.value === '__new__') {
+            location.hash = '#setup';
+            // Clear active so setup shows a blank form
+            Store.createProfile({
+                full_name: '', email: '', state: '', country: '',
+                phone: '', dob: '', street: '', city: '', zip: '',
+            });
+            route();
+        } else {
+            Store.switchProfile(e.target.value);
+            route();
+        }
+    });
+}
+
 // --- Setup View ---
 
 function renderSetup(container) {
     const existing = Store.getPII();
+    const profiles = Store.getProfiles();
+    const isEditing = existing && existing.full_name;
 
     container.innerHTML = `
         <div class="setup-page">
             <div class="container-narrow">
                 <div class="setup-header">
-                    <h2>Enter your information</h2>
-                    <p class="text-secondary">This is used to fill opt-out email templates. Nothing is transmitted.</p>
+                    <h2>${isEditing ? 'Edit Profile' : 'Create a Profile'}</h2>
+                    <p class="text-secondary">
+                        ${isEditing
+                            ? 'Update your information for opt-out requests.'
+                            : 'Enter your information to generate opt-out emails. You can create multiple profiles.'}
+                    </p>
                 </div>
+
+                ${profiles.length > 1 ? `
+                <div class="profile-list mb-2">
+                    <h3 class="text-sm text-secondary mb-1">Your Profiles</h3>
+                    ${profiles.map(p => `
+                        <div class="profile-list-item ${p.id === Store.getActiveProfileId() ? 'active' : ''}">
+                            <button class="profile-list-btn" data-profile-id="${esc(p.id)}">
+                                <strong>${esc(p.label || 'Profile')}</strong>
+                                <span class="text-sm text-muted">${esc(p.pii?.email || '')}</span>
+                            </button>
+                            <button class="btn btn-ghost btn-sm btn-delete-profile" data-profile-id="${esc(p.id)}" title="Delete profile">
+                                &times;
+                            </button>
+                        </div>
+                    `).join('')}
+                    <button class="btn btn-outline btn-sm mt-1" id="btn-new-profile">+ New Profile</button>
+                </div>
+                ` : ''}
 
                 <div class="privacy-notice">
                     <span class="privacy-notice-icon">&#128274;</span>
                     <div>
                         <strong>Privacy first.</strong> Your information is stored only in your browser's
-                        session memory. It is never sent to any server. When you close this tab, it's gone.
+                        local storage. It is never sent to any server. You can delete it at any time.
                     </div>
                 </div>
 
@@ -121,13 +188,13 @@ function renderSetup(container) {
                                     `<option value="EU:${code}" ${existing?.country === code ? 'selected' : ''}>${name}</option>`
                                 ).join('')}
                             </optgroup>
-                            <option value="other">Other / Prefer not to say</option>
+                            <option value="other" ${existing?.country === '' && existing?.state === '' && existing?.full_name ? 'selected' : ''}>Other / Prefer not to say</option>
                         </select>
                         <div class="form-hint">Used to select the strongest legal template for your jurisdiction.</div>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg" style="width:100%">
-                        Generate Opt-Out Emails
+                        ${isEditing ? 'Update & Continue' : 'Generate Opt-Out Emails'}
                     </button>
 
                     <details class="mt-2" style="cursor: pointer;">
@@ -182,6 +249,35 @@ function renderSetup(container) {
         </div>
     `;
 
+    // Profile list interactions
+    container.querySelectorAll('.profile-list-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            Store.switchProfile(btn.dataset.profileId);
+            renderSetup(container);
+        });
+    });
+
+    container.querySelectorAll('.btn-delete-profile').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (confirm('Delete this profile and all its progress?')) {
+                Store.deleteProfile(btn.dataset.profileId);
+                renderSetup(container);
+            }
+        });
+    });
+
+    const btnNew = container.querySelector('#btn-new-profile');
+    if (btnNew) {
+        btnNew.addEventListener('click', () => {
+            Store.createProfile({
+                full_name: '', email: '', state: '', country: '',
+                phone: '', dob: '', street: '', city: '', zip: '',
+            });
+            renderSetup(container);
+        });
+    }
+
+    // Form submission
     container.querySelector('#setup-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const locationVal = container.querySelector('#location').value;
@@ -239,6 +335,11 @@ async function boot() {
         ]);
     } catch (err) {
         console.error('Failed to load data:', err);
+    }
+
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
     }
 
     window.addEventListener('hashchange', route);
