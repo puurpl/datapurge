@@ -58,11 +58,15 @@ function getAllBrokerEmails() {
 }
 
 function buildMassEmail() {
+    const pii = Store.getPII();
     const fields = Store.getTemplateFields();
-    if (!fields) return null;
+    if (!pii || !fields) return null;
 
-    // Use preemptive_blanket — it's generic (no broker name), minimal PII
-    const filled = Templates.fill('preemptive_blanket', fields, {
+    // Select the strongest template for the user's jurisdiction
+    const templateId = Templates.selectBestTemplate(
+        pii.state, pii.country, { legal: { ccpa: true } }
+    );
+    const filled = Templates.fill(templateId, fields, {
         name: 'your organization',
         domain: '',
     });
@@ -70,12 +74,15 @@ function buildMassEmail() {
 
     const allEmails = getAllBrokerEmails();
 
+    const tmpl = Templates.getTemplate(templateId);
     return {
         bccList: allEmails,
         bccString: allEmails.join(', '),
         subject: filled.subject,
         body: filled.body,
         count: allEmails.length,
+        templateId,
+        templateName: tmpl?.name || templateId,
     };
 }
 
@@ -199,9 +206,9 @@ function renderMassMode(container) {
             <h3 style="margin-bottom: 0.75rem;">How this works</h3>
             <p class="text-secondary" style="max-width: none;">
                 One email, BCC'd to <strong>${mass.count} data broker privacy addresses</strong>.
-                Uses the pre-emptive blanket template — it cites every applicable law, withdraws
-                consent, and works regardless of whether a broker currently holds your data.
-                Only your <strong>name and email</strong> are included (minimal PII).
+                Using <strong>${esc(mass.templateName)}</strong> — the strongest template for your
+                location. It cites every applicable law, withdraws consent, demands written
+                confirmation, and warns of regulatory action for non-compliance.
             </p>
         </div>
 
