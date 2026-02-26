@@ -377,14 +377,9 @@ export const Progress = {
         container.querySelectorAll('.btn-verify').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.brokerId;
-                const p = progress[id];
-                if (p) {
-                    p.status = 'verified';
-                    p.verifiedAt = new Date().toISOString();
-                    localStorage.setItem('datapurge_progress', JSON.stringify(progress));
-                    showToast('Marked as removed');
-                    Progress.render(container, registryData);
-                }
+                Store.updateProgress(id, { status: 'verified', verifiedAt: new Date().toISOString() });
+                showToast('Marked as removed');
+                Progress.render(container, registryData);
             });
         });
 
@@ -393,19 +388,16 @@ export const Progress = {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.brokerId;
                 const broker = brokers.find(b => b.id === id);
-                const p = progress[id];
-                if (p && broker) {
-                    p.status = 'still_listed';
-                    p.checkedAt = new Date().toISOString();
-                    localStorage.setItem('datapurge_progress', JSON.stringify(progress));
-                    // Open noncompliance notice
+                Store.updateProgress(id, { status: 'still_listed', checkedAt: new Date().toISOString() });
+                if (broker) {
+                    const p = Store.getProgress()[id];
                     const nc = buildNoncompliance(broker, p);
                     if (nc) {
                         window.open(nc.mailto, '_blank');
                         showToast(`Still listed — noncompliance notice opened for ${broker.name}`);
                     }
-                    Progress.render(container, registryData);
                 }
+                Progress.render(container, registryData);
             });
         });
 
