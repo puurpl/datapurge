@@ -484,12 +484,45 @@ templates:
       matching records or provide a verifiable, documented basis for
       your determination that they do not belong to me.
 
+      I require the following responses in writing to {email}:
+
+      (a) ACKNOWLEDGE receipt of this request within 10 business days,
+          as required by CCPA regulations (Cal. Code Regs. tit. 11,
+          § 7023).
+
+      (b) DISCLOSE what personal information you hold about me and the
+          categories of sources from which it was obtained, prior to
+          deletion, as required under CCPA § 1798.110 and GDPR Article
+          15.
+
+      (c) CONFIRM in writing when deletion is complete, specifying what
+          data was deleted and from which systems, as required under
+          GDPR Article 12(3) and CCPA regulations.
+
+      (d) NOTIFY all third parties to whom you have disclosed, sold, or
+          shared my personal information to delete it as well, and
+          provide me with a list of those third parties, per GDPR
+          Article 19 and CCPA § 1798.105(c).
+
+      (e) CEASE any future collection, purchase, licensing, or inference
+          of my personal information, including through your service
+          providers and contractors, on an ongoing basis.
+
       If you currently hold no data about me, I request written
       confirmation of that fact and ask that this objection be recorded
       in your systems to prevent future collection.
 
-      If you do hold data about me, please process the deletion request
-      above and respond within the timeframe required by applicable law.
+      Response deadlines:
+      - CCPA/CPRA: 45 calendar days from receipt (Cal. Civ. Code
+        § 1798.105).
+      - GDPR: 30 calendar days from receipt (GDPR Article 12(3)).
+      - California Delete Act: $200 per day per unfulfilled request
+        (Cal. Civ. Code § 1798.99.86).
+
+      Failure to comply within the applicable deadline will be reported
+      to the relevant enforcement authority, including the California
+      Privacy Protection Agency (CPPA), the Federal Trade Commission
+      (FTC), and/or the appropriate EU/UK Data Protection Authority.
 
       This request is submitted via email. Under CCPA § 1798.105(a),
       GDPR Articles 12 and 17, and equivalent state privacy laws, you
@@ -504,7 +537,9 @@ templates:
       Email: {email}
       {additional_emails}
 
-      This communication is archived with timestamp verification.
+      This communication constitutes a verifiable consumer request.
+      It is archived with timestamp verification and will be used
+      as evidence in any regulatory complaint or legal proceeding.
 
       {full_name}
       Date: {date}
