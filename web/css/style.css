@@ -658,7 +658,7 @@ h4 { font-size: 1rem; font-weight: 600; }
 /* --- Progress --- */
 .progress-header {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-bottom: 2rem;
 }
@@ -681,8 +681,16 @@ h4 { font-size: 1rem; font-weight: 600; }
     color: var(--color-text-secondary);
 }
 
+.progress-stat-card.stat-alert {
+    border-color: var(--color-danger);
+    background: var(--color-danger-light);
+}
+.progress-stat-card.stat-alert .value {
+    color: var(--color-danger);
+}
+
 @media (max-width: 640px) {
-    .progress-header { grid-template-columns: 1fr; }
+    .progress-header { grid-template-columns: repeat(2, 1fr); }
 }
 
 .progress-list { margin-top: 1.5rem; }
@@ -693,10 +701,66 @@ h4 { font-size: 1rem; font-weight: 600; }
     justify-content: space-between;
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--color-border);
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .progress-item-name { font-weight: 500; }
 .progress-item-date { font-size: 0.8125rem; color: var(--color-text-muted); }
+.progress-item-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+.progress-item-overdue {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+    border-bottom: none;
+}
+
+.progress-item-verified { opacity: 0.6; }
+
+.card-alert {
+    border-color: var(--color-danger);
+}
+.card-alert .card-title {
+    color: var(--color-danger);
+}
+
+/* Progress bar mini */
+.progress-bar-mini {
+    width: 80px;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Monitoring tools */
+.monitoring-tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+.monitoring-tool {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+.monitoring-tool strong { display: block; margin-bottom: 0.25rem; }
+.monitoring-tool p { margin-bottom: 0.5rem; }
+
+/* Badge for overdue/still listed */
+.badge-overdue {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+}
 
 .overdue-section {
     margin-top: 2rem;
