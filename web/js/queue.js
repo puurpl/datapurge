@@ -98,6 +98,91 @@ function esc(str) {
     return div.innerHTML;
 }
 
+// States that legally require honoring Global Privacy Control signals
+const GPC_STATES = new Set([
+    'California', 'Colorado', 'Connecticut', 'Delaware', 'Montana',
+    'Nebraska', 'New Hampshire', 'New Jersey', 'Oregon', 'Texas',
+    'Minnesota', 'Maryland',
+]);
+
+function getLocationNotices() {
+    const pii = Store.getPII();
+    if (!pii) return '';
+    const notices = [];
+
+    if (pii.state === 'California') {
+        notices.push(`
+            <div class="callout callout-action" style="text-align: left;">
+                <h3 style="margin-bottom: 0.5rem;">&#127919; California DELETE Act — DROP</h3>
+                <p class="text-secondary" style="max-width: none;">
+                    As a California resident, you can also use the state's official
+                    <strong>Delete Request and Opt-out Platform (DROP)</strong> — a single request
+                    that reaches <strong>500+ registered data brokers</strong>, backed by law.
+                    Brokers must process your request within 45 days or face $200/day fines.
+                </p>
+                <div class="mt-1">
+                    <a href="https://privacy.ca.gov/drop/" class="btn btn-primary" target="_blank" rel="noopener">
+                        Go to DROP (privacy.ca.gov)
+                    </a>
+                </div>
+                <p class="text-sm text-secondary mt-1">
+                    Use DROP <strong>in addition to</strong> the emails below for maximum coverage —
+                    DROP covers registered brokers, our emails reach others that may not be registered.
+                </p>
+            </div>
+        `);
+    }
+
+    const gpcLegal = GPC_STATES.has(pii.state);
+    notices.push(`
+        <div class="callout" style="text-align: left;">
+            <h3 style="margin-bottom: 0.5rem;">&#128261; Enable Global Privacy Control (GPC)</h3>
+            <p class="text-secondary" style="max-width: none;">
+                GPC is a browser signal that automatically tells every website you visit
+                to <strong>stop selling or sharing your data</strong>.
+                ${gpcLegal
+                    ? `In <strong>${esc(pii.state)}</strong>, websites are <strong>legally required</strong> to honor this signal — companies have been fined over $1M for ignoring it.`
+                    : 'Many companies honor it voluntarily, and legal mandates are expanding across states.'}
+                It works alongside the emails below for ongoing protection.
+            </p>
+            <p class="text-sm text-secondary mt-1" style="max-width: none;">
+                <strong>Supported in:</strong> Firefox, Brave, and DuckDuckGo have it built in.
+                For Chrome, Safari, and Edge, install an extension from the link below.
+            </p>
+            <div class="mt-1">
+                <a href="https://globalprivacycontrol.org/" class="btn btn-outline" target="_blank" rel="noopener">
+                    Enable GPC (globalprivacycontrol.org)
+                </a>
+            </div>
+        </div>
+    `);
+
+    const euCountries = new Set([
+        'AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU',
+        'IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES',
+        'SE','IS','LI','NO','GB',
+    ]);
+    if (pii.country && pii.country !== 'US' && euCountries.has(pii.country)) {
+        notices.push(`
+            <div class="callout" style="text-align: left;">
+                <h3 style="margin-bottom: 0.5rem;">&#127466;&#127482; GDPR — File a complaint if ignored</h3>
+                <p class="text-secondary" style="max-width: none;">
+                    Under GDPR, brokers must respond to your erasure request within <strong>30 days</strong>.
+                    If a broker ignores you, you can file a formal complaint with your national
+                    Data Protection Authority — this can result in significant fines against them.
+                </p>
+                <div class="mt-1">
+                    <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" class="btn btn-outline" target="_blank" rel="noopener">
+                        Find your Data Protection Authority
+                    </a>
+                </div>
+            </div>
+        `);
+    }
+
+    return notices.join('');
+}
+
 function renderMassMode(container) {
     const mass = buildMassEmail();
     if (!mass) return;
@@ -119,6 +204,8 @@ function renderMassMode(container) {
                 Only your <strong>name and email</strong> are included (minimal PII).
             </p>
         </div>
+
+        ${getLocationNotices()}
 
         <div class="card mt-2">
             <div class="card-header">
