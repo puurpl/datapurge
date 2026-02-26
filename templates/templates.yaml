@@ -491,6 +491,14 @@ templates:
       If you do hold data about me, please process the deletion request
       above and respond within the timeframe required by applicable law.
 
+      This request is submitted via email. Under CCPA § 1798.105(a),
+      GDPR Articles 12 and 17, and equivalent state privacy laws, you
+      are required to accept verifiable consumer requests submitted
+      through any reasonable means, including email. You may not
+      require me to use a specific web form, create an account, or
+      use any proprietary portal as a precondition for processing
+      this request.
+
       Identifying Information:
       Full Name: {full_name}
       Email: {email}
