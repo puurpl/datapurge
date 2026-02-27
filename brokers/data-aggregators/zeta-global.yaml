@@ -1,0 +1,80 @@
+id: zeta-global
+name: Zeta Global
+domain: zetaglobal.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+  - device-ids
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B marketing technology platform. No consumer-facing search. Provides identity-based marketing data, email marketing, and programmatic advertising."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://zetaglobal.com/rights-request/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://zetaglobal.com/rights-request/"
+          description: "Go to Zeta Global rights request page (for programmatic/pseudonymous data)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy rights request"
+    - type: web_form
+      url: "https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/d0720d0f-d427-4a7d-a773-5d6793229f15.html"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/d0720d0f-d427-4a7d-a773-5d6793229f15.html"
+          description: "Go to Zeta Global OneTrust privacy portal (for deterministic/identified data)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit opt-out request for identified data"
+    - type: email
+      email_to: privacy@zetaglobal.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Zeta Global maintains two types of data: deterministic (fully identifiable PII) and programmatic (pseudonymous cookie/device data). Separate opt-out forms exist for each type. Submit to both for complete removal. Claims 235M+ US adult identity records."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #192108), zetaglobal.com/how-zeta-protects-privacy-and-manages-data-responsibly. Headquartered at 3 Park Ave, 33rd Floor, New York, NY 10016. Claims data on 235M+ US adults. Two separate opt-out paths for deterministic vs. programmatic data."

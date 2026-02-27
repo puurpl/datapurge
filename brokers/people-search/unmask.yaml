@@ -1,0 +1,84 @@
+id: unmask
+name: UnMask
+domain: unmask.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - court-records
+  - property-records
+  - mugshots
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://unmask.com/people/{first_name}-{last_name}/"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://unmask.com/opt-out/"
+      required_fields: [first_name, last_name, city, state]
+      steps:
+        - action: navigate
+          url: "https://unmask.com/opt-out/"
+          description: "Go to UnMask opt-out page"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: input
+          value: "{city}, {state}"
+          description: "Enter city and state"
+        - action: captcha
+          description: "Verify CAPTCHA"
+        - action: click
+          description: "Click Search to find your record"
+        - action: click
+          description: "Click 'Delete Record' on your listing"
+      template_id: null
+    - type: email
+      email_to: contact@unmask.com
+      required_fields: [full_name, listing_url]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Most requests take effect within 5-7 days. Free to opt out. Include listing URL in email requests."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: State of Surveillance Master List, Big Ass Data Broker Opt-Out List."

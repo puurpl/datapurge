@@ -1,0 +1,54 @@
+id: rentprep
+name: RentPrep
+domain: rentprep.com
+aliases: []
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - ssn
+  - credit-history
+  - criminal-records
+  - eviction-records
+
+scan:
+  scannable: false
+  reason: "Tenant screening service for landlords. No public consumer search. Reports generated with tenant consent."
+
+optout:
+  methods:
+    - type: email
+      email_to: screening@rentprep.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+      notes: "Contact RentPrep customer support for privacy and data requests."
+    - type: phone
+      phone_number: "1-888-877-8501"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated tenant screening provider. Reports generated only with tenant's written consent. Does not store credit card data on local servers. Complies with all FCRA requirements and credit bureau security measures. Personal data is not exchanged or sold per their policy."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: RentPrep security and privacy page, terms of service. FCRA-regulated. States personal data is never exchanged. Limited public information on specific CCPA procedures."

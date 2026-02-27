@@ -1,0 +1,61 @@
+id: eyeota
+name: Eyeota (Dun & Bradstreet)
+domain: eyeota.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - email
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B audience data marketplace. No consumer-facing search. Provides audience data segments for digital advertising targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.eyeota.com/how-to-opt-out"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.eyeota.com/how-to-opt-out"
+          description: "Go to Eyeota opt-out page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address to opt out of hashed email usage"
+        - action: submit
+          description: "Submit opt-out request"
+    - type: email
+      email_to: privacy@eyeota.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-467-8688"
+      notes: "Toll-free number. Use Eyeota Service Code: 714."
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Eyeota is an audience data marketplace acquired by Dun & Bradstreet. Opt-out requests are honored instantly for behavioral profiling; contact details removed within 72 hours. In 2024, Eyeota received and honored 14,698,461 CCPA opt-out requests. Processes pseudonymous identifiers (cookie IDs, mobile ad IDs) and browsing history."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #188572), eyeota.com/how-to-opt-out, eyeota.com/eyeota-marketplace-privacy-policy. Acquired by Dun & Bradstreet. Singapore-headquartered audience data marketplace. Fast 72-hour contact removal."

@@ -1,0 +1,82 @@
+id: newenglandfacts
+name: NewEnglandFacts
+domain: newenglandfacts.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - social-media
+  - employment
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://newenglandfacts.com/people/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".profile-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://newenglandfacts.com/ng/control/privacy"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://newenglandfacts.com"
+          description: "Search for your profile on NewEnglandFacts"
+        - action: click
+          description: "Click 'Control this Profile' next to your listing"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Click 'SUBMIT OPT OUT REQUEST'"
+        - action: verify_email
+          description: "Click verification link in email to complete removal"
+      template_id: null
+    - type: email
+      email_to: csr@newenglandfacts.com
+      required_fields: [full_name, listing_url]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 2
+  legal_max_days: 45
+  notes: "Focused on New England region (CT, ME, MA, RI, NH, VT). Include profile URL in email requests. Removal within 48 hours."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - connecticut
+    - massachusetts
+
+timing:
+  typical_removal_days: 2
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Connected to Dataveria, backgroundcheck.run, clubset.com, councilon.com, wellnut.com network. Source: Big Ass Data Broker Opt-Out List, DeleteMe."

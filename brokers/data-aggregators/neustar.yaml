@@ -1,0 +1,66 @@
+id: neustar
+name: Neustar (TransUnion)
+domain: home.neustar
+aliases: [neustar.biz, www.home.neustar]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B identity data management and marketing analytics platform. No consumer-facing search. Provides identity resolution, audience segmentation, and multi-touch attribution."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.home.neustar/privacy/opt-out"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.home.neustar/privacy/opt-out"
+          description: "Go to Neustar Privacy Choices Portal"
+        - action: click
+          description: "Opt out of Neustar's use of personal information via cookies, MAIDs, hashed emails, and pseudonymous IDs"
+    - type: email
+      email_to: privacy@team.neustar
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: ns_privacy@transunion.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-844-638-2878"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Neustar is a TransUnion company as of December 2021. Operates Identity Data Management Platform (IDMP) and Multi-Touch Attribution (MTA). Segments consumers into 'Audiences' using unique identifiers. Two email paths: privacy@team.neustar (Neustar) and ns_privacy@transunion.com (TransUnion). Separate from TransUnion credit bureau — this covers marketing/identity resolution data only."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: home.neustar/privacy/opt-out, home.neustar/privacy/information-for-california-residents, transunion.com/privacy/neustar. Acquired by TransUnion in 2021. Major identity resolution and marketing analytics platform. Separate opt-out from TransUnion credit bureau."

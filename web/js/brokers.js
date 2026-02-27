@@ -13,6 +13,13 @@ const CATEGORY_LABELS = {
     'background-check': 'Background Check',
     'financial': 'Financial',
     'public-records': 'Public Records',
+    'health': 'Health',
+    'insurance': 'Insurance',
+    'tenant-screening': 'Tenant Screening',
+    'employment': 'Employment',
+    'political': 'Political',
+    'vehicle': 'Vehicle',
+    'real-estate': 'Real Estate',
     'other': 'Other',
 };
 
@@ -100,11 +107,23 @@ function methodIcon(type) {
 export const Brokers = {
     async load() {
         const resp = await fetch('data/registry.json');
+        if (!resp.ok) throw new Error(`Failed to load broker directory: ${resp.status}`);
         const data = await resp.json();
-        allBrokers = data.brokers;
+        allBrokers = data.brokers || [];
     },
 
     render(container) {
+        if (allBrokers.length === 0) {
+            container.innerHTML = `
+                <h2 class="mb-2">Broker Directory</h2>
+                <div class="empty-state">
+                    <h3>Unable to load broker data</h3>
+                    <p>Please check your connection and reload the page.</p>
+                    <button class="btn btn-outline mt-2" onclick="location.reload()">Reload</button>
+                </div>`;
+            return;
+        }
+
         // Get unique categories
         const categories = [...new Set(allBrokers.map(b => b.category))].sort();
 

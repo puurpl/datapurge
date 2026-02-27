@@ -1,0 +1,57 @@
+id: zeotap
+name: Zeotap
+domain: zeotap.com
+aliases: [privacy.zeotap.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - email
+  - phone
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform and identity resolution provider. No consumer-facing search. Provides CDP, identity resolution, and data enrichment services."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacy.zeotap.com/optout/authentication"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://privacy.zeotap.com/optout/authentication"
+          description: "Go to Zeotap privacy opt-out page"
+        - action: click
+          description: "Opt out of personal information stored against cookie IDs"
+    - type: email
+      email_to: privacy@zeotap.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Include your Ad ID if requesting mobile advertising opt-out"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Zeotap provides a customer data platform (CDP) with identity resolution capabilities. Also operates 'Zeotap Fuel' for third-party identity resolution. Supports Right to Erasure / Right to Be Forgotten via Delete API. For mobile ad ID opt-out, include your Ad ID in the email request."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registration #186755), zeotap.com/privacy-policy, PrivacyHawk opt-out guide. German-headquartered CDP and identity resolution company. Registered as zeotap GmbH in California."

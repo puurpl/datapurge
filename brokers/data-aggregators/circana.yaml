@@ -1,0 +1,60 @@
+id: circana
+name: Circana (formerly IRI / NPD Group)
+domain: circana.com
+aliases: [iriworldwide.com, npd.com]
+category: data-aggregator
+data_types:
+  - purchase-history
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B market research and consumer/retail analytics platform. No consumer-facing search. Provides purchase behavior and point-of-sale data to CPG and retail companies."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyportal.onetrust.com/webform/95580356-b46a-4234-8f47-d824de4dbbc6/2de05774-2e3d-45b0-a7c2-45bb6ba50ab1"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://privacyportal.onetrust.com/webform/95580356-b46a-4234-8f47-d824de4dbbc6/2de05774-2e3d-45b0-a7c2-45bb6ba50ab1"
+          description: "Go to Circana Privacy Web Form (OneTrust)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy rights request"
+    - type: email
+      email_to: privacy@circana.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Circana (formerly IRI and The NPD Group, merged in 2023) is one of the largest market research firms. Tracks consumer purchases via loyalty cards, point-of-sale data, and consumer panels. Provides purchase behavior analytics to CPG companies and retailers."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: circana.com/the-circana-group-global-privacy-policy-and-notice, OneTrust privacy portal. Formed in 2023 from merger of IRI and The NPD Group. Headquartered in Chicago. Tracks consumer purchasing via loyalty programs, POS data, and household panels."

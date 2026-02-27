@@ -1,0 +1,57 @@
+id: iqvia
+name: IQVIA
+domain: iqvia.com
+aliases: [rxhistories.com, quintiles.com]
+category: health
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - prescription-history
+  - medical-claims
+  - health-data
+  - demographic
+
+scan:
+  scannable: false
+  reason: "B2B health data analytics company. No public consumer search. Processes prescription, medical claims, and anonymized patient data for pharma and healthcare clients."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyportal.onetrust.com/webform/07e8dc4d-6686-403e-9b11-39fe7347d2f4/2f999bd2-c826-498c-a504-894eaf543b6f"
+      required_fields: [full_name, email, address, phone]
+      template_id: null
+    - type: email
+      email_to: privacyofficer@iqvia.com
+      required_fields: [full_name, email, address, phone]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 45
+  notes: "One of the world's largest health data companies. Collects prescription purchase history, medical claims, and patient-level data. Privacy requests require name, address, email, phone, and details of your interactions with IQVIA. CCPA rights available. HIPAA-compliant data collection."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+    oregon: true
+    texas: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: medium
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: IQVIA privacy policy (updated Jan 2026), California Data Broker Registry, OneTrust privacy portal. Largest health data analytics company globally. Privacy policy effective Jan 26, 2026."

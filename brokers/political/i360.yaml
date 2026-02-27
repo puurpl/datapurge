@@ -1,0 +1,63 @@
+id: i360
+name: i360
+domain: i-360.com
+aliases: [i360gov.com]
+category: political
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - voter-registration
+  - party-affiliation
+  - voting-history
+  - ethnicity
+  - religion
+  - occupation
+  - hobbies
+  - shopping-habits
+  - financial
+  - health-conditions
+  - consumer-interests
+  - demographic
+
+scan:
+  scannable: false
+  reason: "Political data analytics company. No public consumer search. Maintains database of 250+ million adults including 190 million registered voters."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.i-360.com/privacy-policy/"
+      required_fields: [full_name, address, email]
+      template_id: null
+      notes: "Consumer request portal accessible from i360 privacy policy page."
+    - type: phone
+      phone_number: "1-844-611-2737"
+      required_fields: [full_name, address]
+      notes: "i360 CCPA information line."
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 45
+  notes: "Koch-funded political data analytics company. Maintains database of 250+ million adults. Knows demographics, ethnicity, religion, occupation, hobbies, shopping habits, financial assets, health conditions, and more. Products used by NRA, Republican party committees, and conservative political organizations. Opt-out via consumer request portal or CCPA phone line."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: i360 privacy policy, JoinDeleteMe opt-out guide, SourceWatch, PR Watch investigation. Koch brothers' data operation, merged with Themis voter database project. Extensive consumer profiling."

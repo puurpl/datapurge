@@ -9,19 +9,55 @@ const PROFILES_KEY = 'datapurge_profiles';
 const ACTIVE_KEY = 'datapurge_active_profile';
 
 function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    if (crypto.randomUUID) return crypto.randomUUID();
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+}
+
+function safeGetItem(key) {
+    try { return localStorage.getItem(key); }
+    catch { return null; }
+}
+
+function safeSetItem(key, value) {
+    try { localStorage.setItem(key, value); }
+    catch (e) {
+        console.warn('localStorage write failed:', e.message);
+        showStorageWarning();
+    }
+}
+
+function safeRemoveItem(key) {
+    try { localStorage.removeItem(key); }
+    catch { /* ignore */ }
+}
+
+let _storageWarningShown = false;
+function showStorageWarning() {
+    if (_storageWarningShown) return;
+    _storageWarningShown = true;
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.textContent = 'Storage is full — some data may not be saved.';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
 }
 
 function getAllProfiles() {
-    return JSON.parse(localStorage.getItem(PROFILES_KEY) || '[]');
+    try {
+        return JSON.parse(safeGetItem(PROFILES_KEY) || '[]');
+    } catch {
+        console.warn('Corrupt profile data — resetting.');
+        return [];
+    }
 }
 
 function saveAllProfiles(profiles) {
-    localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+    safeSetItem(PROFILES_KEY, JSON.stringify(profiles));
 }
 
 function getActiveId() {
-    return localStorage.getItem(ACTIVE_KEY) || null;
+    return safeGetItem(ACTIVE_KEY) || null;
 }
 
 function getActiveProfile() {
@@ -32,31 +68,52 @@ function getActiveProfile() {
 
 // Migrate from old single-profile format
 function migrateIfNeeded() {
-    if (getAllProfiles().length > 0) return;
+    try {
+        if (getAllProfiles().length > 0) return;
 
-    // Check old sessionStorage PII
-    const oldPII = sessionStorage.getItem('datapurge_pii');
-    const oldProgress = localStorage.getItem('datapurge_progress');
+        let oldPII = null;
+        let oldProgress = {};
+        try { oldPII = JSON.parse(sessionStorage.getItem('datapurge_pii')); } catch { /* ignore */ }
+        try { oldProgress = JSON.parse(safeGetItem('datapurge_progress')) || {}; } catch { /* ignore */ }
 
-    if (oldPII || oldProgress) {
-        const pii = oldPII ? JSON.parse(oldPII) : null;
-        const progress = oldProgress ? JSON.parse(oldProgress) : {};
-        const profile = {
-            id: generateId(),
-            label: pii?.full_name || 'My Profile',
-            pii: pii || {},
-            progress,
-            createdAt: new Date().toISOString(),
-        };
-        saveAllProfiles([profile]);
-        localStorage.setItem(ACTIVE_KEY, profile.id);
-        // Clean up old keys
-        sessionStorage.removeItem('datapurge_pii');
-        localStorage.removeItem('datapurge_progress');
+        if (oldPII || Object.keys(oldProgress).length > 0) {
+            const profile = {
+                id: generateId(),
+                label: oldPII?.full_name || 'My Profile',
+                pii: oldPII || {},
+                progress: oldProgress,
+                createdAt: new Date().toISOString(),
+            };
+            saveAllProfiles([profile]);
+            safeSetItem(ACTIVE_KEY, profile.id);
+            try { sessionStorage.removeItem('datapurge_pii'); } catch { /* ignore */ }
+            safeRemoveItem('datapurge_progress');
+        }
+    } catch (e) {
+        console.warn('Migration failed:', e.message);
     }
 }
 
 migrateIfNeeded();
+
+// Cross-tab sync — refresh when another tab modifies localStorage
+if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+        if (e.key === PROFILES_KEY || e.key === ACTIVE_KEY) {
+            // Dispatch custom event so views can re-render
+            window.dispatchEvent(new CustomEvent('datapurge-storage-sync'));
+        }
+    });
+}
+
+function uniqueLabel(label, profiles) {
+    const base = label || 'Profile';
+    const existing = profiles.map(p => p.label);
+    if (!existing.includes(base)) return base;
+    let n = 2;
+    while (existing.includes(`${base} ${n}`)) n++;
+    return `${base} ${n}`;
+}
 
 export const Store = {
     // --- Profiles ---
@@ -83,21 +140,21 @@ export const Store = {
         }
         const profile = {
             id: generateId(),
-            label: piiData.full_name || 'Profile',
+            label: uniqueLabel(piiData.full_name, profiles),
             pii: piiData,
             progress: {},
             createdAt: new Date().toISOString(),
         };
         profiles.push(profile);
         saveAllProfiles(profiles);
-        localStorage.setItem(ACTIVE_KEY, profile.id);
+        safeSetItem(ACTIVE_KEY, profile.id);
         return profile;
     },
 
     switchProfile(profileId) {
         const profiles = getAllProfiles();
         if (profiles.find(p => p.id === profileId)) {
-            localStorage.setItem(ACTIVE_KEY, profileId);
+            safeSetItem(ACTIVE_KEY, profileId);
         }
     },
 
@@ -106,7 +163,11 @@ export const Store = {
         profiles = profiles.filter(p => p.id !== profileId);
         saveAllProfiles(profiles);
         if (getActiveId() === profileId) {
-            localStorage.setItem(ACTIVE_KEY, profiles.length > 0 ? profiles[0].id : '');
+            if (profiles.length > 0) {
+                safeSetItem(ACTIVE_KEY, profiles[0].id);
+            } else {
+                safeRemoveItem(ACTIVE_KEY);
+            }
         }
     },
 
@@ -125,10 +186,9 @@ export const Store = {
         const profile = profiles.find(p => p.id === id);
         if (profile) {
             profile.pii = data;
-            profile.label = data.full_name || 'Profile';
+            profile.label = data.full_name || profile.label;
             saveAllProfiles(profiles);
         } else {
-            // No active profile — create one
             this.createProfile(data);
         }
     },
@@ -235,6 +295,9 @@ export const Store = {
 
     importProgress(jsonString) {
         const data = JSON.parse(jsonString);
+        if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+            throw new Error('Invalid progress format — expected an object');
+        }
         const profiles = getAllProfiles();
         const id = getActiveId();
         const profile = profiles.find(p => p.id === id);
@@ -246,12 +309,19 @@ export const Store = {
 
     importAll(jsonString) {
         const imported = JSON.parse(jsonString);
-        if (!Array.isArray(imported)) throw new Error('Invalid format');
+        if (!Array.isArray(imported)) throw new Error('Invalid format — expected an array');
         const existing = getAllProfiles();
         const existingIds = new Set(existing.map(p => p.id));
         imported.forEach(p => {
-            if (!existingIds.has(p.id)) {
-                existing.push(p);
+            if (p && typeof p === 'object' && p.id && !existingIds.has(p.id)) {
+                // Sanitize: ensure expected shape
+                existing.push({
+                    id: String(p.id),
+                    label: String(p.label || 'Imported Profile'),
+                    pii: (typeof p.pii === 'object' && p.pii) ? p.pii : {},
+                    progress: (typeof p.progress === 'object' && p.progress) ? p.progress : {},
+                    createdAt: p.createdAt || new Date().toISOString(),
+                });
             }
         });
         saveAllProfiles(existing);

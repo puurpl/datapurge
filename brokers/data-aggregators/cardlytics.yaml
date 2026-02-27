@@ -1,0 +1,49 @@
+id: cardlytics
+name: Cardlytics
+domain: cardlytics.com
+aliases: [bridg.com]
+category: data-aggregator
+data_types:
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B purchase intelligence platform. No consumer-facing search. Analyzes bank transaction data to provide purchase insights and card-linked offers."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@cardlytics.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: privacy@bridg.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Bridg is a division of Cardlytics registered separately as a California data broker"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Cardlytics sees credit, debit, ACH, and bill pay transactions (including mobile wallet) through bank partnerships. No PII (names, card numbers, account numbers) ever leaves the bank — Cardlytics only receives anonymized transaction data. To opt out of card-linked offers, contact your financial institution directly. Bridg division is registered separately as a California data broker."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (Bridg division, registration #562185), cardlytics.com/privacy-policy. Purchase intelligence platform that partners with banks to analyze transaction data. Bridg division registered separately as data broker. Does not receive PII from banks."

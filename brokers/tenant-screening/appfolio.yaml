@@ -1,0 +1,57 @@
+id: appfolio
+name: AppFolio
+domain: appfolio.com
+aliases: []
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - ssn
+  - credit-history
+  - criminal-records
+  - eviction-records
+  - rental-history
+
+scan:
+  scannable: false
+  reason: "Property management and tenant screening platform. No public consumer search. Reports generated with applicant consent."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@appfolio.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+      notes: "Include 'Authorized Agent Opt-Out Request' or 'Privacy Request' in the subject line."
+    - type: web_form
+      url: "https://www.appfolio.com/consumer"
+      required_fields: [full_name, dob, address]
+      template_id: null
+      notes: "Consumer relations page for requesting copies of screening reports or filing disputes."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 10
+  legal_max_days: 45
+  notes: "Property management platform that provides tenant screening reports including credit, criminal, and rental history. FCRA-regulated CRA. Consumers can request a copy of their screening report (delivered within 10 business days). Dispute process available for incorrect information. Opt-out of targeted advertising available for residents of CA, CO, CT, DE, IA, MN, MT, NE, NH, NJ, OR, TN, TX, UT, VA."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon, new-jersey]
+
+timing:
+  typical_removal_days: 10
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: CFPB consumer reporting companies list, AppFolio privacy policy, AppFolio consumer relations page. FCRA-regulated for tenant screening. Privacy opt-out email is privacy@appfolio.com."

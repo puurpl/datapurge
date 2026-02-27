@@ -1,0 +1,62 @@
+id: zillow
+name: Zillow
+domain: zillow.com
+aliases: [zillowgroup.com, trulia.com, hotpads.com, streeteasy.com]
+category: real-estate
+data_types:
+  - name
+  - address
+  - email
+  - phone
+  - property-records
+  - home-values
+  - mortgage-data
+  - tax-assessments
+  - browsing-behavior
+  - location-data
+
+scan:
+  search_url: "https://www.zillow.com/homes/"
+  scannable: true
+  scan_type: address_lookup
+  reason: "Public property search available. Address lookup shows property details, estimated values, tax history, and ownership information."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@zillow.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://privacy.zillowgroup.com/"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "Zillow Group Privacy Portal for exercising privacy rights."
+    - type: phone
+      phone_number: "1-877-313-8601"
+      required_fields: [full_name, address]
+      notes: "Zillow Customer Care Team. Use for multiple property opt-outs or extenuating circumstances."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Largest online real estate marketplace. Displays property details, Zestimates (home value estimates), tax history, and ownership for virtually every US property. Also operates Trulia, HotPads, and StreetEasy. Contact privacy@zillow.com or use the Zillow Group Privacy Portal."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: Zillow Group privacy policy, Zillow Group Privacy Portal. Property data sourced from public records and is difficult to fully remove. BBB Digital Advertising Accountability Program found compliance issues in Dec 2025."

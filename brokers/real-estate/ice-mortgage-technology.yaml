@@ -1,0 +1,59 @@
+id: ice-mortgage-technology
+name: ICE Mortgage Technology (Black Knight)
+domain: mortgagetech.ice.com
+aliases: [blackknightinc.com, ice.com]
+category: real-estate
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - ssn
+  - property-records
+  - mortgage-data
+  - financial
+  - tax-assessments
+  - deed-transfers
+  - home-values
+
+scan:
+  scannable: false
+  reason: "B2B mortgage technology and real estate data platform. No public consumer search. Maintains the largest US property database covering nearly 100% of US property records."
+
+optout:
+  methods:
+    - type: email
+      email_to: dataprivacy@ice.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+      notes: "Include 'Do Not Sell My Personal Information' in subject line and body."
+    - type: web_form
+      url: "https://www.ice.com/privacy-security-center"
+      required_fields: [full_name, email, address]
+      template_id: null
+      notes: "Privacy Web Form accessible from ICE Privacy & Security Center."
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 90
+  notes: "ICE acquired Black Knight in 2023. Maintains the largest US property database. Provides mortgage servicing, origination, and real estate analytics. Consumer opt-out of sale/sharing of personal information available. Send 'Do Not Sell' requests to dataprivacy@ice.com. California law allows up to 90 days for data broker opt-out processing."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: high
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: ICE Privacy & Security Center, Black Knight privacy notice, Wikipedia. ICE acquired Black Knight in 2023. Largest US property database. Opt-out email dataprivacy@ice.com confirmed via ICE privacy policy."

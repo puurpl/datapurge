@@ -1,0 +1,59 @@
+id: tapad
+name: Tapad (Experian Company)
+domain: tapad.com
+aliases: [privacy.tapad.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - email
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B cross-device identity resolution platform. No consumer-facing search. Maps devices to households for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacy.tapad.com/optout.html"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://privacy.tapad.com/optout.html"
+          description: "Go to Tapad opt-out page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+    - type: email
+      email_to: privacy@tapad.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Tapad is now an Experian company. Cross-device identity graph technology that links smartphones, tablets, desktops, and connected TVs to the same user. Opt-out requires email confirmation."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #187511), tapad.com/privacy, JoinDeleteMe opt-out guide. Acquired by Experian in 2020. Cross-device identity resolution — links devices to same user for targeted advertising."

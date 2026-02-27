@@ -1,0 +1,65 @@
+id: audience-acuity
+name: Audience Acuity
+domain: audienceacuity.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - email
+  - phone
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B identity resolution and marketing data platform. No consumer-facing search. Links offline consumer identities to digital identifiers for targeted marketing."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://audienceacuity.com/opt-out-of-database/"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://audienceacuity.com/opt-out-of-database/"
+          description: "Go to Audience Acuity opt-out form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: submit
+          description: "Submit opt-out request"
+    - type: email
+      email_to: privacy@audienceacuity.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Audience Acuity provides identity resolution linking offline PII to digital identifiers for email, direct mail, and online display marketing. Opt-out stops Audience Acuity from using their database to help clients target you, but does not opt you out of clients' own databases."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registration #186838), audienceacuity.com/opt-out-of-database, audienceacuity.com/california. Identity resolution company that links offline consumer identities to digital IDs for cross-channel marketing."

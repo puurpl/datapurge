@@ -1,0 +1,54 @@
+id: sambasafety
+name: SambaSafety
+domain: sambasafety.com
+aliases: []
+category: vehicle
+data_types:
+  - name
+  - address
+  - dob
+  - driving-records
+  - license-status
+  - traffic-violations
+  - accident-history
+
+scan:
+  scannable: false
+  reason: "Driver risk management platform. No public consumer search. Provides MVR (Motor Vehicle Record) monitoring to employers and insurers."
+
+optout:
+  methods:
+    - type: email
+      email_to: bnuss@sambasafety.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+      notes: "Contact SambaSafety Data Protection Officer for privacy requests."
+    - type: web_form
+      url: "https://sambasafety.com/compliance/"
+      required_fields: [full_name, address, dob]
+      template_id: null
+      notes: "Consumer dispute form available on compliance page for inaccurate MVR information."
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Driver risk management platform providing MVR monitoring to employers and insurers. FCRA-regulated for employment purposes. Requires written consumer authorization before MVR monitoring enrollment. MVR data sourced from state DMVs and regulated under DPPA (Driver's Privacy Protection Act). Consumer disputes can be filed for inaccurate information."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: SambaSafety privacy policy, compliance page, SafeBase trust center. DPO contact is bnuss@sambasafety.com. MVR data regulated under FCRA and DPPA."

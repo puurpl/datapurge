@@ -1,0 +1,79 @@
+id: privaterecords
+name: PrivateRecords
+domain: privaterecords.net
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - bankruptcy-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.privaterecords.net/name/{first_name}/{last_name}"
+  detection:
+    - method: selector_present
+      value: ".result-item"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.privaterecords.net/optOut/name/landing"
+      required_fields: [first_name, last_name, state]
+      steps:
+        - action: navigate
+          url: "https://www.privaterecords.net/optOut/name/landing"
+          description: "Go to PrivateRecords opt-out page"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: select
+          value: "{state}"
+          description: "Select your state"
+        - action: click
+          description: "Search for your record and click opt-out"
+      template_id: null
+    - type: email
+      email_to: support@privaterecords.net
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Mailing address: Private Records LLC, ATTN: PrivateRecords Privacy, 1317 Edgewater Dr #1255, Orlando, FL 32804."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: State of Surveillance Master List, Big Ass Data Broker Opt-Out List."

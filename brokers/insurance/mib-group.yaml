@@ -1,0 +1,56 @@
+id: mib-group
+name: MIB Group
+domain: mib.com
+aliases: [mibgroup.com]
+category: insurance
+data_types:
+  - name
+  - address
+  - dob
+  - medical-history
+  - health-data
+  - insurance-claims
+  - driving-records
+
+scan:
+  scannable: false
+  reason: "Insurance information exchange. No public consumer search. Consumers can request their own MIB Consumer File annually."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.mib.com/request_your_record.html"
+      required_fields: [full_name, dob, address]
+      template_id: null
+      notes: "Request disclosure of your MIB record. MIB does not sell individual data to third parties, but you can dispute inaccuracies."
+    - type: phone
+      phone_number: "866-692-6901"
+      required_fields: [full_name, dob]
+    - type: postal
+      postal_address: "MIB Group Holdings, Inc., 50 Braintree Hill Park, Suite 400, Braintree, MA 02184-8734"
+      required_fields: [full_name, dob, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 20
+  processing_days: 30
+  legal_max_days: 30
+  notes: "FCRA-regulated nationwide specialty consumer reporting agency. Owned by ~430 member insurance companies. Stores coded medical information from life/health/disability insurance applications. MIB does not sell individually identifiable information. One free report every 12 months. Dispute inaccuracies under FCRA. MIB must investigate within 30 days."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: CFPB consumer reporting companies list, mib.com, MIB privacy policy. FCRA-regulated specialty CRA for insurance underwriting. Does not sell individual data. Dispute process available for inaccurate records."

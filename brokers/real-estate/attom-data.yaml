@@ -1,0 +1,58 @@
+id: attom-data
+name: ATTOM Data Solutions
+domain: attomdata.com
+aliases: [attom.com]
+category: real-estate
+data_types:
+  - name
+  - address
+  - property-records
+  - tax-assessments
+  - deed-transfers
+  - foreclosures
+  - mortgage-data
+  - home-values
+  - demographic
+
+scan:
+  scannable: false
+  reason: "B2B real estate data provider. No direct consumer search portal. Provides property and homeowner data to businesses via API."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@attomdata.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.attomdata.com/privacy/california-consumer-privacy-act-ccpa-request-form/"
+      required_fields: [full_name, email, address]
+      template_id: null
+      notes: "CCPA request form for opt-out, deletion, or access requests."
+    - type: phone
+      phone_number: "800-462-5125"
+      required_fields: [full_name, address]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Real estate data provider collecting from public records. Serves real estate, mortgage, insurance, and marketing industries. Opt-out via privacy@attomdata.com or CCPA request form. Located at 530 Technology Drive, Suite 100 & 200, Irvine, CA 92618."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, ATTOM privacy policy, JoinDeleteMe opt-out guide. Registered data broker in California. Collects from public records -- data may reappear after removal."

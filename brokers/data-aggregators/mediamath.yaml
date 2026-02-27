@@ -1,0 +1,66 @@
+id: mediamath
+name: MediaMath
+domain: mediamath.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic advertising demand-side platform (DSP). No consumer-facing search. Collects data via cookies and device identifiers for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.mediamath.com/ad-choices-opt-out/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.mediamath.com/ad-choices-opt-out/"
+          description: "Go to MediaMath Ad Choices opt-out page"
+        - action: click
+          description: "Click opt-out button to stop interest-based advertising"
+    - type: web_form
+      url: "https://www.mediamath.com/privacy-policy/ccpa-optout/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.mediamath.com/privacy-policy/ccpa-optout/"
+          description: "Go to MediaMath CCPA opt-out page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit CCPA opt-out request"
+    - type: email
+      email_to: privacy@mediamath.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "MediaMath is a programmatic advertising DSP. Collects data via cookies, mobile ad IDs, and pixel tags for interest-based advertising. Recognizes Global Privacy Control (GPC) signals. Also opt out via NAI opt-out tool or EDAA opt-out tool."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registration #186773), mediamath.com/privacy-policy, Optery. Programmatic advertising DSP headquartered at 4 World Trade Center, 45th Floor, New York, NY 10007. NAI and DAA member."
