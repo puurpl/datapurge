@@ -1,0 +1,54 @@
+id: homefacts
+name: HomeFacts
+domain: homefacts.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.homefacts.com/address/{state}/{city}/{address}.html"
+  detection:
+    - method: selector_present
+      value: ".property-detail"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@homefacts.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "No dedicated opt-out page. Email privacy@homefacts.com with your name, address, and request for removal. Consider engaging a content removal service if standard request fails."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Property/neighborhood focused. Limited opt-out options. Source: web research"

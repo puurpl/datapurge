@@ -1,0 +1,53 @@
+id: fog-data-science
+name: Fog Data Science
+domain: fogdatascience.com
+aliases: [fogreveal.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Law enforcement surveillance platform (Fog Reveal). No consumer-facing product. Sells geolocation data to state and local police agencies."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.fogdatascience.com/privacy-policy"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.fogdatascience.com/privacy-policy"
+          description: "Go to Fog Data Science privacy policy page"
+        - action: click
+          value: "Contact Us"
+          description: "Use the contact form or email link to submit opt-out request"
+        - action: submit
+          description: "Submit opt-out request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Fog Data Science operates Fog Reveal, a subscription service selling geolocation data to state and local law enforcement. Buys billions of data points from tens of thousands of mobile apps. Compiles location history tied to advertising IDs. EFF investigation (2022) revealed extensive warrantless surveillance use. Company is highly secretive. Best consumer defense: disable and regularly reset advertising ID on mobile devices, limit app location permissions. Opt-out may take up to 10 business days."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 10
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.60
+  notes: "Secretive law enforcement location data broker. Source: fogdatascience.com/privacy-policy, EFF investigations (2022), AP reporting. Low confidence due to company opacity and minimal public policy documentation."

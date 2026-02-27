@@ -1,0 +1,59 @@
+id: eighty-four-fifty-one
+name: 84.51 (Kroger)
+domain: 8451.com
+aliases: [kroger.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B retail data science and media platform (Kroger subsidiary). No consumer-facing search. Uses Kroger loyalty card purchase data for advertising and insights."
+
+optout:
+  methods:
+    - type: email
+      email_to: KrogerPrivacyOffice@Kroger.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-576-4377"
+      required_fields: [full_name, email]
+      notes: "1-800-KROGERS — Kroger Customer Contact Center"
+    - type: web_form
+      url: "https://www.kroger.com/i/privacy-center"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.kroger.com/i/privacy-center"
+          description: "Go to Kroger Privacy Center to opt out of data sharing"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "84.51 is Kroger's wholly-owned retail data science subsidiary. Uses Kroger loyalty card data (60M+ households) to provide advertising, media, and insights to CPG brands. Opt-out requires Kroger Loyalty ID verification. Contact KrogerPrivacyOffice@Kroger.com or call 1-800-KROGERS (1-800-576-4377)."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: kroger.com/i/privacy-policy, kroger.com/i/privacy-center. 84.51 is Kroger's retail media and data science subsidiary. Uses loyalty purchase data from 60M+ households. Contact: KrogerPrivacyOffice@Kroger.com."

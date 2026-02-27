@@ -1,7 +1,7 @@
 id: transunion
 name: TransUnion (TLO / Neustar)
 domain: transunion.com
-aliases: [tlo.com, home.neustar, neustar.biz]
+aliases: [tlo.com]
 category: data-aggregator
 data_types:
   - name

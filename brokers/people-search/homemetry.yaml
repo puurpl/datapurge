@@ -1,0 +1,77 @@
+id: homemetry
+name: Homemetry
+domain: homemetry.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://homemetry.com/address/{address}"
+  detection:
+    - method: selector_present
+      value: ".record-detail"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://homemetry.com/control/privacy"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://homemetry.com"
+          description: "Search for your address on Homemetry"
+        - action: click
+          description: "Click 'Information Control' link on the right side of the page"
+        - action: click
+          description: "Click 'Remove' button next to each detail you want deleted (max 6 per request)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit removal request"
+        - action: verify_email
+          description: "Click confirmation link in email from Homemetry"
+      template_id: null
+    - type: email
+      email_to: support@homemetry.com
+      required_fields: [full_name, email, listing_url]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 2
+  legal_max_days: 45
+  notes: "Only allows removal of 6 records at a time. For more records, submit multiple requests. Can also email support@homemetry.com with listing URL."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 2
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Property-focused people search. Data aggregated from public sources. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

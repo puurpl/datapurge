@@ -1,0 +1,53 @@
+id: ncsolutions
+name: NCSolutions
+domain: ncsolutions.com
+aliases: []
+category: data-aggregator
+data_types:
+  - purchase-history
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B CPG advertising effectiveness and purchase data platform. No consumer-facing search. Measures ad impact on actual purchases using retailer shopper data."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://ncsolutions.com/do-not-sell-my-information/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://ncsolutions.com/do-not-sell-my-information/"
+          description: "Go to NCSolutions 'Do Not Sell or Share My Information' page"
+    - type: email
+      email_to: ncs.privacy@ncsolutions.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "NCSolutions measures the sales impact of advertising using purchase data from major retailers. Opt-outs are processed on a going-forward basis only — ineffective for sales of consumer data that occurred before the opt-out. Submit requests to ncs.privacy@ncsolutions.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: ncsolutions.com/services-privacy-statement, ncsolutions.com/do-not-sell-my-information. CPG advertising effectiveness measurement using purchase data. Contact: ncs.privacy@ncsolutions.com."

@@ -1,0 +1,56 @@
+id: roundel
+name: Roundel (Target)
+domain: roundel.com
+aliases: [target.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Retail media platform (Target subsidiary). No consumer-facing search. Uses Target shopper purchase and browsing data for advertising."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.target.com/privacy-choices"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.target.com/privacy-choices"
+          description: "Go to Target privacy choices page or click 'Your Privacy Choices' footer link"
+    - type: phone
+      phone_number: "1-800-831-6880"
+      required_fields: [full_name]
+      notes: "Roundel/Target CCPA opt-out phone line"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Roundel is Target's retail media network. Uses Target Circle loyalty data and shopper browsing/purchase behavior for ad targeting. Opt out via 'Your Privacy Choices' link or call 1-800-831-6880. Supports Global Privacy Control (GPC) for frictionless opt-out."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: roundel.com/privacy-policy, corporate.target.com. Target's retail media division. Major retail media network. Contact: 1-800-831-6880."

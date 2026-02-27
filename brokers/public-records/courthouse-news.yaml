@@ -1,0 +1,57 @@
+id: courthouse-news
+name: Courthouse News Service
+domain: courthousenews.com
+aliases: [cns.law]
+category: public-records
+data_types:
+  - name
+  - address
+  - court-records
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.courthousenews.com/?s={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".post-title"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 10
+
+optout:
+  methods:
+    - type: email
+      email_to: info@courthousenews.com
+      required_fields: [full_name, email, case_url]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 90
+  notes: "Courthouse News Service is a nationwide news service for lawyers and the news media, reporting on civil litigation. Publishes summaries of new civil lawsuits filed in courts across the US. Public records are typically exempt from CCPA. Removal limited to sealed/expunged cases with court orders. CNS has argued successfully for First Amendment right to access court records."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Court records news service. Public records largely exempt from privacy laws. Source: courthousenews.com."

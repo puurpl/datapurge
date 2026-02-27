@@ -1,0 +1,71 @@
+id: ancestry
+name: Ancestry
+domain: ancestry.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - dob
+  - relatives
+  - address
+  - photos
+
+scan:
+  scannable: false
+  method: web_search
+  search_url: "https://www.ancestry.com/search/?name={first_name}+{last_name}"
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://support.ancestry.com/s/reportissue"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.ancestry.com"
+          description: "Sign up for a free account"
+        - action: input
+          value: "{full_name}"
+          description: "Search for your records"
+        - action: navigate
+          url: "https://support.ancestry.com/s/reportissue"
+          description: "Go to the Report an Issue page"
+        - action: input
+          value: "{listing_url}"
+          description: "Submit URLs of records containing your information"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+    - type: email
+      email_to: privacy@ancestry.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 20
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Requires creating a free account first to search for records. Email privacy@ancestry.com for removal. May require verification of identity. Records come from many sources."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Genealogy and historical records. Source: Big Ass Data Broker Opt-Out List"

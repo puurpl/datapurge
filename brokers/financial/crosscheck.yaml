@@ -1,0 +1,69 @@
+id: crosscheck
+name: CrossCheck Inc
+domain: cross-check.com
+aliases: [consumerinquiry.cross-check.com]
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Check verification and guarantee service. No public consumer search. Consumers can request one free report every 12 months."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@cross-check.com
+      required_fields: [full_name, email, dob, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "800-843-0760"
+      required_fields: [full_name, dob]
+      notes: "Call CrossCheck toll-free for consumer inquiries, file disclosure, or opt-out requests"
+    - type: web_form
+      url: "https://consumerinquiry.cross-check.com/RequestForReport/submitrequest"
+      required_fields: [full_name, dob, address]
+      steps:
+        - action: navigate
+          url: "https://consumerinquiry.cross-check.com/RequestForReport/submitrequest"
+          description: "Go to CrossCheck consumer inquiry portal"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{dob}"
+          description: "Enter date of birth"
+        - action: input
+          value: "{address}"
+          description: "Enter current address"
+        - action: submit
+          description: "Submit report request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated specialty CRA for check verification and guarantee services. Serves automotive, retail, medical, and building supply industries. One free report available every 12 months. Mail: CrossCheck, Inc., Attn: Privacy Inquiry Department, PO Box 6008, Petaluma, CA 94955-6008."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated specialty CRA for check verification. Source: cross-check.com/privacy-policy, CFPB consumer reporting companies list."

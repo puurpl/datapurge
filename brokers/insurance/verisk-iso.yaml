@@ -1,7 +1,7 @@
 id: verisk-iso
 name: Verisk ISO ClaimSearch / A-PLUS
 domain: fcra.verisk.com
-aliases: [iso.com, verisk.com/insurance]
+aliases: [iso.com]
 category: insurance
 data_types:
   - name

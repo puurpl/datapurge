@@ -1,0 +1,64 @@
+id: venntel
+name: Venntel (Gravy Analytics)
+domain: venntel.com
+aliases: []
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Government surveillance location data broker. Subsidiary of Gravy Analytics. Sells raw location data to federal agencies."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@venntel.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.venntel.com/opt-out"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.venntel.com/opt-out"
+          description: "Go to Venntel opt-out page"
+        - action: input
+          value: "{advertising_id}"
+          description: "Enter your Mobile Advertising ID (MAID) to identify your device data"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit opt-out and do-not-sell request"
+      template_id: null
+    - type: phone
+      phone_number: "877-717-9985"
+      required_fields: [full_name, email]
+      notes: "Call toll-free to submit opt-out request"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Venntel is a subsidiary of Gravy Analytics. FTC finalized order in January 2025 prohibiting both companies from selling sensitive location data. They collected 17+ billion location signals daily from ~1 billion devices. Data sold to ICE, CBP, FBI, and other agencies. Upon opt-out, Venntel removes all data linked to the submitted Mobile Advertising ID. Best consumer defense: disable advertising ID and reset it regularly. Registered as data broker in California."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Government surveillance location data broker. FTC enforcement action in 2024-2025. Source: venntel.com/opt-out, FTC press releases, CA Data Broker Registry (registration #188485)."

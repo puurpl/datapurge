@@ -1,0 +1,56 @@
+id: walmart-connect
+name: Walmart Connect
+domain: walmartconnect.com
+aliases: [walmart.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Retail media platform (Walmart subsidiary). No consumer-facing search. Uses Walmart shopper purchase and browsing data for advertising."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.walmart.com/account/api/ccpa-intake"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.walmart.com/account/api/ccpa-intake"
+          description: "Go to Walmart privacy choices page or click 'Your Privacy Choices' in footer"
+    - type: phone
+      phone_number: "1-800-925-6278"
+      required_fields: [full_name]
+      notes: "1-800-Walmart — say 'Privacy' when prompted"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Walmart Connect is Walmart's retail media platform, providing ad targeting based on shopper purchase data. Walmart may 'sell' or 'share' personal information for cross-context behavioral advertising under California law. Opt out via 'Your Privacy Choices' link in footer or by calling 1-800-Walmart. Supports Global Privacy Control (GPC)."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: walmartconnect.com/privacy-policy, corporate.walmart.com/privacy-security/california-privacy-rights. Walmart's retail media division. Major retail media network using first-party shopper data. Contact: 1-800-925-6278."

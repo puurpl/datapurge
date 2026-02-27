@@ -1,0 +1,77 @@
+id: golookup
+name: GoLookUp
+domain: golookup.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - criminal-records
+  - court-records
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://golookup.com/people-search/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://golookup.com/support/optout"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://golookup.com/support/optout"
+          description: "Go to GoLookUp opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete the CAPTCHA challenge"
+        - action: click
+          description: "Click Submit"
+      template_id: null
+    - type: email
+      email_to: support@golookup.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 14
+  legal_max_days: 45
+  notes: "CAPTCHA required on web form. Can also call 1-877-890-2213 (9 AM - 10 PM EST). Processing takes 7-14 business days. Data may reappear."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, texas, oregon]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Records update regularly so data may reappear. Source: Optery, Incogni opt-out guides"

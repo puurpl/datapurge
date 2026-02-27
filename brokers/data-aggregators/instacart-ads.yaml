@@ -1,0 +1,57 @@
+id: instacart-ads
+name: Instacart Ads
+domain: instacart.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Retail media platform built on grocery delivery service. No consumer-facing search for data broker purposes. Uses shopper purchase data for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.instacart.com/privacy"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.instacart.com/privacy"
+          description: "Go to Instacart privacy page and click 'Your Privacy Choices' in app or website"
+    - type: email
+      email_to: legal@instacart.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "For appeals and privacy rights requests"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Instacart Ads is Instacart's retail media platform. Shares shopper data with brand partners and advertising partners, which may constitute 'sale' or 'sharing' under state privacy laws. Opt out via 'Your Privacy Choices' in the Instacart app/website. Supports Global Privacy Control (GPC). Appeals: legal@instacart.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: instacart.com/company/privacy, instacart.com/privacy. Grocery delivery and retail media platform. Shares shopper data with brand and ad partners. Contact: legal@instacart.com."

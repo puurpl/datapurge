@@ -1,0 +1,45 @@
+id: appsflyer
+name: AppsFlyer
+domain: appsflyer.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile measurement and attribution platform. No consumer-facing search. Acts as service provider processing data on behalf of app developers."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@appsflyer.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "AppsFlyer is a mobile measurement partner (MMP). States it does not act as a data broker or ad network, does not buy/sell/license end user data, and is a 'Service Provider' under CCPA. However, it processes vast amounts of mobile attribution data. Contact privacy@appsflyer.com for data access or deletion."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Source: appsflyer.com/legal/privacy-policy. Mobile measurement partner. Herzliya, Israel. Claims service provider status, not data broker. Contact: privacy@appsflyer.com."

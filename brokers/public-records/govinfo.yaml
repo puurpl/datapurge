@@ -1,0 +1,65 @@
+id: govinfo
+name: GovInfo (US Government Publishing Office)
+domain: govinfo.gov
+aliases: [gpo.gov]
+category: public-records
+data_types:
+  - name
+  - address
+  - court-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.govinfo.gov/search?query={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 20
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.govinfo.gov/about"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.govinfo.gov/about"
+          description: "Visit GovInfo about page for contact information"
+        - action: input
+          value: "Redaction request for {full_name}"
+          description: "Submit request for redaction of personally identifying information"
+        - action: submit
+          description: "Submit redaction request (very unlikely to succeed for non-sealed records)"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 30
+  processing_days: 90
+  legal_max_days: 90
+  notes: "GovInfo is the official US Government Publishing Office repository for federal documents including court opinions, Congressional records, and federal register entries. As a government website, it is exempt from CCPA and most privacy laws. Removal of information is extremely unlikely without a court sealing order. Government records are public by default under FOIA principles."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: []
+
+timing:
+  typical_removal_days: 90
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "US Government Publishing Office. Government records exempt from most privacy laws. Source: govinfo.gov."

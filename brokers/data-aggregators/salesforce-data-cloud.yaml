@@ -1,0 +1,59 @@
+id: salesforce-data-cloud
+name: Salesforce Data Cloud (Audience Studio)
+domain: salesforce.com
+aliases: [krux.com, salesforcedmp.com]
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform and DMP. No consumer-facing search. Formerly Krux/Salesforce DMP/Audience Studio. Unifies customer data for enterprise marketing."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@salesforce.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-931-7365"
+      required_fields: [full_name, email]
+    - type: web_form
+      url: "https://www.salesforce.com/form/other/privacy-request/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.salesforce.com/form/other/privacy-request/"
+          description: "Go to Salesforce privacy request form"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Salesforce Data Cloud (formerly Audience Studio, DMP, Krux) unifies customer data for enterprise marketing. Salesforce states it does not sell Personal Data. For opt-out of sharing for advertising purposes, enable Global Privacy Control or use privacy request form. Contact: privacy@salesforce.com or 1-800-931-7365."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: salesforce.com/company/privacy, salesforce.com/privacy/regions/ccpa-and-salesforce. Salesforce Data Cloud (formerly Krux -> Salesforce DMP -> Audience Studio). Major enterprise data platform. Contact: privacy@salesforce.com, 1-800-931-7365."

@@ -1,0 +1,48 @@
+id: pinwheel
+name: Pinwheel
+domain: pinwheelapi.com
+aliases: [getpinwheel.com, pintiva.co]
+category: financial
+data_types:
+  - name
+  - email
+  - phone
+  - dob
+  - employment
+  - financial
+
+scan:
+  scannable: false
+  reason: "Consumer-permissioned income and employment data aggregator. No public search. Provides payroll data to lenders and banks."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@pinwheelapi.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Pinwheel collects consumer-permissioned income and employment data for banks, lenders, and credit unions. Provides payroll verification, direct deposit switching, and earned wage access. Operates Pinwheel CRA Co. for income verification under FCRA. Does not sell or rent personal information. You can opt out of sharing information with Pinwheel CRA Co. General inquiries: hello@getpinwheel.com. Address: 335 Madison Avenue, Floor 16, New York, NY 10017."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Consumer-permissioned payroll/income data aggregator. CFPB-listed consumer reporting company. Source: pinwheelapi.com/terms-and-policies, CFPB consumer reporting companies list."

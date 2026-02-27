@@ -1,0 +1,70 @@
+id: archives
+name: Archives.com
+domain: archives.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - relatives
+  - dob
+  - court-records
+
+scan:
+  scannable: false
+  method: web_search
+  search_url: "https://www.archives.com/search/ancestor/checkout"
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.archives.com/Optout"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.archives.com/search/ancestor/checkout"
+          description: "Sign up for a free trial account to search"
+        - action: input
+          value: "{full_name}"
+          description: "Search for your records"
+        - action: navigate
+          url: "https://www.archives.com/Optout"
+          description: "Go to the opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email"
+        - action: click
+          description: "Submit opt-out request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 15
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Requires signing up for a free trial first to search for your records. Then use the opt-out page."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: low
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Historical records and public data. Source: Big Ass Data Broker Opt-Out List"

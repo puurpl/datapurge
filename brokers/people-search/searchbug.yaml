@@ -1,0 +1,68 @@
+id: searchbug
+name: SearchBug
+domain: searchbug.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+
+scan:
+  scannable: false
+  method: web_search
+  search_url: "https://www.searchbug.com/people-finder/"
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.searchbug.com/contact-us.aspx"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.searchbug.com/contact-us.aspx"
+          description: "Go to SearchBug contact page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name and removal request details"
+        - action: input
+          value: "{email}"
+          description: "Enter your email"
+        - action: click
+          description: "Submit contact form"
+      template_id: null
+    - type: email
+      email_to: support@searchbug.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Contact via web form, phone/text (760) 454-7301, or fax (760) 454-7341. Searching requires credit card."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Paid search service. Source: Big Ass Data Broker Opt-Out List"

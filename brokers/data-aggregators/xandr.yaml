@@ -1,0 +1,63 @@
+id: xandr
+name: Xandr (Microsoft Advertising)
+domain: xandr.com
+aliases: [platform.xandr.com, about.ads.microsoft.com, appnexus.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic advertising platform (Microsoft). No consumer-facing search. Collects device/browser identifiers for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://platform.xandr.com/privacy-center/opt_out"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://platform.xandr.com/privacy-center/opt_out"
+          description: "Go to Xandr opt-out page to stop interest-based advertising"
+        - action: click
+          value: "Opt Out"
+          description: "Click opt-out button. Preference stored in cookie for 5 years."
+    - type: web_form
+      url: "https://about.ads.microsoft.com/en/forms/opt-out-personalized-ads-sales-sharing"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://about.ads.microsoft.com/en/forms/opt-out-personalized-ads-sales-sharing"
+          description: "Go to Microsoft Advertising opt-out form for sale/sharing of personal information"
+    - type: email
+      email_to: privacy@xandr.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Xandr is Microsoft's programmatic advertising platform (acquired 2022, formerly AppNexus). Opt-out cookie lasts 5 years and is browser-specific. Can also link opt-out to Microsoft account for cross-device coverage. Microsoft states it does not 'sell' data but may 'share' for personalized advertising."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: xandr.com/privacy, about.ads.microsoft.com. Formerly AppNexus, acquired by AT&T then Microsoft. Major DSP/SSP platform. Note: Xandr denied 100% of GDPR access/deletion requests in 2022 per noyb.eu complaint. Contact: privacy@xandr.com."

@@ -1,0 +1,56 @@
+id: asurint
+name: Asurint
+domain: asurint.com
+aliases: [reports.asurint.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background screening service. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: Compliance@asurint.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "800-906-2034"
+      required_fields: [full_name, dob]
+      notes: "Call for disputes, file disclosure, or privacy requests"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA for employment background screening. Wide range of services including criminal record searches, employment/education verification, and motor vehicle records. Contact compliance team for disputes or data deletion. Mail: Asurint, PO Box 14730, Cleveland, OH 44114. Fax: 1-800-906-2034."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "FCRA-regulated CRA for employment screening. Source: asurint.com/privacy-policy, CFPB consumer reporting companies list."

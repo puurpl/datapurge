@@ -1,0 +1,78 @@
+id: social-catfish
+name: SocialCatfish
+domain: socialcatfish.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - social-media
+  - photos
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://socialcatfish.com/search/#byname"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://socialcatfish.com/opt-out/"
+      required_fields: [full_name, email, listing_url]
+      steps:
+        - action: navigate
+          url: "https://socialcatfish.com/opt-out/"
+          description: "Go to Social Catfish opt-out page"
+        - action: input
+          value: "{listing_url}"
+          description: "Paste the URL of your Social Catfish record"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for confirmation link and click it"
+      template_id: null
+    - type: email
+      email_to: info@socialcatfish.com
+      required_fields: [full_name, email, listing_url]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Record URLs of your data first, then submit for removal. Can also email NVOptOut@socialcatfish.com for Nevada residents. Phone: (844) 422-8347. Processing takes up to 3 weeks."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, texas, oregon]
+
+timing:
+  typical_removal_days: 21
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Reverse image search and people search. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

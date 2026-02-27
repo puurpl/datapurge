@@ -1,0 +1,56 @@
+id: pubmatic
+name: PubMatic
+domain: pubmatic.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B supply-side ad-tech platform. No consumer-facing search. Collects device/browser identifiers for programmatic advertising."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://pubmatic.com/legal/opt-out-of-the-sale-of-personal-information/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://pubmatic.com/legal/opt-out-of-the-sale-of-personal-information/"
+          description: "Go to PubMatic opt-out page"
+        - action: click
+          value: "Opt Out"
+          description: "Click the opt-out button to set an opt-out cookie"
+    - type: email
+      email_to: pubmaticprivacy@pubmatic.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "PubMatic is a major SSP (supply-side platform) for programmatic advertising. Opt-out via cookie is browser/device specific. For full data deletion, email pubmaticprivacy@pubmatic.com. DSR Notice Page also available for formal rights requests."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: pubmatic.com/legal/privacy, pubmatic.com/legal/ccpa-privacy-policy. Major SSP processing billions of ad impressions daily. Publicly traded (NASDAQ: PUBM). Contact: pubmaticprivacy@pubmatic.com."

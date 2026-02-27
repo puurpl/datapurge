@@ -1,0 +1,54 @@
+id: treasure-data
+name: Treasure Data
+domain: treasuredata.com
+aliases: [treasure-data.com]
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Processes and unifies customer data for enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@treasure-data.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.treasuredata.com/privacy-statement/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.treasuredata.com/privacy-statement/"
+          description: "Go to Treasure Data privacy statement to find the Data Subject Request Form"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Treasure Data is an enterprise customer data platform (CDP). Opt out of cookie-based sale/sharing via 'Your Privacy Choices' footer link. For full data deletion, email privacy@treasure-data.com or use Data Subject Request Form."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: treasuredata.com/privacy-statement. Enterprise CDP platform. Subsidiary of Arm Holdings. Contact: privacy@treasure-data.com."

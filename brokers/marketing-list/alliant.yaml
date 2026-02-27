@@ -1,0 +1,57 @@
+id: alliant
+name: Alliant Cooperative Data Solutions
+domain: alliantinsight.com
+aliases: [alliantdata.com]
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - income-estimates
+  - age
+  - dob
+
+scan:
+  scannable: false
+  reason: "B2B data cooperative. No consumer-facing search. Aggregates purchase transaction data from 2,500+ contributing brands for marketing analytics."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://alliantdata.com/data-services-and-website-privacy-policy/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://alliantdata.com/data-services-and-website-privacy-policy/"
+          description: "Go to Alliant privacy policy page and use the automated opt-out form"
+    - type: email
+      email_to: Compliance@alliantdata.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Alliant is a data cooperative that aggregates transaction data from 2,500+ contributing brands representing billions of consumer transactions. Opt out via automated opt-out page on their privacy policy or email Compliance@alliantdata.com. Address: 301 Fields Lane, Brewster, NY 10509."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: alliantinsight.com/data-services-and-website-privacy-policy, California Data Broker Registry (reg #565949). Data cooperative aggregating purchase data from 2,500+ brands. Address: 301 Fields Lane, Brewster, NY 10509. Contact: Compliance@alliantdata.com."

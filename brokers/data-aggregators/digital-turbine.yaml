@@ -1,0 +1,52 @@
+id: digital-turbine
+name: Digital Turbine (AdColony)
+domain: digitalturbine.com
+aliases: [adcolony.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile advertising and app distribution platform. No consumer-facing search. AdColony SDK deprecated, now Digital Turbine FairBid."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.digitalturbine.com/legal/privacy-policy"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.digitalturbine.com/legal/privacy-policy"
+          description: "Go to Digital Turbine privacy policy page and click 'Do not Sell or Share My Personal Information'"
+    - type: email
+      email_to: privacy@digitalturbine.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Digital Turbine acquired AdColony in 2021. AdColony SDK is no longer in operation. Digital Turbine provides mobile app distribution and in-app advertising via FairBid SDK. For current privacy inquiries, contact privacy@digitalturbine.com or monetization@digitalturbine.com."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: digitalturbine.com/legal/privacy-policy. Digital Turbine acquired AdColony and Fyber. Publicly traded (NASDAQ: APPS). Contact: privacy@digitalturbine.com. Address: 110 San Antonio St, Ste 160, Austin, TX 78701."

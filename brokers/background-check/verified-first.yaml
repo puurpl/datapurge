@@ -1,0 +1,66 @@
+id: verified-first
+name: Verified First
+domain: verifiedfirst.com
+aliases: []
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background screening service. No public consumer search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://verifiedfirst.com/privacy-policy/"
+      required_fields: [full_name, email, dob]
+      steps:
+        - action: navigate
+          url: "https://verifiedfirst.com/privacy-policy/"
+          description: "Go to Verified First privacy policy page"
+        - action: click
+          value: "Privacy Request"
+          description: "Submit a privacy or data deletion request"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{email}"
+          description: "Enter email"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA providing employment background screening. Background check data subject to FCRA exemptions. Integrates with major HR platforms and ATS systems."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "FCRA-regulated CRA. Source: verifiedfirst.com/privacy-policy."

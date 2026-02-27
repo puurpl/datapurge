@@ -1,0 +1,51 @@
+id: orange-tree
+name: Orange Tree Employment Screening (Accurate)
+domain: orangetreescreening.com
+aliases: [orangetreees.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: customer_service@accurate.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Orange Tree Employment Screening was acquired by Accurate Background in June 2024. All privacy and data requests should now go through Accurate Background. FCRA-regulated CRA. Background screening reports retained for minimum 6 years per FCRA limitation of liability. Subjects may opt out by not consenting to the background screening report. Contact Accurate Background for post-acquisition data requests."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Acquired by Accurate Background in June 2024. FCRA-regulated CRA. Source: accurate.com/privacy-policy, SHRM vendor directory listing."

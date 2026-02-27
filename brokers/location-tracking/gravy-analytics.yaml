@@ -1,7 +1,7 @@
 id: gravy-analytics
 name: Gravy Analytics
 domain: gravyanalytics.com
-aliases: []
+aliases: [venntel.com, unacast.com]
 category: location-tracking
 data_types:
   - location-history

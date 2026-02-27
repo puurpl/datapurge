@@ -1,7 +1,7 @@
 id: lexisnexis-aplus
 name: LexisNexis A-PLUS
 domain: personalreports.lexisnexis.com
-aliases: [consumer.risk.lexisnexis.com]
+aliases: []
 category: insurance
 data_types:
   - name

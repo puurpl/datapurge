@@ -1,0 +1,53 @@
+id: corelogic-credco
+name: CoreLogic Credco (Cotality)
+domain: corelogic.com
+aliases: [cotality.com, credco.com]
+category: financial
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - financial
+
+scan:
+  scannable: false
+  reason: "Reseller of tri-merge consumer credit reports to mortgage lenders. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@corelogic.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "800-637-2422"
+      required_fields: [full_name, dob]
+      notes: "Call Credco Consumer Services Monday-Friday 6am-5pm PST for credit report inquiries"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "CoreLogic Credco is a reseller of consumer credit reports from Equifax, Experian, and TransUnion to mortgage lenders. Credco does not maintain its own consumer database. CoreLogic rebranded to Cotality in 2025. CCPA deletion limited to HR and B2B data subjects for California residents. FCRA obligations apply as a reseller CRA. Mail: Credco Consumer Services, PO Box 509124, San Diego, CA 92150."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated reseller CRA for mortgage lending. CoreLogic rebranded to Cotality. Source: corelogic.com/support/credco-consumer-assistance, corelogic.com privacy policy, CFPB listing."

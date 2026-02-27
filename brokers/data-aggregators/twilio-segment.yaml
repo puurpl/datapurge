@@ -1,0 +1,47 @@
+id: twilio-segment
+name: Twilio Segment
+domain: segment.com
+aliases: [twilio.com]
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Processes customer data for event tracking and audience activation on behalf of enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@twilio.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Twilio Segment is a customer data platform. States it does not sell customer user data. Operates as a service provider under CCPA. Supports data deletion via Segment API and UI. Contact privacy@twilio.com for account closure, data deletion, or CCPA requests."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: twilio.com/en-us/legal/privacy, segment.com/trust-center. Major CDP acquired by Twilio. Claims service provider status, does not sell customer data. Contact: privacy@twilio.com."

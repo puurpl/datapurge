@@ -1,0 +1,67 @@
+id: propertyrecs
+name: PropertyRecs
+domain: propertyrecs.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.propertyrecs.com/search?name={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://dashboard.propertyrecs.com/opt-out"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://dashboard.propertyrecs.com/opt-out"
+          description: "Go to PropertyRecs opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Search for your name and state"
+        - action: click
+          description: "Find your record and click removal button"
+      template_id: null
+    - type: email
+      email_to: support@propertyrecs.com
+      required_fields: [full_name, email, dob, address]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Can email support@propertyrecs.com with a screenshot or link to your record, or your complete name, DOB, city/state, and email. Phone: 1-866-242-0544."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Property records search. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

@@ -1,7 +1,7 @@
 id: whitepages
 name: Whitepages
 domain: whitepages.com
-aliases: [whitepages.com, premium.whitepages.com]
+aliases: [premium.whitepages.com]
 category: people-search
 data_types: [name, address, phone, email, age, relatives, associates, criminal-records, property-records]
 

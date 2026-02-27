@@ -1,0 +1,74 @@
+id: datecheck
+name: DateCheck
+domain: datecheck.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.datecheck.com/search?name={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://suppression.peopleconnect.us/login"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://suppression.peopleconnect.us/login"
+          description: "Go to PeopleConnect Suppression Center"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: verify_email
+          description: "Check email for verification link and click it"
+        - action: input
+          value: "{full_name}"
+          description: "Search for your name"
+        - action: click
+          description: "Select your record and submit suppression"
+      template_id: null
+    - type: email
+      email_to: support@mailer.intelius.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Part of PeopleConnect/Intelius network. Background check for dating. One opt-out at PeopleConnect covers all network sites."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Background check for dating. Part of PeopleConnect/Intelius. Source: Big Ass Data Broker Opt-Out List"

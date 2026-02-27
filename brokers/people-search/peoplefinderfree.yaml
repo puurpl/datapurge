@@ -1,0 +1,71 @@
+id: peoplefinderfree
+name: PeopleFinderFree
+domain: peoplefinderfree.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+  - photos
+  - criminal-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://peoplefinderfree.com/people-search/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://peoplefinderfree.com/optout"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://peoplefinderfree.com/optout"
+          description: "Go to PeopleFinderFree opt-out page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Standard web form opt-out process."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Optery, DeleteMyInfo opt-out guides"
