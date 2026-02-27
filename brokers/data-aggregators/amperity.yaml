@@ -1,0 +1,51 @@
+id: amperity
+name: Amperity
+domain: amperity.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - address
+  - purchase-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP) and identity resolution. No consumer-facing search. Unifies first-party consumer data for enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@amperity.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-674-8267"
+      required_fields: [full_name, email]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Amperity is a customer data platform specializing in identity resolution. States it does not sell personal information for money, but may process data for targeted advertising. Opt out by emailing privacy@amperity.com or calling 1-800-674-8267. Supports Global Privacy Control (GPC) signals."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: amperity.com/legal/privacy-notice. Enterprise CDP with identity resolution. Seattle-based. Contact: privacy@amperity.com, 1-800-674-8267."

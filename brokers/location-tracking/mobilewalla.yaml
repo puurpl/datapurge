@@ -1,0 +1,48 @@
+id: mobilewalla
+name: Mobilewalla
+domain: mobilewalla.com
+aliases: []
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B location data and audience intelligence platform. No consumer-facing product. Collects location data from real-time bidding ad exchanges."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@mobilewalla.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: marketingopt-out@mobilewalla.com
+      required_fields: [full_name, email]
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FTC finalized order in January 2025 banning Mobilewalla from selling sensitive location data. Collected consumer location data from online real-time bidding (RTB) advertising exchanges. FTC alleged this was an unfair act under Section 5. To opt out of services, submit your Advertising ID to privacy@mobilewalla.com. Marketing opt-out: marketingopt-out@mobilewalla.com."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Location data broker subject to FTC enforcement action (2024-2025). Source: mobilewalla.com/website-privacy, mobilewalla.com/business-services-privacy-policy, FTC press releases."

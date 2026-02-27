@@ -1,0 +1,57 @@
+id: plaid
+name: Plaid
+domain: plaid.com
+aliases: [my.plaid.com]
+category: financial
+data_types:
+  - name
+  - email
+  - phone
+  - financial
+
+scan:
+  scannable: false
+  reason: "Financial data aggregator. No public consumer search. Connects to consumer bank accounts via APIs on behalf of third-party apps."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://my.plaid.com/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://my.plaid.com/"
+          description: "Go to Plaid Portal to view and manage your connected accounts"
+        - action: click
+          value: "Create Account / Log In"
+          description: "Create a Plaid Portal account or log in"
+        - action: click
+          value: "Delete Data"
+          description: "Select connections and delete your financial data from Plaid's systems"
+        - action: submit
+          description: "Confirm deletion request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Plaid connects consumer bank accounts to third-party financial apps (Venmo, Cash App, etc.). Claims not to sell or rent personal information. Use the Plaid Portal (my.plaid.com) to view all connected apps and delete data. Plaid Privacy Request Form available regardless of jurisdiction. Past class action lawsuit alleged CCPA violations for insufficient disclosures. Disconnect individual apps through the Plaid Portal to revoke access."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Major financial data aggregator. Source: plaid.com/legal, plaid.com/how-we-handle-data, support-my.plaid.com consumer help center."

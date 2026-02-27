@@ -1,0 +1,56 @@
+id: nativo
+name: Nativo
+domain: nativo.com
+aliases: []
+category: other
+data_types:
+  - device-ids
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "Native advertising platform. No consumer-facing search. Tracks users for programmatic ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.nativo.com/privacy-portal"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.nativo.com/privacy-portal"
+          description: "Go to Nativo privacy portal"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out of sale/sharing of personal information"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit opt-out request"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Nativo is a native advertising technology platform that serves personalized content ads. Collects device identifiers and browsing data for ad targeting. Cookie-based opt-out available. Honors Global Privacy Control signal."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Native advertising technology platform. Source: nativo.com/privacy-policy."

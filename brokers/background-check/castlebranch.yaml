@@ -1,0 +1,56 @@
+id: castlebranch
+name: CastleBranch (DISA)
+domain: castlebranch.com
+aliases: [mycb.castlebranch.com, disa.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Background screening and compliance tracking for higher education and healthcare. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: compliance@castlebranch.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "866-217-7215"
+      required_fields: [full_name, dob]
+      notes: "Call toll-free for consumer disputes, privacy requests, or human trafficking victim report disputes"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA focused on higher education and healthcare compliance tracking. Acquired by DISA Global Solutions. Consent withdrawal: email compliance@castlebranch.com. Complaints: email complaints@castlebranch.com. Opt-out of automated calls/texts: allow up to 30 days to process. Located at 1844 Sir Tyler Drive, Wilmington, NC."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated CRA for higher education/healthcare compliance. Acquired by DISA. Source: castlebranch.com/privacy-policy, disa.com/privacy-policy, CFPB listing."

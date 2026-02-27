@@ -1,7 +1,7 @@
 id: autocheck
 name: AutoCheck (Experian)
 domain: autocheck.com
-aliases: [experian.com/automotive/autocheck-business]
+aliases: []
 category: vehicle
 data_types:
   - name

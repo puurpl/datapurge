@@ -1,0 +1,58 @@
+id: justia
+name: Justia
+domain: justia.com
+aliases: [dockets.justia.com, law.justia.com]
+category: public-records
+data_types:
+  - name
+  - address
+  - court-records
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://dockets.justia.com/search?query={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 10
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@justia.com
+      required_fields: [full_name, email, case_url]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 90
+  notes: "Justia provides free access to federal and state case law, court opinions, and dockets. One of the largest free legal information platforms. Public records are typically exempt from CCPA. Justia may de-index specific pages from search engines but underlying court records remain publicly accessible. Removal primarily available for sealed or expunged cases with court orders."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Free legal information and court records platform. Public records largely exempt from privacy laws. Source: justia.com."

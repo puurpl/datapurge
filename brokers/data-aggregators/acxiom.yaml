@@ -1,7 +1,7 @@
 id: acxiom
-name: Acxiom (now Kinesso)
+name: Acxiom
 domain: acxiom.com
-aliases: [kinesso.com, liveramp.com, aboutthedata.com]
+aliases: [kinesso.com, aboutthedata.com]
 category: data-aggregator
 data_types:
   - name

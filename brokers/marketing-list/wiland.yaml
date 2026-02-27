@@ -1,0 +1,57 @@
+id: wiland
+name: Wiland
+domain: wiland.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - income-estimates
+  - age
+  - dob
+
+scan:
+  scannable: false
+  reason: "B2B data cooperative and marketing analytics company. No consumer-facing search. Provides predictive models and audience lists to clients."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://wiland.com/privacy-choices/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://wiland.com/privacy-choices/"
+          description: "Go to Wiland Privacy Choices page to submit opt-out or 'do not sell' request"
+    - type: email
+      email_to: privacy@wiland.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Wiland is a data cooperative that helps clients identify prospective customers using purchase transaction data from cooperating retailers and nonprofits. Claims not to 'sell' or 'share' HR information. Submit opt-out requests via wiland.com/privacy-choices or email privacy@wiland.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: wiland.com/privacy-choices, California Data Broker Registry (reg #186790). Data cooperative providing predictive models for direct marketing. Colorado-based. Contact: privacy@wiland.com."

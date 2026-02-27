@@ -1,0 +1,48 @@
+id: cambridge-mobile-telematics
+name: Cambridge Mobile Telematics (CMT)
+domain: cmtelematics.com
+aliases: [drivewell.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Telematics platform for insurance companies. Collects driving behavior and location data via mobile apps. No direct consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@cmtelematics.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "800-941-7177"
+      required_fields: [full_name, email]
+      notes: "Call CMT to exercise privacy rights or submit data deletion request"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Cambridge Mobile Telematics is the world's largest telematics service provider, powering usage-based insurance (UBI) programs for major insurers. Collects GPS coordinates, WiFi, Bluetooth, and accelerometer data through insurance company apps (DriveWell SDK). To stop collection, disable location access for the insurance app in device settings. Data controller for GDPR purposes. Address: 314 Main Street, Cambridge, MA 02142."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "World's largest telematics platform for insurance. Source: cmtelematics.com/privacy-policy. Collects location via SDK in insurer apps."

@@ -1,0 +1,50 @@
+id: modigie
+name: Modigie, Inc.
+domain: modigie.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - online-activity
+  - demographics
+
+scan:
+  scannable: false
+  reason: "Imported from California Data Broker Registry. Manual verification needed."
+
+optout:
+  methods:
+    - type: email
+      email_to: "kleclaire@modigie.com"
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://modigie.com/privacy-policy/"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "CCPA rights page from CA Data Broker Registry filing." 
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Registered California data broker. Imported from CPPA registry."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: ca_data_broker_registry
+  confidence: 0.70
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."

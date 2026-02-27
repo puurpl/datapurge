@@ -1,0 +1,60 @@
+id: amazon-ads
+name: Amazon Ads
+domain: advertising.amazon.com
+aliases: [ads.amazon.com, amazon.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Retail media and programmatic advertising platform. No consumer-facing data broker search. Uses Amazon shopping and browsing data for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.amazon.com/privacyprefs"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.amazon.com/privacyprefs"
+          description: "Go to Amazon Your Ads Privacy Choices to opt out of cross-context behavioral advertising"
+    - type: web_form
+      url: "https://www.amazon.com/adprefs"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.amazon.com/adprefs"
+          description: "Go to Amazon Advertising Preferences to opt out of interest-based advertising"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Amazon Ads is the third-largest digital advertising platform. Amazon states it has not 'sold' personal information but shares identifiers for cross-context behavioral advertising. Opt out via 'Your Ads Privacy Choices' or 'Advertising Preferences' page. Supports Global Privacy Control (GPC). Login required."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: amazon.com/gp/help/customer/display.html?nodeId=GC5HB5DVMU5Y8CJ2. Third-largest digital ad platform globally. Uses first-party retail purchase data. Not registered as data broker but shares data for behavioral advertising."

@@ -1,0 +1,70 @@
+id: instant-people-finder
+name: InstantPeopleFinder
+domain: instantpeoplefinder.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: false
+  method: web_search
+  search_url: "https://www.instantpeoplefinder.com"
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://suppression.peopleconnect.us/login"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://suppression.peopleconnect.us/login"
+          description: "Go to PeopleConnect Suppression Center (handles InstantPeopleFinder)"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: verify_email
+          description: "Check email for verification link and click it"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name to find your record"
+        - action: click
+          description: "Select your record and submit suppression request"
+      template_id: null
+    - type: email
+      email_to: support@mailer.intelius.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Part of PeopleConnect/Intelius network. Site may have ceased independent operation. Opt-out through PeopleConnect Suppression Center covers all network sites including Intelius, TruthFinder, Instant Checkmate, and more."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: low
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Owned by Intelius/PeopleConnect. May have ceased independent operation. Source: Onerep, PurePrivacy, DeleteMyInfo"

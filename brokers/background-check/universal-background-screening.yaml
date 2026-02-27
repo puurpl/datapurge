@@ -1,0 +1,55 @@
+id: universal-background-screening
+name: Universal Background Screening
+domain: universalbackground.com
+aliases: []
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service and licensed Private Investigator Agency. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: info@universalbackground.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "602-337-3060"
+      required_fields: [full_name, dob]
+      notes: "Call Universal Background Screening for consumer inquiries or privacy requests"
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA and licensed Private Investigator Agency (Arizona). Does not sell consumer information to third parties. Consumers who wish to opt out should not provide information or sign the Background Check Authorization Form. Mail: Universal Background Screening, Attn: Consumer Information Privacy Policy, PO Box 5920, Scottsdale, AZ 85261. Office: 7720 North 16th Street, Suite 450, Phoenix, AZ 85020."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated CRA and AZ-licensed PI agency. Source: universalbackground.com/consumer-information-privacy-policy, universalbackground.com/website-privacy-policy-statement."
