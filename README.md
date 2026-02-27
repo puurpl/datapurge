@@ -6,7 +6,7 @@
 
 DataPurge maintains a community-driven database of data broker opt-out procedures and helps you contact every single one:
 
-- **One-click mass mailing**: Enter your info once. DataPurge generates legally-cited opt-out emails for 200+ brokers and lets you BCC them all in a single click.
+- **One-click mass mailing**: Enter your info once. DataPurge generates legally-cited opt-out emails for 700+ brokers and lets you BCC them all in a single click.
 - **Jurisdiction-aware templates**: Automatically selects the strongest legal template based on your location — CCPA, GDPR, state privacy laws, or blanket federal coverage.
 - **Multi-profile support**: Manage separate identities (different names, emails, locations) with independent progress tracking.
 - **Free monitoring pipeline**: Track response deadlines, verify removal from broker search pages, generate noncompliance notices for overdue brokers.
@@ -52,7 +52,7 @@ Every opt-out request includes:
 
 ## The Broker Registry
 
-The `brokers/` directory contains YAML definitions for 200+ data brokers organized by category. Each file includes opt-out contact info, applicable laws, data types collected, and search URLs for verification.
+The `brokers/` directory contains YAML definitions for 700+ data brokers organized by category. Each file includes opt-out contact info, applicable laws, data types collected, and search URLs for verification.
 
 ### Contributing a Broker
 
