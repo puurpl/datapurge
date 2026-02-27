@@ -215,18 +215,57 @@ function getLocationNotices() {
     return notices.join('');
 }
 
-// mailto: URLs have platform-specific length limits (~2KB on macOS, ~8KB on Linux,
-// ~32KB on Windows). With 600+ broker addresses we can easily exceed these limits.
-// MAILTO_BATCH_SIZE controls how many BCC addresses go in each mailto link.
-const MAILTO_BATCH_SIZE = 50;
+// --- Email provider limits ---
+// Each provider has a max BCC per message and a daily sending cap.
+// mailto: URLs also have OS-level length limits (~2KB macOS, ~8KB Linux, ~32KB Windows).
+const EMAIL_PROVIDERS = [
+    { id: 'gmail',     name: 'Gmail',       maxBcc: 100, dailyCap: 500,  note: 'Limits each email to ~100 BCC recipients. 500 emails/day.' },
+    { id: 'outlook',   name: 'Outlook / Hotmail', maxBcc: 100, dailyCap: 300, note: 'Supports up to 500 recipients per message but may throttle above 100.' },
+    { id: 'yahoo',     name: 'Yahoo / AOL', maxBcc: 100, dailyCap: 500,  note: 'Limits BCC to ~200 per email. May flag mass sends above 100.' },
+    { id: 'proton',    name: 'Proton Mail', maxBcc: 100, dailyCap: 150,  note: '100 recipients per message (free). 250 on paid plans. 150/day free cap.' },
+    { id: 'icloud',    name: 'iCloud Mail', maxBcc: 100, dailyCap: 500,  note: 'Supports up to 500 recipients. Mailto links work well on Apple devices.' },
+    { id: 'zoho',      name: 'Zoho Mail',   maxBcc: 100, dailyCap: 250,  note: '100 BCC recipients per email on most plans.' },
+    { id: 'fastmail',  name: 'Fastmail',    maxBcc: 100, dailyCap: 500,  note: 'Supports large BCC lists. 100 per batch for consistent delivery.' },
+    { id: 'other',     name: 'Other / Custom', maxBcc: 50,  dailyCap: null, note: 'Conservative default. Adjust the batch size below if your provider supports more.' },
+];
 
-function buildMailtoBatches(allEmails, subject, body) {
+// Map email domains → provider ID for auto-detection (recommendation only)
+const DOMAIN_TO_PROVIDER = {
+    'gmail.com': 'gmail', 'googlemail.com': 'gmail',
+    'outlook.com': 'outlook', 'hotmail.com': 'outlook', 'live.com': 'outlook', 'msn.com': 'outlook',
+    'yahoo.com': 'yahoo', 'yahoo.co.uk': 'yahoo', 'ymail.com': 'yahoo', 'aol.com': 'yahoo',
+    'protonmail.com': 'proton', 'proton.me': 'proton', 'pm.me': 'proton',
+    'icloud.com': 'icloud', 'me.com': 'icloud', 'mac.com': 'icloud',
+    'zoho.com': 'zoho', 'zohomail.com': 'zoho',
+    'fastmail.com': 'fastmail', 'fastmail.fm': 'fastmail',
+};
+
+function detectProviderId(email) {
+    if (!email || typeof email !== 'string') return null;
+    const domain = email.split('@')[1]?.toLowerCase();
+    return domain ? (DOMAIN_TO_PROVIDER[domain] || null) : null;
+}
+
+const BATCH_SIZE_KEY = 'datapurge_batch_size';
+
+function getSavedBatchSize() {
+    try {
+        const val = parseInt(localStorage.getItem(BATCH_SIZE_KEY));
+        return val > 0 ? val : null;
+    } catch { return null; }
+}
+
+function saveBatchSize(size) {
+    try { localStorage.setItem(BATCH_SIZE_KEY, String(size)); } catch { /* ignore */ }
+}
+
+function buildBatches(allEmails, maxBcc, subject, body) {
     const batches = [];
-    for (let i = 0; i < allEmails.length; i += MAILTO_BATCH_SIZE) {
-        const slice = allEmails.slice(i, i + MAILTO_BATCH_SIZE);
+    for (let i = 0; i < allEmails.length; i += maxBcc) {
+        const slice = allEmails.slice(i, i + maxBcc);
         const bcc = slice.join(', ');
         const link = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        batches.push({ bcc, link, count: slice.length, start: i + 1, end: i + slice.length });
+        batches.push({ emails: slice, bcc, link, count: slice.length, start: i + 1, end: i + slice.length });
     }
     return batches;
 }
@@ -235,11 +274,20 @@ function renderMassMode(container) {
     const mass = buildMassEmail();
     if (!mass) return;
 
+    // Check if user already chose a batch size
+    const saved = getSavedBatchSize();
+    if (saved) {
+        renderBatchSendFlow(container, mass, saved);
+    } else {
+        renderProviderPicker(container, mass);
+    }
+}
+
+function renderProviderPicker(container, mass) {
     const brokers = getEmailableBrokers();
     const nonEmailBrokers = getNonEmailBrokers();
-
-    const batches = buildMailtoBatches(mass.bccList, mass.subject, mass.body);
-    const singleBatch = batches.length === 1;
+    const pii = Store.getPII();
+    const detectedId = detectProviderId(pii?.email);
 
     container.innerHTML = `
         <h2 class="mb-2">Send to All Brokers at Once</h2>
@@ -247,10 +295,140 @@ function renderMassMode(container) {
         <div class="callout" style="text-align: left;">
             <h3 style="margin-bottom: 0.75rem;">How this works</h3>
             <p class="text-secondary" style="max-width: none;">
-                One email, BCC'd to <strong>${mass.count} data broker privacy addresses</strong>.
+                We'll BCC <strong>${mass.count} data broker privacy addresses</strong> using
+                <strong>${esc(mass.templateName)}</strong> — the strongest legal template for your
+                location. Every provider limits how many BCC recipients you can include per email,
+                so we'll split them into batches for you.
+            </p>
+        </div>
+
+        <div class="card mt-2">
+            <div class="card-header">
+                <div class="card-title">Which email provider do you use?</div>
+            </div>
+            <p class="text-sm text-secondary mb-1">
+                This determines how many brokers to include per email. Your choice is saved for next time.
+                ${detectedId ? `We detected <strong>${esc(EMAIL_PROVIDERS.find(p => p.id === detectedId)?.name || '')}</strong> from your email address.` : ''}
+            </p>
+            <div id="provider-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                ${EMAIL_PROVIDERS.map(p => `
+                    <button class="btn ${p.id === detectedId ? 'btn-primary' : 'btn-outline'} btn-provider" data-provider="${p.id}"
+                        style="text-align: left; padding: 0.75rem; height: auto; white-space: normal;">
+                        <strong>${esc(p.name)}${p.id === detectedId ? ' (detected)' : ''}</strong>
+                        <span class="text-sm ${p.id === detectedId ? '' : 'text-secondary'}" style="display: block; margin-top: 0.25rem;">
+                            ${p.maxBcc} per email${p.dailyCap ? ` · ${p.dailyCap}/day` : ''}
+                        </span>
+                    </button>
+                `).join('')}
+            </div>
+
+            <details class="mt-2">
+                <summary class="text-sm text-secondary" style="cursor: pointer;">Provider limits explained</summary>
+                <div class="mt-1" style="font-size: 0.8rem;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--color-border);">
+                                <th style="text-align: left; padding: 0.25rem 0.5rem;">Provider</th>
+                                <th style="text-align: right; padding: 0.25rem 0.5rem;">Per email</th>
+                                <th style="text-align: right; padding: 0.25rem 0.5rem;">Per day</th>
+                                <th style="text-align: left; padding: 0.25rem 0.5rem;">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${EMAIL_PROVIDERS.filter(p => p.id !== 'other').map(p => `
+                                <tr style="border-bottom: 1px solid var(--color-border);">
+                                    <td style="padding: 0.25rem 0.5rem;">${esc(p.name)}</td>
+                                    <td style="text-align: right; padding: 0.25rem 0.5rem;">${p.maxBcc}</td>
+                                    <td style="text-align: right; padding: 0.25rem 0.5rem;">${p.dailyCap || '—'}</td>
+                                    <td style="padding: 0.25rem 0.5rem;" class="text-secondary">${esc(p.note)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+
+            <div class="mt-2" style="display: flex; align-items: center; gap: 0.5rem;">
+                <label class="text-sm" for="custom-batch-size">Or set a custom batch size:</label>
+                <input type="number" id="custom-batch-size" min="1" max="500" placeholder="e.g. 75"
+                    style="width: 80px; padding: 0.35rem 0.5rem; border: 1px solid var(--color-border); border-radius: 4px; font-size: 0.9rem;">
+                <button class="btn btn-outline btn-sm" id="btn-custom-batch">Apply</button>
+            </div>
+        </div>
+
+        ${nonEmailBrokers.length > 0 ? `
+        <div class="callout mt-2" style="text-align: left;">
+            <p class="text-sm text-secondary" style="max-width: none;">
+                <strong>${nonEmailBrokers.length} broker${nonEmailBrokers.length > 1 ? 's' : ''}</strong> require manual opt-out
+                (web form or phone). Check the <a href="#brokers">Brokers</a> directory for details.
+            </p>
+        </div>
+        ` : ''}
+
+        <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+            <div class="flex items-center justify-between mb-1">
+                <h3>Prefer to send individually?</h3>
+                <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
+            </div>
+            <p class="text-sm text-secondary">
+                Send one-by-one with broker-specific templates for a stronger paper trail.
+            </p>
+        </div>
+    `;
+
+    // Provider button clicks
+    container.querySelectorAll('.btn-provider').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const providerId = btn.getAttribute('data-provider');
+            const provider = EMAIL_PROVIDERS.find(p => p.id === providerId);
+            if (provider) {
+                saveBatchSize(provider.maxBcc);
+                renderBatchSendFlow(container, mass, provider.maxBcc);
+            }
+        });
+    });
+
+    // Custom batch size
+    container.querySelector('#btn-custom-batch').addEventListener('click', () => {
+        const input = container.querySelector('#custom-batch-size');
+        const val = parseInt(input.value);
+        if (val > 0 && val <= 500) {
+            saveBatchSize(val);
+            renderBatchSendFlow(container, mass, val);
+        } else {
+            input.style.borderColor = 'var(--color-warning)';
+            showToast('Enter a number between 1 and 500');
+        }
+    });
+
+    // Switch to individual
+    container.querySelector('#btn-individual-mode').addEventListener('click', () => {
+        renderIndividualMode(container);
+    });
+}
+
+function renderBatchSendFlow(container, mass, batchSize) {
+    const brokers = getEmailableBrokers();
+    const nonEmailBrokers = getNonEmailBrokers();
+    const batches = buildBatches(mass.bccList, batchSize, mass.subject, mass.body);
+    const totalEmails = batches.length;
+
+    container.innerHTML = `
+        <h2 class="mb-2">Send to All Brokers at Once</h2>
+
+        <div class="callout" style="text-align: left;">
+            <h3 style="margin-bottom: 0.75rem;">How this works</h3>
+            <p class="text-secondary" style="max-width: none;">
+                ${totalEmails === 1
+                    ? `One email, BCC'd to <strong>${mass.count} data broker privacy addresses</strong>.`
+                    : `<strong>${totalEmails} emails</strong>, each with up to <strong>${batchSize} BCC recipients</strong> (${mass.count} total).`}
                 Using <strong>${esc(mass.templateName)}</strong> — the strongest template for your
                 location. It cites every applicable law, withdraws consent, demands written
                 confirmation, and warns of regulatory action for non-compliance.
+            </p>
+            <p class="text-sm text-secondary mt-1">
+                Batch size: <strong>${batchSize}</strong> per email.
+                <button class="btn-link text-sm" id="btn-change-provider" style="background:none; border:none; color:var(--color-primary); cursor:pointer; padding:0; text-decoration:underline;">Change</button>
             </p>
         </div>
 
@@ -258,10 +436,10 @@ function renderMassMode(container) {
 
         <div class="card mt-2">
             <div class="card-header">
-                <div class="card-title">Step 1 — Copy the email</div>
+                <div class="card-title">Step 1 — Copy the email body</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                Copy the subject and body, then paste into a new email in your email client.
+                This is the same for ${totalEmails === 1 ? 'the email' : 'every batch'} — copy once${totalEmails > 1 ? ', reuse for each email' : ''}.
             </p>
             <div class="email-preview">
                 <button class="email-preview-toggle" id="toggle-body">
@@ -279,40 +457,38 @@ ${esc(mass.body)}</div>
 
         <div class="card mt-2">
             <div class="card-header">
-                <div class="card-title">Step 2 — Add the BCC addresses</div>
+                <div class="card-title">Step 2 — Send ${totalEmails} email${totalEmails > 1 ? 's' : ''}</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                Copy all ${mass.count} addresses and paste into the <strong>BCC</strong> field.
-                Using BCC means brokers can't see each other's addresses.
+                ${totalEmails === 1
+                    ? 'Copy the BCC addresses below and paste into the <strong>BCC</strong> field of a new email.'
+                    : 'For each batch: create a new email, paste the subject + body, then copy and paste the BCC addresses.'}
             </p>
-            <div class="email-preview">
-                <button class="email-preview-toggle" id="toggle-bcc">
-                    <span>Show all ${mass.count} addresses</span>
-                    <span>&#9662;</span>
-                </button>
-                <div class="email-preview-content" id="bcc-list">${esc(mass.bccString)}</div>
-            </div>
-            <div class="mt-1">
-                <button class="btn btn-primary" id="btn-copy-bcc" style="width:100%;">Copy All ${mass.count} BCC Addresses</button>
-            </div>
-        </div>
-
-        <details class="mt-2">
-            <summary class="text-sm text-secondary" style="cursor:pointer;">Prefer one-click mailto links? Open in batches of ${MAILTO_BATCH_SIZE}</summary>
-            <p class="text-sm text-secondary mt-1 mb-1">
-                Email clients limit how many addresses fit in a single link, so we split them into
-                ${batches.length} batches. Click each one to open a pre-filled email.
-            </p>
-            <div id="mailto-batches">
+            <div id="batch-list">
                 ${batches.map((b, i) => `
-                    <div class="card mt-1">
-                        <a href="${b.link}" class="btn btn-outline btn-mailto-batch" data-batch="${i}" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
-                            Batch ${i + 1}: Brokers ${b.start}–${b.end} (${b.count} addresses)
-                        </a>
+                    <div class="card mt-1 batch-card" data-batch="${i}" style="border-left: 3px solid var(--color-border);">
+                        <div class="flex items-center justify-between mb-1">
+                            <strong class="text-sm">
+                                ${totalEmails === 1 ? `All ${b.count} addresses` : `Email ${i + 1} of ${totalEmails} — ${b.count} addresses`}
+                            </strong>
+                            <span class="badge batch-status" id="batch-status-${i}"></span>
+                        </div>
+                        <div class="email-preview">
+                            <button class="email-preview-toggle" data-toggle-batch="${i}">
+                                <span>${totalEmails === 1 ? `Show all ${b.count} addresses` : `Show ${b.count} addresses (#${b.start}–${b.end})`}</span>
+                                <span>&#9662;</span>
+                            </button>
+                            <div class="email-preview-content batch-bcc" id="batch-bcc-${i}">${esc(b.bcc)}</div>
+                        </div>
+                        <div class="mt-1 flex" style="gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary btn-sm btn-copy-batch" data-batch="${i}">Copy BCC Addresses</button>
+                            <a href="${b.link}" class="btn btn-outline btn-sm btn-mailto-batch" data-batch="${i}">Open via mailto</a>
+                            <button class="btn btn-success btn-sm btn-batch-done" data-batch="${i}">Sent</button>
+                        </div>
                     </div>
                 `).join('')}
             </div>
-        </details>
+        </div>
 
         <!-- Post-send prompt (hidden initially, shown on return) -->
         <div class="card mt-2" id="post-send-prompt" style="display:none; border-color: var(--color-success);">
@@ -320,20 +496,20 @@ ${esc(mass.body)}</div>
                 <div class="card-title" style="color: var(--color-success);">Welcome back! Did you send it?</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                If you sent the email, mark all brokers as contacted to start tracking deadlines.
+                Mark the batch as done above, or mark everything at once below.
             </p>
             <button class="btn btn-success btn-lg" id="btn-mark-all-sent-prompt" style="width:100%;">
-                Yes — Mark All ${mass.count} Brokers as Sent
+                Mark All ${mass.count} Brokers as Sent
             </button>
         </div>
 
         <div class="card mt-2" id="mark-done-card">
             <div class="card-header">
-                <div class="card-title">Step 3 — Mark as done</div>
+                <div class="card-title">Step 3 — Mark all as done</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                After you've sent the email, click below to mark all brokers as contacted
-                and start tracking legal deadlines.
+                Once you've sent ${totalEmails === 1 ? 'the email' : `all ${totalEmails} emails`},
+                click below to mark all brokers as contacted and start tracking legal deadlines.
             </p>
             <button class="btn btn-success" id="btn-mark-all-sent" style="width:100%;">Mark All ${mass.count} Brokers as Sent</button>
         </div>
@@ -353,7 +529,7 @@ ${esc(mass.body)}</div>
                 <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
             </div>
             <p class="text-sm text-secondary">
-                Send one-by-one for a stronger paper trail per broker.
+                Send one-by-one with broker-specific templates for a stronger paper trail.
             </p>
         </div>
 
@@ -362,6 +538,14 @@ ${esc(mass.body)}</div>
             <div id="broker-list"></div>
         </div>
     `;
+
+    // --- Event listeners ---
+
+    // Change provider / batch size
+    container.querySelector('#btn-change-provider').addEventListener('click', () => {
+        try { localStorage.removeItem(BATCH_SIZE_KEY); } catch { /* ignore */ }
+        renderProviderPicker(container, mass);
+    });
 
     // Post-send UX: detect when user returns after clicking a mailto batch
     let mailtoClicked = false;
@@ -386,25 +570,45 @@ ${esc(mass.body)}</div>
         renderCompletionCard(container, mass.count);
     });
 
-    // Toggle BCC list
-    container.querySelector('#toggle-bcc').addEventListener('click', () => {
-        container.querySelector('#bcc-list').classList.toggle('open');
-    });
-
-    // Toggle email body
+    // Toggle email body preview
     container.querySelector('#toggle-body').addEventListener('click', () => {
         container.querySelector('#email-body').classList.toggle('open');
     });
 
-    // Copy BCC
-    container.querySelector('#btn-copy-bcc').addEventListener('click', () => {
-        copyToClipboard(mass.bccString, `${mass.count} addresses copied`);
+    // Toggle per-batch BCC previews
+    container.querySelectorAll('[data-toggle-batch]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = btn.getAttribute('data-toggle-batch');
+            container.querySelector(`#batch-bcc-${idx}`).classList.toggle('open');
+        });
     });
 
-    // Copy email
+    // Copy BCC for a batch
+    container.querySelectorAll('.btn-copy-batch').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-batch'));
+            copyToClipboard(batches[idx].bcc, `${batches[idx].count} addresses copied${totalEmails > 1 ? ` (email ${idx + 1} of ${totalEmails})` : ''}`);
+        });
+    });
+
+    // Mark individual batch as sent (visual indicator only)
+    container.querySelectorAll('.btn-batch-done').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = btn.getAttribute('data-batch');
+            const card = container.querySelector(`.batch-card[data-batch="${idx}"]`);
+            const status = container.querySelector(`#batch-status-${idx}`);
+            if (card) card.style.borderLeftColor = 'var(--color-success)';
+            if (status) { status.textContent = 'Sent'; status.className = 'badge badge-sent batch-status'; }
+            btn.disabled = true;
+            btn.textContent = 'Done';
+            showToast(`Email ${parseInt(idx) + 1} of ${totalEmails} marked as sent`);
+        });
+    });
+
+    // Copy email body
     container.querySelector('#btn-copy-email').addEventListener('click', () => {
         const text = `Subject: ${mass.subject}\n\n${mass.body}`;
-        copyToClipboard(text, 'Email copied');
+        copyToClipboard(text, 'Email copied — paste into a new email');
     });
 
     // Mark all sent
