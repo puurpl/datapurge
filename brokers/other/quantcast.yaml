@@ -1,0 +1,52 @@
+id: quantcast
+name: Quantcast
+domain: quantcast.com
+aliases: []
+category: other
+data_types:
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Ad-tech audience measurement platform. Tracks users via cookies and device identifiers. No direct personal identification."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.quantcast.com/privacy-choices/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.quantcast.com/privacy-choices/"
+          description: "Go to Quantcast Privacy Choices page"
+        - action: click
+          value: "Opt Out"
+          description: "Click opt-out button to stop Quantcast from tracking your browsing"
+        - action: submit
+          description: "Opt-out is browser and device specific; repeat for each browser"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 2
+  processing_days: 1
+  legal_max_days: 45
+  notes: "Quantcast measures web audiences and provides real-time advertising. Does not collect directly identifying information (name, email). Tracks via cookies and IP addresses. Opt-out is cookie-based and browser-specific. Can also opt out via DAA at youradchoices.com or in EU via youronlinechoices.eu. Opt-out cookie must be maintained (not cleared) to remain effective."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Ad-tech audience measurement platform. Cookie-based tracking, no direct PII. Source: quantcast.com/privacy, quantcast.com/privacy-choices."

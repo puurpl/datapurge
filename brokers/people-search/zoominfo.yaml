@@ -1,0 +1,76 @@
+id: zoominfo
+name: ZoomInfo
+domain: zoominfo.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - address
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.zoominfo.com/p/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".profile-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 2
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacyrequest.zoominfo.com/remove/verify"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://privacyrequest.zoominfo.com/remove/verify"
+          description: "Go to ZoomInfo privacy request page"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address (business or personal)"
+        - action: click
+          description: "Click to verify your email"
+        - action: verify_email
+          description: "Check email for verification code"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name and details"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+    - type: email
+      email_to: privacy@zoominfo.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Business/professional data broker. Focuses on B2B contact information. Email privacy@zoominfo.com for CCPA requests."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Major B2B data broker. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

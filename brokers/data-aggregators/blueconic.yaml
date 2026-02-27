@@ -1,0 +1,47 @@
+id: blueconic
+name: BlueConic
+domain: blueconic.com
+aliases: []
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Collects and unifies first-party customer data for enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: info@blueconic.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "BlueConic is a customer data platform (CDP). Opt out of 'sales' and 'sharing' of personal information via CCPA rights. Supports Global Privacy Control (GPC). Contact info@blueconic.com for privacy requests. They may ask to verify your identity."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Source: blueconic.com/privacy-policy. Enterprise CDP. Boston-based. Contact: info@blueconic.com."

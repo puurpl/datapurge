@@ -1,0 +1,66 @@
+id: backgroundchecks-com
+name: BackgroundChecks.com
+domain: backgroundchecks.com
+aliases: []
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background screening service. No public consumer search without employer authorization."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.backgroundchecks.com/privacy"
+      required_fields: [full_name, email, dob]
+      steps:
+        - action: navigate
+          url: "https://www.backgroundchecks.com/privacy"
+          description: "Go to BackgroundChecks.com privacy page"
+        - action: click
+          value: "Consumer Privacy Request"
+          description: "Click to submit a privacy request"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{email}"
+          description: "Enter email"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA providing employment background checks. Background check data subject to FCRA exemptions from CCPA deletion rights. One of the largest background check platforms. Provides FCRA compliance resources and guidance for employers."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated CRA. Source: backgroundchecks.com/privacy, backgroundchecks.com/fcra-compliance."

@@ -1,0 +1,80 @@
+id: advanced-background-checks
+name: AdvancedBackgroundChecks
+domain: advancedbackgroundchecks.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.advancedbackgroundchecks.com/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".record-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.advancedbackgroundchecks.com/removal"
+      required_fields: [full_name, listing_url]
+      steps:
+        - action: navigate
+          url: "https://www.advancedbackgroundchecks.com"
+          description: "Search for your name on AdvancedBackgroundChecks"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name, optionally city/state/age"
+        - action: click
+          description: "Click Search to find your listing"
+        - action: navigate
+          url: "https://www.advancedbackgroundchecks.com/removal"
+          description: "Go to the removal page"
+        - action: input
+          value: "{listing_url}"
+          description: "Paste the URL of your listing"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+    - type: email
+      email_to: support@advancedbackgroundchecks.com
+      required_fields: [full_name, listing_url]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Search for your profile first, then use the removal page. Optional fields include city, state, and age."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

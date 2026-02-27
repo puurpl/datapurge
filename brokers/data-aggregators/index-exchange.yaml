@@ -1,0 +1,52 @@
+id: index-exchange
+name: Index Exchange
+domain: indexexchange.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic ad exchange. No consumer-facing search. Collects digital identifiers for real-time bidding."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.indexexchange.com/privacy/rights-exercising-rights/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.indexexchange.com/privacy/rights-exercising-rights/"
+          description: "Go to Index Exchange privacy rights page to opt out or submit data deletion request"
+    - type: email
+      email_to: privacy@indexexchange.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Index Exchange is a major ad exchange for programmatic advertising. Opt-out via cookie is browser-specific. Previous personal data stored is deleted or anonymized within 30 days of opt-out. Supports Global Privacy Control (GPC) signals."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: indexexchange.com/privacy, California Data Broker Registry. Major independent ad exchange. Canadian-headquartered. Contact: privacy@indexexchange.com."

@@ -1,0 +1,67 @@
+id: tlo
+name: TLO (TransUnion)
+domain: tlo.com
+aliases: [tlosolutions.com]
+category: public-records
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - court-records
+  - criminal-records
+  - property-records
+
+scan:
+  scannable: false
+  reason: "Professional investigative platform owned by TransUnion. Access restricted to licensed professionals. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: compliance@tlo.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.transunion.com/consumer-privacy"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://www.transunion.com/consumer-privacy"
+          description: "Go to TransUnion consumer privacy page"
+        - action: click
+          value: "Privacy Request"
+          description: "Submit a privacy request covering TLO products"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{email}"
+          description: "Enter email"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "TLO is TransUnion's professional investigative platform providing public records, skip tracing, and identity verification to licensed professionals (law enforcement, attorneys, insurance, licensed investigators). TransUnion acquired TLO in 2014. Opt-out requests should be directed to both TLO and TransUnion. Data includes billions of public records and proprietary data sources."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Professional investigative public records platform owned by TransUnion. Source: tlo.com, transunion.com/consumer-privacy."

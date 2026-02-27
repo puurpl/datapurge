@@ -1,0 +1,61 @@
+id: analyticsiq
+name: AnalyticsIQ
+domain: analytics-iq.com
+aliases: [analyticsiq.com]
+category: other
+data_types:
+  - name
+  - email
+  - address
+  - phone
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B predictive analytics and consumer data provider. No public consumer search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://analytics-iq.com/consumer-privacy-policy-and-choice/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://analytics-iq.com/consumer-privacy-policy-and-choice/"
+          description: "Go to AnalyticsIQ consumer privacy page"
+        - action: click
+          value: "Do Not Sell or Share My Personal Information"
+          description: "Click the opt-out link at the bottom of the page"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: click
+          value: "Confirm Email"
+          description: "Click confirmation link sent to your email"
+        - action: submit
+          description: "Complete opt-out verification"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "AnalyticsIQ provides predictive consumer data including cognitive and psychological attributes, financial indicators, and purchase intent. Uses a combination of survey data, public records, and modeled attributes. Registered in California Data Broker Registry. Use a disposable email when contacting to avoid being added to marketing lists."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Predictive consumer data provider. Source: analytics-iq.com/consumer-privacy-policy-and-choice, CA Data Broker Registry (registration #189201)."

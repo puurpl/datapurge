@@ -1,0 +1,49 @@
+id: s-p-global
+name: S&P Global Inc
+domain: spglobal.com
+aliases: []
+category: location-tracking
+data_types:
+  - name
+  - location-history
+  - device-id
+
+scan:
+  scannable: false
+  reason: "Imported from California Data Broker Registry. Manual verification needed."
+
+optout:
+  methods:
+    - type: email
+      email_to: "privacy@spglobal.com"
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://privacyportal.onetrust.com/webform/5cb57702-8ef7-437e-a62b-408fe78cd310/93391c3d-d6c8-45b1-a169-39a0b7f9fb74"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "CCPA rights page from CA Data Broker Registry filing." 
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Registered California data broker. Imported from CPPA registry."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: ca_data_broker_registry
+  confidence: 0.70
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."

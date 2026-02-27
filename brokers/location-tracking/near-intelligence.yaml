@@ -1,0 +1,60 @@
+id: near-intelligence
+name: Near Intelligence
+domain: near.com
+aliases: [nearintelligence.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B location intelligence platform. Transforms mobile advertising IDs and geolocation data into audience insights for advertisers."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@near.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://near.wirewheel.io/privacy-page/614c395a6a9fca00143453ae"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://near.wirewheel.io/privacy-page/614c395a6a9fca00143453ae"
+          description: "Go to Near Intelligence privacy request portal"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out of sale of personal information"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit CCPA opt-out request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Near Intelligence collects mobile advertising IDs (MAIDs) and approximate geolocation data from apps and transforms it into audience insights. Singapore-headquartered with US operations in Pasadena, CA. Registered as a data broker in California. Filed for Chapter 11 bankruptcy in 2023 but continues to operate."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Location intelligence data broker. Registered in CA Data Broker Registry. Source: near.com/privacy-policy, California Data Broker Registry (Near Intelligence PTE. LTD., registration #561972)."

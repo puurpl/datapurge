@@ -1,0 +1,70 @@
+id: docketbird
+name: DocketBird
+domain: docketbird.com
+aliases: []
+category: public-records
+data_types:
+  - name
+  - address
+  - court-records
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.docketbird.com/search?query={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".case-result"
+      means: listed
+    - method: text_match
+      value: "No cases found"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.docketbird.com"
+      required_fields: [full_name, email, case_url]
+      steps:
+        - action: navigate
+          url: "https://www.docketbird.com"
+          description: "Log in or create a DocketBird account"
+        - action: input
+          value: "{case_url}"
+          description: "Find and navigate to your case"
+        - action: click
+          value: "Request Removal"
+          description: "Follow removal instructions for your case type"
+        - action: submit
+          description: "Submit removal request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 20
+  processing_days: 30
+  legal_max_days: 90
+  notes: "DocketBird provides access to federal and state court records. Free basic removal available. Sealed cases: removed with valid court order. Unsealed cases: record stays but DocketBird can block from search engines. Expedited Google removal for $59.99. Mail-in notarized form available for those who prefer not to provide payment details online. Data originates from PACER."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Federal and state court records aggregator. Source: docketbird.com, multiple opt-out guides."

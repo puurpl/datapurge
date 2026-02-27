@@ -1,0 +1,52 @@
+id: infomart
+name: InfoMart
+domain: infomart-usa.com
+aliases: [infomartusa.com]
+category: background-check
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - employment
+  - education
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: false
+  reason: "Employment background check service. No public consumer search."
+
+optout:
+  methods:
+    - type: email
+      email_to: compliance@infomart-usa.com
+      required_fields: [full_name, email, dob]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated CRA for employment background screening. Subject to FTC and CFPB enforcement. Background check data exempt from CCPA under FCRA exemption. Data automatically destroyed, deleted, or anonymized 7 years from date of completion. Contact compliance@infomart-usa.com for data removal requests."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "FCRA-regulated CRA for employment background screening. Source: infomart-usa.com/infomart-privacy-policy, CFPB listing."

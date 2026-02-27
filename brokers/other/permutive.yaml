@@ -1,0 +1,55 @@
+id: permutive
+name: Permutive
+domain: permutive.com
+aliases: []
+category: other
+data_types:
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Publisher-side audience platform for privacy-safe advertising. No consumer-facing search. Processes data on-device."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://permutive.com/privacy/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://permutive.com/privacy/"
+          description: "Go to Permutive privacy page"
+        - action: click
+          value: "Privacy Request"
+          description: "Submit a privacy or data deletion request"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Permutive provides on-device audience segmentation for publishers. Claims to process data on the user's device without sending personal data to external servers. Used by major publishers for privacy-compliant ad targeting. Despite privacy-first claims, still collects device-level data for cohort building."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Publisher-side audience platform. Claims on-device processing. Source: permutive.com/privacy."

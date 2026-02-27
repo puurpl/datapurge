@@ -1,0 +1,51 @@
+id: fetch-rewards
+name: Fetch Rewards
+domain: fetch.com
+aliases: [fetchrewards.com]
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Consumer rewards app and shopper data platform. No consumer-facing data broker search. Collects receipt/purchase data for brand advertising insights."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://fetch.com/privacy-notice-for-california-consumers"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://fetch.com/privacy-notice-for-california-consumers"
+          description: "Go to Fetch privacy notice for California consumers and use 'Do Not Sell or Share My Personal Information' link"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Fetch Rewards is a consumer rewards app that scans receipts. Shares shopper data with brand partners and advertising partners, which may constitute 'sale' or 'sharing' under state privacy laws. Opt out via 'Do Not Sell or Share My Personal Information' link."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: fetch.com/privacy-notice-for-california-consumers. Consumer rewards app scanning millions of receipts. Shares purchase data with brand and advertising partners."

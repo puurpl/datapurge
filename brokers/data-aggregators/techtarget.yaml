@@ -1,0 +1,60 @@
+id: techtarget
+name: TechTarget (Informa TechTarget)
+domain: techtarget.com
+aliases: [informatechtarget.com]
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - employer
+  - ip-address
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B intent data and lead generation platform. No consumer-facing search. Tracks business professionals' content consumption to generate purchase intent signals."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@techtarget.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: memberservices@techtarget.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "For account deletion and member services"
+    - type: web_form
+      url: "https://www.techtarget.com/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.techtarget.com/"
+          description: "Go to TechTarget and click 'Do Not Sell My Personal Information' link at the bottom of the page"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "TechTarget (now Informa TechTarget after Informa acquisition) provides Priority Engine B2B intent data. If you opt out of data selling, you cannot maintain your member account or access free Premium Services — your account will be deleted. DPO: TechTarget, Inc. Attn: Data Protection Officer, 275 Grove Street, Newton, MA 02466."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: informatechtarget.com/ccpa-privacy-notice. B2B intent data provider. Acquired by Informa. Provides Priority Engine intent signals. Contact: privacy@techtarget.com, memberservices@techtarget.com."

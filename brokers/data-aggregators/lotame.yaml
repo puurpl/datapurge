@@ -1,7 +1,7 @@
 id: lotame
-name: Lotame (now part of Epsilon)
+name: Lotame
 domain: lotame.com
-aliases: [epsilon.com]
+aliases: []
 category: data-aggregator
 data_types:
   - email

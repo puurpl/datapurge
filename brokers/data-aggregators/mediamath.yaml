@@ -11,7 +11,7 @@ data_types:
 
 scan:
   scannable: false
-  reason: "B2B programmatic advertising demand-side platform (DSP). No consumer-facing search. Collects data via cookies and device identifiers for ad targeting."
+  reason: "DEFUNCT — MediaMath shut down in June 2023 after filing for bankruptcy. Data may have been acquired by Infillion. Opt-out links are no longer functional."
 
 optout:
   methods:
@@ -62,5 +62,6 @@ meta:
   added: "2026-02-26"
   last_verified: "2026-02-26"
   verified_by: web_research
-  confidence: 0.80
-  notes: "Source: California Data Broker Registry (registration #186773), mediamath.com/privacy-policy, Optery. Programmatic advertising DSP headquartered at 4 World Trade Center, 45th Floor, New York, NY 10007. NAI and DAA member."
+  confidence: 0.40
+  defunct: true
+  notes: "DEFUNCT — MediaMath shut down June 2023 after bankruptcy. Assets acquired by Infillion. Opt-out URLs no longer functional. Kept for reference; users may need to contact Infillion for data previously held by MediaMath."

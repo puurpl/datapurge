@@ -1,0 +1,59 @@
+id: google-ads
+name: Google Ads (DV360)
+domain: ads.google.com
+aliases: [doubleclick.net, googlesyndication.com, googleadservices.com, marketingplatform.google.com]
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "Largest global advertising platform. No consumer-facing data broker search. Collects browsing, search, and behavioral data for ad targeting across the web."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://myadcenter.google.com/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://myadcenter.google.com/"
+          description: "Go to Google My Ad Center to turn off personalized ads"
+    - type: web_form
+      url: "https://myaccount.google.com/data-and-privacy"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://myaccount.google.com/data-and-privacy"
+          description: "Go to Google Data & Privacy settings to manage or delete data"
+  difficulty: medium
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Google is the largest digital advertising platform (Search, YouTube, Display, DV360). DV360 is now classified as a 'third party' under CCPA for certain features (since July 2023), meaning data shared is considered 'selling' or 'sharing.' Opt out via My Ad Center or enable Global Privacy Control. Supports GPC."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: support.google.com/google-ads/answer/9614122, myadcenter.google.com. Largest digital ad platform. DV360 reclassified as third party under CCPA since July 2023. Not registered as data broker per se."

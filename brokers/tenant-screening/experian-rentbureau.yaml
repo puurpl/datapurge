@@ -1,7 +1,7 @@
 id: experian-rentbureau
 name: Experian RentBureau
-domain: experian.com/rental-property-solutions/rentbureau
-aliases: [experian.com/rentbureau]
+domain: experian.com
+aliases: []
 category: tenant-screening
 data_types:
   - name

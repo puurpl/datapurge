@@ -1,0 +1,78 @@
+id: fast-background-check
+name: FastBackgroundCheck
+domain: fastbackgroundcheck.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+  - criminal-records
+  - court-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.fastbackgroundcheck.com/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.fastbackgroundcheck.com/opt-out"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.fastbackgroundcheck.com"
+          description: "Scroll to footer and click 'Do Not Sell My Personal Information'"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete the CAPTCHA challenge"
+        - action: checkbox
+          description: "Tick the agreement box"
+        - action: click
+          description: "Click 'Begin Removal Process'"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name, city, and state to find your listing"
+        - action: click
+          description: "Click 'Remove My Record' on your listing"
+        - action: verify_email
+          description: "Check email for verification link and click it"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 1
+  legal_max_days: 45
+  notes: "Data removed within 24 hours. If verification email not received, check spam. Can also mail removal requests to 4845 Pearl East Cir., Ste. 118, Boulder, CO 80301-6112."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, texas, oregon]
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Continuously scrapes data so information may reappear. Source: Optery, Incogni, Security.org opt-out guides"

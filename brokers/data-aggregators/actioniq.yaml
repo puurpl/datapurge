@@ -1,0 +1,47 @@
+id: actioniq
+name: ActionIQ
+domain: actioniq.com
+aliases: []
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Acts as data processor for enterprise clients. Processes customer data for audience segmentation and activation."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@actioniq.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "ActionIQ is an enterprise customer data platform (CDP). Acts as data processor — processes data on directions from enterprise data controllers. If you are a customer of one of ActionIQ's clients, contact that client directly for data requests. For ActionIQ-held data, email privacy@actioniq.com. Data purging conducted automatically daily."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Source: actioniq.com privacy policy, cookie policy. Enterprise CDP. Acts as data processor. NYC-based. Contact: privacy@actioniq.com."

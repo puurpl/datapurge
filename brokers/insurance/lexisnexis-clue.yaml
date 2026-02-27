@@ -1,7 +1,7 @@
 id: lexisnexis-clue
 name: LexisNexis C.L.U.E.
 domain: consumer.risk.lexisnexis.com
-aliases: [risk.lexisnexis.com, personalreports.lexisnexis.com]
+aliases: [risk.lexisnexis.com]
 category: insurance
 data_types:
   - name

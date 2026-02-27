@@ -1,0 +1,64 @@
+id: groundtruth
+name: GroundTruth (formerly xAd)
+domain: groundtruth.com
+aliases: [xad.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Location-powered advertising platform. Collects device location data for targeted advertising. No consumer-facing search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacyrights@groundtruth.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: privacy@groundtruth.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.groundtruth.com/privacy-rights/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.groundtruth.com/privacy-rights/"
+          description: "Go to GroundTruth U.S. States Privacy Rights page"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out of sale/sharing of personal information"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit privacy rights request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 1
+  legal_max_days: 45
+  notes: "GroundTruth (formerly xAd) specializes in location-powered advertising. Registered as data broker in California under xAd, Inc. dba GroundTruth. Responded to California consumer privacy requests with median response time of 1 day. Can also opt out via DAA's AppChoices tool or by disabling location services on device. Address: One World Trade Center, 60th Floor, New York, NY 10007."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Location-powered ad platform. Registered in CA Data Broker Registry (registration #186761, xAd, Inc. dba GroundTruth). Source: groundtruth.com/privacy-policy, groundtruth.com/privacy-rights."

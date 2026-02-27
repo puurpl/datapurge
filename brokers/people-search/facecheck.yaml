@@ -1,0 +1,68 @@
+id: facecheck
+name: FaceCheck.ID
+domain: facecheck.id
+aliases: []
+category: people-search
+data_types:
+  - photos
+  - name
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://facecheck.id"
+  detection:
+    - method: text_match
+      value: "results"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 1
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://facecheck.id/Face-Search/RemoveMyPhotos"
+      required_fields: [email, photo, id_document]
+      steps:
+        - action: navigate
+          url: "https://facecheck.id/Face-Search/RemoveMyPhotos"
+          description: "Go to FaceCheck photo removal page"
+        - action: upload
+          value: "{photo}"
+          description: "Upload a photo of your face"
+        - action: upload
+          value: "{id_document}"
+          description: "Upload a driver's license or ID (with identifying info redacted) or take a selfie"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Requires photo and ID upload (or selfie). Removes from FaceCheck search index only, not original sources. Redact all identifying info on ID except your photo and name."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Facial recognition search engine. Source: Big Ass Data Broker Opt-Out List"

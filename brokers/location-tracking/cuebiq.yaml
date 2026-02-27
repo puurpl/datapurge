@@ -1,0 +1,60 @@
+id: cuebiq
+name: Cuebiq
+domain: cuebiq.com
+aliases: []
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B location intelligence platform. Collects location data via SDK embedded in mobile apps. No consumer-facing search."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@cuebiq.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://cuebiq.com/privacy-request/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://cuebiq.com/privacy-request/"
+          description: "Go to Cuebiq privacy request page"
+        - action: select
+          value: "Delete my data"
+          description: "Select data deletion request"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Cuebiq collects location data via SDK embedded in third-party mobile applications. Users can also opt out at the device level or within partner apps. To delete device-specific data, provide your mobile advertising ID. Privacy policy last updated November 2024."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Location intelligence platform. SDK-based data collection via mobile apps. Source: cuebiq.com/privacy-policy, cuebiq.com/privacy-center, cuebiq.com/privacy-request."

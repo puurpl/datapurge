@@ -1,0 +1,55 @@
+id: openx
+name: OpenX Technologies
+domain: openx.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic advertising exchange. No consumer-facing search. Collects digital identifiers for ad auctions."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.openx.com/privacy-center/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.openx.com/privacy-center/"
+          description: "Go to OpenX Privacy Center to opt out or exercise data rights"
+    - type: phone
+      phone_number: "1-855-231-3834"
+      required_fields: [full_name, email]
+    - type: email
+      email_to: privacy@openx.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 22
+  legal_max_days: 45
+  notes: "OpenX is a major ad exchange. In 2024, OpenX received 13 deletion requests and complied with all of them in an average of 22 days. Privacy Center allows opt-out, data access, and deletion requests. Also callable at 1-855-231-3834."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 22
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: openx.com/privacy-center, California Data Broker Registry (reg #193614). Major programmatic ad exchange. Contact: privacy@openx.com or 1-855-231-3834."

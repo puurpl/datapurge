@@ -1,0 +1,68 @@
+id: pimeyes
+name: PimEyes
+domain: pimeyes.com
+aliases: []
+category: people-search
+data_types:
+  - photos
+  - name
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://pimeyes.com/en"
+  detection:
+    - method: text_match
+      value: "results found"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 1
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://pimeyes.com/en/opt-out-request-form"
+      required_fields: [email, photo, id_document]
+      steps:
+        - action: navigate
+          url: "https://pimeyes.com/en/opt-out-request-form"
+          description: "Go to PimEyes opt-out request form"
+        - action: upload
+          value: "{photo}"
+          description: "Upload a clear photo of your face"
+        - action: upload
+          value: "{id_document}"
+          description: "Upload a blurred ID document (only name and photo visible, blur all other info)"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Requires photo upload and blurred government ID. Only name and photo on ID should be visible; blur all other identifying info (can use Signal app's blur tool). Removes from PimEyes search index only, not from original sources."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Facial recognition search engine. Source: Big Ass Data Broker Opt-Out List"

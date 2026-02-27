@@ -1,0 +1,45 @@
+id: branch
+name: Branch (Branch Metrics)
+domain: branch.io
+aliases: [app.link, bnc.lt]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile linking and measurement platform. No consumer-facing search. Processes deep linking and attribution data for app developers."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@branch.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Branch provides deep linking and mobile attribution services. States it does not sell personal information of end users as defined under CCPA. For privacy rights requests, email privacy@branch.io. Branch processes mobile device identifiers and attribution data."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.65
+  notes: "Source: branch.io/ccpa, branch.io privacy policy. Mobile deep linking and attribution. Claims not to sell end user data. Contact: privacy@branch.io."

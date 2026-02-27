@@ -1,0 +1,71 @@
+id: lexisnexis-public-records
+name: LexisNexis Risk Solutions (Public Records)
+domain: risk.lexisnexis.com
+aliases: [optout.lexisnexis.com]
+category: public-records
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - court-records
+  - criminal-records
+  - property-records
+
+scan:
+  scannable: false
+  reason: "Public records aggregation platform. Consumer access requires subscription. Information suppression available for eligible individuals."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://optout.lexisnexis.com/"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://optout.lexisnexis.com/"
+          description: "Go to LexisNexis opt-out / information suppression page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter full name"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: input
+          value: "{address}"
+          description: "Enter current address"
+        - action: submit
+          description: "Submit information suppression request (supporting documents may be required)"
+      template_id: null
+    - type: email
+      email_to: privacy.information.mgr@lexisnexis.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "888-217-1591"
+      required_fields: [full_name, dob, address]
+      notes: "Call for U.S. Consumer Privacy requests including deletion, opt-out, and correction"
+  difficulty: hard
+  estimated_minutes: 30
+  processing_days: 30
+  legal_max_days: 45
+  notes: "LexisNexis Risk Solutions is one of the largest public records aggregators. Information suppression available for: law enforcement officers, public/elected officials, individuals facing substantial risk of physical harm, and identity theft victims. After opt-out, data remains in FCRA-regulated products, law enforcement restricted products, and third-party real-time systems. Mail for suppression: LexisNexis Individual Requests for Information Suppression, PO Box 933, Dayton, OH 45401. Mail for CCPA: LexisNexis Risk Solutions Consumer Center, Attn: U.S. Consumer Privacy Request, PO Box 105108, Atlanta, GA 30348-5108."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Major public records aggregator. Source: risk.lexisnexis.com/consumer-and-data-access-policies, optout.lexisnexis.com, risk.lexisnexis.com/state-privacy-act-notice."

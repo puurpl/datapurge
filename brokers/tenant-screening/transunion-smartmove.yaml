@@ -1,7 +1,7 @@
 id: transunion-smartmove
 name: TransUnion SmartMove
 domain: mysmartmove.com
-aliases: [transunion.com/product/smartmove]
+aliases: []
 category: tenant-screening
 data_types:
   - name

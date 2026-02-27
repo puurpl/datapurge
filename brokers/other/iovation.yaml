@@ -1,0 +1,43 @@
+id: iovation
+name: iovation (TransUnion TruValidate)
+domain: iovation.com
+aliases: [truvalidate.com]
+category: other
+data_types:
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "Device reputation and fraud prevention platform. Cannot directly identify end users. Data collected via JavaScript and SDKs on subscriber websites."
+
+optout:
+  methods:
+    - type: email
+      email_to: PDLGFSPrivacy@transunion.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "iovation (now TransUnion TruValidate) maintains a device reputation consortium of nearly 5 billion unique devices across 50+ countries. Prevents 200+ million fraudulent transactions annually. iovation cannot directly identify end users because it tracks devices, not people. Data subjects should first contact the subscriber (the website/app) that used iovation services. For direct requests: PDLGFSPrivacy@transunion.com. To opt out of non-essential cookies, select 'Restrict All' in their cookie settings."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Device reputation platform owned by TransUnion. Source: transunion.com/privacy/iovation, iovation.com."

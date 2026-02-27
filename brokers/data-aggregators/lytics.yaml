@@ -1,0 +1,52 @@
+id: lytics
+name: Lytics
+domain: lytics.com
+aliases: []
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Processes and unifies customer data for enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@lytics.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: dpo@lytics.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Data Protection Officer direct contact"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Lytics is an enterprise customer data platform (CDP). Acts as service provider and data processor. States it does not share or sell information to third parties for direct marketing. Delete profiles via Lytics API or UI. Contact: privacy@lytics.io or DPO at dpo@lytics.io."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: lytics.com/privacy-policy. Enterprise CDP. Claims service provider status. Contact: privacy@lytics.io, dpo@lytics.io."

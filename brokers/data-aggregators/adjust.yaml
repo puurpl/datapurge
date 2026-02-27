@@ -1,0 +1,52 @@
+id: adjust
+name: Adjust (AppLovin)
+domain: adjust.com
+aliases: []
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile measurement and analytics platform. No consumer-facing search. Collects device identifiers for mobile attribution."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.adjust.com/forget-device/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.adjust.com/forget-device/"
+          description: "Go to Adjust automatic opt-out tool to object to processing of personal data"
+    - type: email
+      email_to: privacy@adjust.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Adjust is a mobile measurement partner (MMP) owned by AppLovin. Provides an automatic opt-out tool on its website. For data deletion or privacy concerns, email privacy@adjust.com. Reports data loss to privacy@adjust.com."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: adjust.com/terms/privacy-policy. Mobile measurement partner (MMP) owned by AppLovin (acquired 2021). Berlin-based (Adjust GmbH). Contact: privacy@adjust.com, security@adjust.com."

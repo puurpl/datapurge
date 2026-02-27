@@ -1,0 +1,62 @@
+id: liftoff
+name: Liftoff (Vungle)
+domain: liftoff.io
+aliases: [vungle.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile app marketing and monetization platform (merged with Vungle). No consumer-facing search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://vungle.com/ccpa-faq/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://vungle.com/ccpa-faq/"
+          description: "Go to Liftoff/Vungle CCPA opt-out page"
+    - type: web_form
+      url: "https://performwith.vungle.com/ccpa-opt-out-request"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://performwith.vungle.com/ccpa-opt-out-request"
+          description: "Go to Vungle CCPA opt-out request form"
+    - type: email
+      email_to: CCPA@vungle.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-904-1107"
+      required_fields: [full_name]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Liftoff merged with Vungle in 2022 to create a leading mobile app marketing platform. Vungle states it does not 'sell' data as defined under CCPA but will honor sale opt-out requests. Opt-out via mobile device settings or web form. Toll-free: 1-866-904-1107."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: vungle.com/ccpa-faq, vungle.com/privacy. Liftoff+Vungle merged 2022. Mobile app marketing, monetization, and in-app advertising. Contact: CCPA@vungle.com."
