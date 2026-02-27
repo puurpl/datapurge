@@ -1,0 +1,65 @@
+id: lead411
+name: Lead411
+domain: lead411.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+
+scan:
+  scannable: false
+  reason: "B2B sales intelligence platform. Requires paid subscription to search contacts."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.lead411.com/removeinforequest/"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://www.lead411.com/removeinforequest/"
+          description: "Go to Lead411 removal request form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: submit
+          description: "Submit data removal request"
+    - type: email
+      email_to: lead411_privacy@l4mail.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Lead411 provides verified B2B contact data including direct dials and emails. Also accessible via 'Do Not Sell' link in website footer. Alternative support email: support@lead411.io."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registration #185769), lead411.com/policy, JoinDeleteMe opt-out guide, Optery. Registered as Lead411 Corporation. Headquartered at 4655 7th Street, Boulder, CO 80304."

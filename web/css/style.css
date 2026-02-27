@@ -974,3 +974,25 @@ h4 { font-size: 1rem; font-weight: 600; }
     gap: 0.25rem;
     padding: 0.5rem 0;
 }
+
+.footer-credits {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    opacity: 0.7;
+}
+
+/* --- Error Banner --- */
+.error-banner {
+    background: var(--color-warning-light);
+    border-bottom: 2px solid var(--color-warning);
+    color: var(--color-text);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+.error-banner span {
+    flex: 1;
+}

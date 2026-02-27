@@ -1,0 +1,82 @@
+id: voterrecords
+name: VoterRecords
+domain: voterrecords.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - voter-registration
+  - party-affiliation
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://voterrecords.com/voters/{first_name}-{last_name}/{state}"
+  detection:
+    - method: selector_present
+      value: ".voter-record"
+      means: listed
+    - method: text_match
+      value: "No records found"
+      means: not_listed
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://voterrecords.com/faq"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          description: "Find your individual record page on VoterRecords"
+        - action: click
+          description: "Scroll to bottom of record page and click 'Record Opt-Out' link"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete reCAPTCHA"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Click verification link in email from VoterRecords"
+      template_id: null
+    - type: email
+      email_to: admin@voterrecords.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Partial removal only: house number, phone, and email hidden. Full record removal only for individuals with official public records exemption. Covers 18 states plus DC."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Only publishes voter data for 18 states: AK, AR, CO, CT, DE, FL, ID, LA, MI, MS, NV, NJ, NC, OH, OK, RI, UT, WA plus DC. Source: Optery, Incogni, Onerep."

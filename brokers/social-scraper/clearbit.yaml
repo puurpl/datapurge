@@ -1,0 +1,65 @@
+id: clearbit
+name: Clearbit (HubSpot)
+domain: clearbit.com
+aliases: [dashboard.clearbit.com]
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+
+scan:
+  scannable: false
+  reason: "B2B data enrichment platform. Requires paid subscription to use. Enriches email addresses with company and contact data."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://dashboard.clearbit.com/ccpa-opt-out"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://dashboard.clearbit.com/ccpa-opt-out"
+          description: "Go to Clearbit CCPA opt-out form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your postal address"
+        - action: submit
+          description: "Submit the CCPA opt-out request"
+    - type: email
+      email_to: privacy@clearbit.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Clearbit was acquired by HubSpot in 2023 and integrated as 'Breeze Intelligence.' Enriches email addresses with company data, job titles, social profiles, and technographic data. CCPA opt-out removes data from Clearbit database and notifies customers who previously received it."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: dashboard.clearbit.com/ccpa-opt-out, help.clearbit.com, knowledge.hubspot.com. Acquired by HubSpot in November 2023. Now powers HubSpot's Breeze Intelligence. Scrapes web, social media, and public data to build B2B contact profiles."

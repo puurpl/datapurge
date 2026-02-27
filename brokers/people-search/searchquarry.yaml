@@ -1,0 +1,90 @@
+id: searchquarry
+name: SearchQuarry
+domain: searchquarry.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - court-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.searchquarry.com/namesearch/results?fname={first_name}&lname={last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-results"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://members.searchquarry.com/removeMyData/"
+      required_fields: [first_name, last_name, state, email]
+      steps:
+        - action: navigate
+          url: "https://www.searchquarry.com"
+          description: "Go to SearchQuarry homepage"
+        - action: click
+          description: "Click 'Do Not Sell My Info' link in footer"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: select
+          value: "{state}"
+          description: "Select your state"
+        - action: click
+          description: "Find your record and click 'Remove Data'"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete CAPTCHA"
+        - action: verify_email
+          description: "Check email for data removal confirmation link from SearchQuarry"
+      template_id: null
+    - type: email
+      email_to: privacy@searchquarry.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 7
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Mailing address for opt-out: P.O. Box 990043, Boston, MA 02199. Allow up to 30 days for processing."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Slow processing (up to 30 days). Source: State of Surveillance Master List, Privacy Extension guides."

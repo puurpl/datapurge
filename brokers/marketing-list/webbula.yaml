@@ -1,0 +1,74 @@
+id: webbula
+name: Webbula
+domain: webbula.com
+aliases: []
+category: marketing-list
+data_types:
+  - email
+  - name
+  - address
+  - phone
+  - ip-address
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B email hygiene and data enrichment platform. No consumer-facing search. Provides email verification, data appending, and audience targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://webbula.com/opt-out-request/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://webbula.com/opt-out-request/"
+          description: "Go to Webbula opt-out request form"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit opt-out request"
+    - type: web_form
+      url: "https://webbula.com/privacy-center/"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://webbula.com/privacy-center/"
+          description: "Go to Webbula Privacy Center"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy request"
+    - type: email
+      email_to: privacy@webbula.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "888-993-2285 ext 4"
+      required_fields: [full_name]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Webbula provides email verification, data appending, and audience targeting services. Fulfilled all 8,516 opt-out requests received in 2023 with 0 denied. Alternative phone: 800-533-5853."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186746), webbula.com/privacy-center, webbula.com/our-ccpa-commitment. Headquartered at 5000 Stonewood Drive, Suite 310, Wexford, PA 15090. Email hygiene and data enrichment provider."

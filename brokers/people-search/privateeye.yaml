@@ -1,0 +1,89 @@
+id: privateeye
+name: PrivateEye
+domain: privateeye.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - court-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.privateeye.com/people/{first_name}-{last_name}/{state}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.privateeye.com/static/view/contact/"
+      required_fields: [first_name, last_name, city, state]
+      steps:
+        - action: navigate
+          url: "https://www.privateeye.com/static/view/contact/"
+          description: "Go to PrivateEye contact form"
+        - action: select
+          value: "OPT ME OUT"
+          description: "Select 'OPT ME OUT' as the subject"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: input
+          value: "{city}"
+          description: "Enter your city"
+        - action: select
+          value: "{state}"
+          description: "Select your state"
+        - action: captcha
+          description: "Complete CAPTCHA"
+        - action: click
+          description: "Click 'Opt out'"
+      template_id: null
+    - type: email
+      email_to: support@peoplefinders.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 9
+  legal_max_days: 45
+  notes: "Owned by Confi-Check (same as PeopleFinders). Opting out of PeopleFinders also removes PrivateEye listings."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+
+timing:
+  typical_removal_days: 9
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Owned by same company as PeopleFinders. Reports generated via PeopleFinders/Enformion. Source: State of Surveillance Master List."

@@ -1,0 +1,56 @@
+id: veeva-systems
+name: Veeva Systems
+domain: veeva.com
+aliases: [veevanetwork.com, veevaengage.com]
+category: health
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - professional-credentials
+  - prescribing-patterns
+  - healthcare-affiliations
+  - employment
+
+scan:
+  scannable: false
+  reason: "Cloud software company for life sciences and healthcare. Maintains databases of healthcare professionals and their prescribing data. No public consumer search."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.veeva.com/privacy/do-not-sell-share/"
+      required_fields: [full_name, email]
+      template_id: null
+    - type: email
+      email_to: privacy@veeva.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-877-807-3230"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Cloud platform for life sciences. Maintains healthcare professional databases (Veeva Network/OpenData). To opt out, select your relationship to Veeva (e.g., Healthcare Professional or Scientific Expert). Contact Chief Privacy Officer at privacy@veeva.com or call toll-free 1-877-807-3230."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Veeva privacy policy, Do Not Sell/Share page. Veeva does not claim to sell/share sensitive personal information. Healthcare professionals are the primary data subjects. GDPR compliant for EU data."

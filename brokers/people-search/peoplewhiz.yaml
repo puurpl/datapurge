@@ -1,0 +1,89 @@
+id: peoplewhiz
+name: PeopleWhiz
+domain: peoplewhiz.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - relatives
+  - criminal-records
+  - court-records
+  - social-media
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.peoplewhiz.com/search/name?fname={first_name}&lname={last_name}&state={state}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.peoplewhiz.com/remove-my-info"
+      required_fields: [first_name, last_name, state, email]
+      steps:
+        - action: navigate
+          url: "https://www.peoplewhiz.com/remove-my-info"
+          description: "Go to PeopleWhiz removal page"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: select
+          value: "{state}"
+          description: "Select your state"
+        - action: click
+          description: "Search and select your record"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for opt-out confirmation link"
+      template_id: null
+    - type: email
+      email_to: info@peoplewhiz.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Email confirmation required. Not a consumer reporting agency under FCRA. Phone: (833) 276-9449. Address: 8383 Wilshire Blvd. Suite 540, Beverly Hills, CA 90211."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+    - colorado
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Holds 67 billion records. Source: Security.org, Incogni, Optery."

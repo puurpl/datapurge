@@ -1,0 +1,53 @@
+id: national-student-clearinghouse
+name: National Student Clearinghouse
+domain: studentclearinghouse.org
+aliases: [secure.studentclearinghouse.org]
+category: employment
+data_types:
+  - name
+  - address
+  - dob
+  - education
+  - enrollment-history
+  - graduation-status
+  - degree-information
+
+scan:
+  scannable: false
+  reason: "Education verification service. No public consumer search. Verifies enrollment and graduation data for employers and background screeners."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.studentclearinghouse.org/privacy-policy/"
+      required_fields: [full_name, dob]
+      template_id: null
+      notes: "Opt-out form available through your school's registrar. The Clearinghouse opt-out form must be completed and submitted to your school principal or registrar."
+    - type: postal
+      postal_address: "National Student Clearinghouse, 2300 Dulles Station Blvd., Suite 220, Herndon, VA 20171"
+      required_fields: [full_name, dob, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 20
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Verifies enrollment and graduation information for most US colleges, universities, and high schools. Provides DiplomaVerify for high school graduation verification to employers and background screeners. Never releases information for targeted advertising. Opt-out requires submitting a form through your school's registrar (FERPA directory information opt-out). Complies with FERPA, Higher Education Act, and applicable state laws."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: National Student Clearinghouse privacy policy, NYC Schools opt-out form, CFPB consumer reporting companies list. FERPA-governed rather than FCRA. Opt-out is through the institution, not directly with the Clearinghouse."

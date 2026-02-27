@@ -1,0 +1,88 @@
+id: searchusapeople
+name: SearchUSAPeople
+domain: searchusapeople.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - relatives
+  - criminal-records
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.searchusapeople.com/search/{first_name}-{last_name}/{state}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.searchusapeople.com/data-removal-request/"
+      required_fields: [first_name, last_name, state, email]
+      steps:
+        - action: navigate
+          url: "https://www.searchusapeople.com/data-removal-request/"
+          description: "Go to SearchUSAPeople data removal request page"
+        - action: input
+          value: "{first_name}"
+          description: "Enter your first name"
+        - action: input
+          value: "{last_name}"
+          description: "Enter your last name"
+        - action: select
+          value: "{state}"
+          description: "Select your state"
+        - action: click
+          description: "Click Submit to search"
+        - action: click
+          description: "Select your record and click 'Remove Data'"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit removal request"
+        - action: verify_email
+          description: "Click Confirm Email button in email from InfoTracer"
+      template_id: null
+    - type: email
+      email_to: privacy@infotracer.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 2
+  legal_max_days: 45
+  notes: "Operated by InfoTracer. Opt-out redirects to InfoTracer's removal system. Data removal email goes through InfoTracer privacy team."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+    - virginia
+
+timing:
+  typical_removal_days: 2
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Part of InfoTracer network. Opt-out handled via InfoTracer system. Source: Optery, Onerep."

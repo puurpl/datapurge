@@ -1,0 +1,76 @@
+id: infutor
+name: Infutor (Verisk Marketing Solutions)
+domain: infutor.com
+aliases: [marketing.verisk.com, privacy.infutor.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - property-records
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B consumer identity management and data enrichment platform. No consumer-facing search. Provides identity resolution, data hygiene, and consumer data to marketers."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacy.infutor.com/s/optout-form"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://privacy.infutor.com/s/optout-form"
+          description: "Go to Verisk Marketing Solutions (Infutor) opt-out form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: submit
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for disclosure report and opt-out confirmation link"
+    - type: email
+      email_to: vmslegal@verisk.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: privacy@verisk.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "For appeals of privacy requests"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 45
+  legal_max_days: 45
+  notes: "Infutor is now Verisk Marketing Solutions. Opt-out process: (1) Fill out register form, (2) Receive disclosure report via email, (3) Activate Opt-Out Community Site account, (4) Review personal information, (5) Confirm deletion. A registered data broker under both California and Texas law."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    texas: true
+  state_laws: [california, virginia, colorado, texas]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: privacy.infutor.com, marketing.verisk.com/privacy-policy, California and Texas data broker registries. Formerly Infutor Data Solutions, now Verisk Marketing Solutions. Registered as Lead Intelligence, Inc. d/b/a Verisk Marketing Solutions. Consumer identity management platform providing data enrichment and identity resolution."

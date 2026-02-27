@@ -1,0 +1,57 @@
+id: verisk-iso
+name: Verisk ISO ClaimSearch / A-PLUS
+domain: fcra.verisk.com
+aliases: [iso.com, verisk.com/insurance]
+category: insurance
+data_types:
+  - name
+  - address
+  - dob
+  - insurance-claims
+  - property-records
+  - auto-claims
+  - workers-comp
+
+scan:
+  scannable: false
+  reason: "Insurance claims database and analytics. No public consumer search. Consumers can request their own A-PLUS Property or auto claims report."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://fcra.verisk.com/"
+      required_fields: [full_name, dob, address]
+      template_id: null
+      notes: "Request your Verisk consumer report (A-PLUS Property, ISO ClaimSearch). FCRA-regulated."
+    - type: email
+      email_to: privacy@verisk.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-627-3487"
+      required_fields: [full_name, dob]
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Verisk ISO ClaimSearch is a comprehensive claims database used by insurers. A-PLUS Property reports track property insurance claims history. FCRA-regulated for insurance reporting. Consumer reports can be requested via fcra.verisk.com. Separate from Verisk/Infutor marketing data entry. Privacy requests to privacy@verisk.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: CFPB consumer reporting companies list (A-PLUS Property by Verisk), Verisk privacy policies, fcra.verisk.com. Separate from the existing Verisk/Infutor marketing data broker entry. Focuses on insurance claims and loss history data."

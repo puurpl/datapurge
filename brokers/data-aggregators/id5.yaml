@@ -1,0 +1,63 @@
+id: id5
+name: ID5
+domain: id5.io
+aliases: [id5-sync.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - email
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B identity resolution platform for digital advertising. No consumer-facing search. Provides universal IDs to publishers and advertisers."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://id5-sync.com/do-not-sell"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://id5-sync.com/do-not-sell"
+          description: "Go to ID5 Do Not Sell page"
+        - action: click
+          description: "Click opt-out button to stop sale of personal information"
+    - type: web_form
+      url: "https://id5-sync.com/privacy/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://id5-sync.com/privacy/"
+          description: "Go to ID5 Privacy Preference Center"
+        - action: click
+          description: "Manage privacy preferences and opt out of tracking"
+    - type: email
+      email_to: privacy@id5.io
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "ID5 provides a universal ID for digital advertising as a cookie replacement. Honors Global Privacy Control (GPC) signals. Opt-out propagated to all ID5 partners."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #550584), id5.io/trust/platform-privacy-policy, id5-sync.com/do-not-sell. Identity resolution company providing universal IDs for programmatic advertising. Registered as data broker in California."

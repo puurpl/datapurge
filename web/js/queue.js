@@ -7,6 +7,7 @@
 
 import { Store } from './store.js';
 import { Templates } from './templates.js';
+import { Share } from './share.js';
 
 let registryData = null;
 
@@ -31,6 +32,13 @@ const CATEGORY_LABELS = {
     'background-check': 'Background Check',
     'financial': 'Financial',
     'public-records': 'Public Records',
+    'health': 'Health',
+    'insurance': 'Insurance',
+    'tenant-screening': 'Tenant Screening',
+    'employment': 'Employment',
+    'political': 'Political',
+    'vehicle': 'Vehicle',
+    'real-estate': 'Real Estate',
     'other': 'Other',
 };
 
@@ -39,10 +47,17 @@ function getEmailMethod(broker) {
     return broker.optout.methods.find(m => m.type === 'email') || null;
 }
 
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 function getEmailableBrokers() {
     if (!registryData) return [];
     return registryData.brokers
-        .filter(b => getEmailMethod(b))
+        .filter(b => {
+            const m = getEmailMethod(b);
+            return m && m.email_to && isValidEmail(m.email_to);
+        })
         .sort((a, b) => {
             const pa = CATEGORY_PRIORITY[a.category] ?? 99;
             const pb = CATEGORY_PRIORITY[b.category] ?? 99;
@@ -51,10 +66,15 @@ function getEmailableBrokers() {
         });
 }
 
+function getNonEmailBrokers() {
+    if (!registryData) return [];
+    return registryData.brokers.filter(b => !getEmailMethod(b));
+}
+
 function getAllBrokerEmails() {
     return getEmailableBrokers()
         .map(b => getEmailMethod(b).email_to)
-        .filter((v, i, a) => a.indexOf(v) === i); // dedupe
+        .filter((v, i, a) => a.indexOf(v) === i);
 }
 
 function buildMassEmail() {
@@ -62,7 +82,6 @@ function buildMassEmail() {
     const fields = Store.getTemplateFields();
     if (!pii || !fields) return null;
 
-    // Select the strongest template for the user's jurisdiction
     const templateId = Templates.selectBestTemplate(
         pii.state, pii.country, { legal: { ccpa: true } }
     );
@@ -97,6 +116,12 @@ function showToast(message) {
     toast.textContent = message;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function copyToClipboard(text, successMsg) {
+    navigator.clipboard.writeText(text)
+        .then(() => showToast(successMsg))
+        .catch(() => showToast('Copy failed — try selecting the text manually'));
 }
 
 function esc(str) {
@@ -195,8 +220,8 @@ function renderMassMode(container) {
     if (!mass) return;
 
     const brokers = getEmailableBrokers();
+    const nonEmailBrokers = getNonEmailBrokers();
 
-    // Build mailto with BCC — use encodeURIComponent (not URLSearchParams, which encodes spaces as +)
     const mailtoLink = `mailto:?bcc=${encodeURIComponent(mass.bccString)}&subject=${encodeURIComponent(mass.subject)}&body=${encodeURIComponent(mass.body)}`;
 
     container.innerHTML = `
@@ -221,12 +246,25 @@ function renderMassMode(container) {
             <p class="text-sm text-secondary mb-1">
                 One click — opens a new email with all ${mass.count} broker addresses in BCC, subject and body pre-filled.
             </p>
-            <a href="${mailtoLink}" class="btn btn-primary btn-lg" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
+            <a href="${mailtoLink}" class="btn btn-primary btn-lg" id="btn-mailto" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
                 Send to ${mass.count} Brokers
             </a>
             <p class="text-sm text-secondary mt-1">
                 After sending, come back and mark them as done below.
             </p>
+        </div>
+
+        <!-- Post-send prompt (hidden initially, shown on return) -->
+        <div class="card mt-2" id="post-send-prompt" style="display:none; border-color: var(--color-success);">
+            <div class="card-header">
+                <div class="card-title" style="color: var(--color-success);">Welcome back! Did you send it?</div>
+            </div>
+            <p class="text-sm text-secondary mb-1">
+                If you sent the email, mark all brokers as contacted to start tracking deadlines.
+            </p>
+            <button class="btn btn-success btn-lg" id="btn-mark-all-sent-prompt" style="width:100%;">
+                Yes — Mark All ${mass.count} Brokers as Sent
+            </button>
         </div>
 
         <details class="mt-2">
@@ -269,7 +307,7 @@ ${esc(mass.body)}</div>
             </div>
         </details>
 
-        <div class="card mt-2">
+        <div class="card mt-2" id="mark-done-card">
             <div class="card-header">
                 <div class="card-title">Mark as done</div>
             </div>
@@ -278,6 +316,15 @@ ${esc(mass.body)}</div>
             </p>
             <button class="btn btn-success" id="btn-mark-all-sent">Mark All ${mass.count} Brokers as Sent</button>
         </div>
+
+        ${nonEmailBrokers.length > 0 ? `
+        <div class="callout mt-2" style="text-align: left;">
+            <p class="text-sm text-secondary" style="max-width: none;">
+                <strong>${nonEmailBrokers.length} broker${nonEmailBrokers.length > 1 ? 's' : ''}</strong> require manual opt-out
+                (web form or phone). Check the <a href="#brokers">Brokers</a> directory for details.
+            </p>
+        </div>
+        ` : ''}
 
         <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
             <div class="flex items-center justify-between mb-1">
@@ -295,6 +342,31 @@ ${esc(mass.body)}</div>
         </div>
     `;
 
+    // Post-send UX: detect when user clicks mailto then returns
+    let mailtoClicked = false;
+    const mailtoBtn = container.querySelector('#btn-mailto');
+    const postSendPrompt = container.querySelector('#post-send-prompt');
+
+    mailtoBtn.addEventListener('click', () => {
+        mailtoClicked = true;
+    });
+
+    // Show prompt when user returns to tab after clicking mailto
+    const handleVisibility = () => {
+        if (mailtoClicked && !document.hidden && postSendPrompt) {
+            postSendPrompt.style.display = '';
+            postSendPrompt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            document.removeEventListener('visibilitychange', handleVisibility);
+        }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    container.querySelector('#btn-mark-all-sent-prompt')?.addEventListener('click', () => {
+        brokers.forEach(b => Store.markSent(b.id));
+        showToast(`${mass.count} brokers marked as sent`);
+        renderCompletionCard(container, mass.count);
+    });
+
     // Toggle BCC list
     container.querySelector('#toggle-bcc').addEventListener('click', () => {
         container.querySelector('#bcc-list').classList.toggle('open');
@@ -307,13 +379,13 @@ ${esc(mass.body)}</div>
 
     // Copy BCC
     container.querySelector('#btn-copy-bcc').addEventListener('click', () => {
-        navigator.clipboard.writeText(mass.bccString).then(() => showToast(`${mass.count} addresses copied`));
+        copyToClipboard(mass.bccString, `${mass.count} addresses copied`);
     });
 
     // Copy email
     container.querySelector('#btn-copy-email').addEventListener('click', () => {
         const text = `Subject: ${mass.subject}\n\n${mass.body}`;
-        navigator.clipboard.writeText(text).then(() => showToast('Email copied'));
+        copyToClipboard(text, 'Email copied');
     });
 
     // Mark all sent
@@ -321,7 +393,7 @@ ${esc(mass.body)}</div>
         if (confirm(`Mark all ${mass.count} brokers as sent?`)) {
             brokers.forEach(b => Store.markSent(b.id));
             showToast(`${mass.count} brokers marked as sent`);
-            renderMassMode(container);
+            renderCompletionCard(container, mass.count);
         }
     });
 
@@ -348,6 +420,27 @@ ${esc(mass.body)}</div>
             </div>
         `;
     }).join('');
+}
+
+function renderCompletionCard(container, count) {
+    container.innerHTML = `
+        <div class="callout" style="text-align: center; padding: 3rem 2rem;">
+            <div class="callout-icon" style="font-size: 3rem;">&#127881;</div>
+            <h2 style="margin-bottom: 0.75rem;">Opt-out requests sent!</h2>
+            <p class="text-secondary" style="max-width: 480px; margin: 0 auto 1.5rem;">
+                You just sent legally-backed deletion requests to <strong>${count} data brokers</strong>.
+                Each one now has a legal deadline to respond. Track their progress in the
+                <a href="#progress">Progress</a> tab.
+            </p>
+
+            <div class="btn-group" style="justify-content: center;">
+                <a href="#progress" class="btn btn-primary">Track Deadlines</a>
+                <a href="#share" class="btn btn-outline">Share DataPurge</a>
+            </div>
+
+            ${Share.renderShareBar()}
+        </div>
+    `;
 }
 
 function renderIndividualMode(container) {
@@ -467,8 +560,7 @@ ${esc(filled.body)}</div>
                 currentSlot.querySelector('#preview-body').classList.toggle('open');
             });
             currentSlot.querySelector('#btn-copy').addEventListener('click', () => {
-                navigator.clipboard.writeText(`Subject: ${filled.subject}\n\n${filled.body}`)
-                    .then(() => showToast('Copied to clipboard'));
+                copyToClipboard(`Subject: ${filled.subject}\n\n${filled.body}`, 'Copied to clipboard');
             });
             currentSlot.querySelector('#btn-sent').addEventListener('click', () => {
                 Store.markSent(broker.id);
@@ -481,6 +573,7 @@ ${esc(filled.body)}</div>
                     <div class="callout-icon">&#127881;</div>
                     <h3>All done!</h3>
                     <p>You've sent opt-out requests to every broker. Check the Progress tab to track responses.</p>
+                    ${Share.renderShareBar()}
                 </div>`;
         }
 
@@ -504,10 +597,26 @@ ${esc(filled.body)}</div>
 export const Queue = {
     async load() {
         const resp = await fetch('data/registry.json');
+        if (!resp.ok) throw new Error(`Failed to load registry: ${resp.status}`);
         registryData = await resp.json();
     },
 
+    /** Shared access to loaded registry for other modules */
+    getRegistryData() {
+        return registryData;
+    },
+
     render(container) {
+        if (!registryData) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <h3>Unable to load broker data</h3>
+                    <p>Please check your connection and reload the page.</p>
+                    <button class="btn btn-outline mt-2" onclick="location.reload()">Reload</button>
+                </div>`;
+            return;
+        }
+
         const brokers = getEmailableBrokers();
         if (brokers.length === 0) {
             container.innerHTML = `
@@ -518,11 +627,6 @@ export const Queue = {
             return;
         }
 
-        // Default to mass mode
         renderMassMode(container);
-    },
-
-    getRegistryData() {
-        return registryData;
     },
 };

@@ -1,0 +1,56 @@
+id: carfax
+name: Carfax
+domain: carfax.com
+aliases: []
+category: vehicle
+data_types:
+  - name
+  - address
+  - email
+  - vehicle-history
+  - vehicle-registration
+  - service-records
+  - accident-history
+  - odometer-readings
+
+scan:
+  search_url: "https://www.carfax.com/vehicle-history-reports/"
+  scannable: true
+  scan_type: vin_lookup
+  reason: "VIN-based vehicle history search available to consumers."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.carfax.com/company/privacy-statement"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "Privacy request via Carfax privacy statement page. Carfax does not sell personally identifying information (name, address, email, phone) but may share data linked to unique identifiers for advertising."
+    - type: email
+      email_to: privacy@carfax.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Carfax claims it does not sell information that specifically identifies consumers. However, it may share personal information through unique identifiers for cross-context behavioral advertising. Vehicle history data itself is largely sourced from public records, insurance companies, service facilities, and state DMVs, and is difficult to remove."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: high
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Carfax privacy statement. Claims not to sell PII directly but shares data via unique identifiers for targeted advertising. Vehicle history data is largely from public records and is difficult to remove. Privacy email not confirmed on official pages but standard channel."

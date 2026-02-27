@@ -206,8 +206,8 @@
                     <h3>Your data never leaves your browser</h3>
                     <p>
                         No accounts. No tracking. No cookies. Your personal information is stored
-                        in your browser's local storage and disappears when you close the tab.
-                        We serve templates &mdash; your browser fills them in. That's it.
+                        in your browser's local storage on your device. It is never sent to any server.
+                        You can delete it at any time. We serve templates &mdash; your browser fills them in.
                     </p>
                 </div>
             </div>
@@ -218,7 +218,7 @@
             <div class="container">
                 <div class="stats-bar" id="stats-bar">
                     <div class="stat">
-                        <div class="stat-value" id="stat-brokers">7</div>
+                        <div class="stat-value" id="stat-brokers">179</div>
                         <div class="stat-label">Data brokers tracked</div>
                     </div>
                     <div class="stat">
@@ -280,20 +280,18 @@
             <div class="footer-links">
                 <a href="https://github.com/puurpl/datapurge" target="_blank" rel="noopener">GitHub</a>
                 <a href="app.html#brokers">Browse Data Brokers</a>
-                <a href="app.html#report">Report a Broker</a>
+                <a href="https://github.com/puurpl/datapurge/issues/new?template=broker-report.md&title=New+Broker:+" target="_blank" rel="noopener">Report a Broker</a>
             </div>
             <p>MIT License &mdash; Broker data is CC0 public domain. Built to make data brokers expensive.</p>
+            <p class="footer-credits">
+                With thanks to Kristine Socall,
+                <a href="https://gifteddreamers.org" target="_blank" rel="noopener">Gifted Dreamers</a>, and
+                <a href="https://digitaldisconnections.com" target="_blank" rel="noopener">Digital Disconnections</a>.
+            </p>
         </div>
     </footer>
 
     <!-- Dynamic stats from registry -->
-    <script>
-        fetch('data/registry.json')
-            .then(r => r.json())
-            .then(d => {
-                document.getElementById('stat-brokers').textContent = d.broker_count;
-            })
-            .catch(() => {});
-    </script>
+    <script src="js/stats.js"></script>
 </body>
 </html>

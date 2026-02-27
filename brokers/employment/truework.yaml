@@ -1,0 +1,58 @@
+id: truework
+name: Truework
+domain: truework.com
+aliases: []
+category: employment
+data_types:
+  - name
+  - address
+  - dob
+  - ssn
+  - employment
+  - salary-history
+  - income-estimates
+
+scan:
+  scannable: false
+  reason: "Employment and income verification service. No public consumer search. Verifies employment data only with consumer's explicit consent."
+
+optout:
+  methods:
+    - type: email
+      email_to: support@truework.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Contact for privacy requests, FCRA requests, or to request your personal employment report."
+    - type: phone
+      phone_number: "1-833-878-3967"
+      required_fields: [full_name]
+      notes: "Toll-free consumer support line for employment report requests and FCRA rights."
+    - type: web_form
+      url: "https://www.truework.com/privacy"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "Do Not Sell or Share My Personal Information link in footer."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Employment and income verification platform. Does not provide information to third parties without express consumer authorization. FCRA-regulated consumer reporting agency. Consumer can request free personal employment report. CCPA does not apply to FCRA-governed data. Do Not Sell/Share link available on website."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: CFPB consumer reporting companies list, Truework privacy policy, Truework FCRA compliance page. FCRA-regulated CRA for employment/income verification. Consumer consent required before data release."

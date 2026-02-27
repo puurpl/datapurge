@@ -1,0 +1,72 @@
+id: harte-hanks
+name: Harte-Hanks
+domain: hartehanks.com
+aliases: [privacy-in-action.hartehanks.com, distribution.hartehanks.com]
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B global behavioral marketing company. No consumer-facing search. Provides direct marketing, digital, and fulfillment services."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://privacy-in-action.hartehanks.com/"
+      required_fields: [full_name, email, address, phone]
+      steps:
+        - action: navigate
+          url: "https://privacy-in-action.hartehanks.com/"
+          description: "Go to Harte-Hanks privacy preferences page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: input
+          value: "{phone}"
+          description: "Enter your phone number"
+        - action: submit
+          description: "Submit privacy preferences / opt-out request"
+    - type: email
+      email_to: privacy@hartehanks.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-800-541-5594"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Harte-Hanks is a global behavioral marketing company providing direct mail, digital, sampling, fulfillment, and customer care services. May not facilitate privacy requests solely via email — use web form or phone for best results. Data Protection Officer available at mailing address."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: hartehanks.com/privacy, privacy-in-action.hartehanks.com. Global behavioral marketing company with operations in the US, Europe, and Asia. Data Protection Officer at 1 Executive Drive, Suite 303, Chelmsford, MA 01824."

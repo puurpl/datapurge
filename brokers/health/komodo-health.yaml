@@ -1,0 +1,53 @@
+id: komodo-health
+name: Komodo Health
+domain: komodohealth.com
+aliases: []
+category: health
+data_types:
+  - name
+  - address
+  - dob
+  - medical-claims
+  - prescription-history
+  - health-data
+  - insurance-claims
+  - demographic
+
+scan:
+  scannable: false
+  reason: "Healthcare analytics company. No public consumer search. Processes de-identified and identified patient-level medical claims data for pharma and healthcare clients."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://komodohealth-privacy.my.onetrust.com/webform/5c3cf8b1-3cf1-422d-84d5-618844b7316f/580adaab-6481-479f-9643-50464eea9863"
+      required_fields: [full_name, email, address]
+      template_id: null
+    - type: email
+      email_to: trust-and-safety@komodohealth.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 45
+  legal_max_days: 45
+  notes: "Healthcare analytics company processing billions of medical claims records. Do Not Sell page available on website. California opt-out form via OneTrust portal. Contact trust-and-safety@komodohealth.com for privacy requests."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: medium
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (two registrations), Komodo Health privacy notice, OneTrust opt-out form. Maps billions of patient encounters from medical claims data."

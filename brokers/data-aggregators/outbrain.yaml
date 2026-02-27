@@ -1,0 +1,57 @@
+id: outbrain
+name: Outbrain
+domain: outbrain.com
+aliases: [my.outbrain.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B content discovery and native advertising platform. No consumer-facing search. Recommends content on publisher websites and tracks user engagement."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://my.outbrain.com/recommendations-settings/home"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://my.outbrain.com/recommendations-settings/home"
+          description: "Go to Outbrain Interest Profile and recommendation settings"
+        - action: click
+          description: "Opt out of personalized recommendations and sale of personal information"
+    - type: email
+      email_to: privacy@outbrain.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-467-8688"
+      notes: "Toll-free number. Use Outbrain Service Code: 253#."
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Outbrain is a native advertising platform embedded on major publisher websites (CNN, Washington Post, etc.). Tracks content consumption, clicks, and browsing behavior to build interest profiles. Opt-out via Interest Profile page stops personalized recommendations."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186707), outbrain.com privacy notice, my.outbrain.com. Native advertising platform headquartered at 39 West 13th Street, 3rd Floor, New York, NY 10011. Embedded on thousands of publisher websites worldwide."

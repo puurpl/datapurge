@@ -1,0 +1,63 @@
+id: comscore
+name: Comscore (Proximic)
+domain: comscore.com
+aliases: [proximic.com, direct.comscore.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B digital analytics and audience measurement platform. No consumer-facing search. Provides cross-platform audience measurement and contextual targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "http://www.comscore.com/About/Privacy/Data-Subject-Rights"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "http://www.comscore.com/About/Privacy/Data-Subject-Rights"
+          description: "Go to Comscore Data Subject Rights page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy rights request"
+    - type: email
+      email_to: privacy@comscore.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-675-6141"
+      required_fields: [full_name]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Comscore provides cross-platform audience measurement and analytics. Owns Proximic, which provides contextual and audience targeting. Comscore tags are embedded on millions of websites and apps to measure digital traffic and behavior."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186289), comscore.com/About/Privacy, proximic.com. Audience measurement company. Tags embedded on millions of sites/apps. Owns Proximic for contextual targeting."

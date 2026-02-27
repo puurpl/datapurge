@@ -1,0 +1,60 @@
+id: affinity-solutions
+name: Affinity Solutions
+domain: affinity.solutions
+aliases: [affinitysolutions-privacy.my.onetrust.com]
+category: data-aggregator
+data_types:
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B consumer purchase intelligence platform. No consumer-facing search. Provides anonymized transaction-level purchase data to brands and agencies."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://affinitysolutions-privacy.my.onetrust.com/webform/a564cfa1-53bf-4c10-bf95-cd907432d7e8/7e4e6bf3-6562-454e-8c73-6a7bd1f4b336"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://affinitysolutions-privacy.my.onetrust.com/webform/a564cfa1-53bf-4c10-bf95-cd907432d7e8/7e4e6bf3-6562-454e-8c73-6a7bd1f4b336"
+          description: "Go to Affinity Solutions Data Privacy Options form (OneTrust)"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy opt-out request"
+    - type: email
+      email_to: dataprivacy@affinitysolutions.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 45
+  notes: "Affinity Solutions provides consumer purchase intelligence derived from debit and credit card transactions across 140M+ cards. Acts upon opt-out requests within 15 business days and notifies third parties. Will honor California DROP requests beginning August 1, 2026. Note: data related to financial transactions is maintained as 'blind' (non-identifiable) data that may fall outside CCPA scope."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    texas: true
+  state_laws: [california, virginia, colorado, texas]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: affinity.solutions/data-privacy-notice, OneTrust privacy portal, California and Texas data broker registrations. Consumer purchase intelligence company. Derives insights from 140M+ debit/credit card transactions. Registered as data broker in California and Texas."

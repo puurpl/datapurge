@@ -1,0 +1,55 @@
+id: saferent-solutions
+name: SafeRent Solutions
+domain: saferentsolutions.com
+aliases: []
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - ssn
+  - credit-history
+  - criminal-records
+  - eviction-records
+  - rental-history
+
+scan:
+  scannable: false
+  reason: "Specialty consumer reporting agency for tenant screening. No public consumer search. Reports generated for property managers with permissible purpose."
+
+optout:
+  methods:
+    - type: email
+      email_to: Consumer@saferentsolutions.com
+      required_fields: [full_name, address, dob]
+      template_id: ccpa_maximum
+      notes: "Consumer Support email. Can request to stop marketing communications or exercise privacy rights."
+    - type: phone
+      phone_number: "888-333-2413"
+      required_fields: [full_name, dob]
+      notes: "Consumer Support hours: Monday-Friday 8am-6pm CST."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 15
+  legal_max_days: 30
+  notes: "FCRA-regulated specialty consumer reporting agency. Provides resident screening including housing court data, criminal records, credit reports, and alternative credit data. Generates applicant risk scores for property managers. One free consumer file disclosure every 12 months. Consumer file freeze available upon request."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 15
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: CFPB consumer reporting companies list, SafeRent Solutions consumer support page, privacy policy. FCRA-regulated specialty CRA. Formerly part of CoreLogic rental property solutions."

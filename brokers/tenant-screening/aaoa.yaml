@@ -1,0 +1,50 @@
+id: aaoa
+name: American Apartment Owners Association (AAOA)
+domain: american-apartment-owners-association.org
+aliases: []
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - credit-history
+  - criminal-records
+  - eviction-records
+
+scan:
+  scannable: false
+  reason: "Membership-based tenant screening service. No public consumer search. Reports generated for member landlords with tenant consent."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.american-apartment-owners-association.org/privacy-policy/"
+      required_fields: [full_name, email, address]
+      template_id: null
+      notes: "Privacy policy page contains opt-out information. AAOA does not sell or rent personal contact information."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Membership-based landlord association providing tenant screening services. Strictly adheres to FCRA and credit bureau security requirements. Does not store applicant data or credit cards on local servers. Does not sell or rent personal contact information."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: AAOA privacy policy, FAQ page. Membership-based organization. FCRA-regulated for screening services. Limited public information on specific CCPA procedures."

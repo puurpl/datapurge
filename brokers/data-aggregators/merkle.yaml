@@ -1,0 +1,76 @@
+id: merkle
+name: Merkle (Dentsu)
+domain: merkle.com
+aliases: [merkleinc.com, merkury.dentsu.com, dentsu.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - dob
+  - income-estimates
+  - purchase-history
+  - device-ids
+  - ip-address
+  - political-affiliation
+
+scan:
+  scannable: false
+  reason: "B2B data-driven customer experience management company. No consumer-facing search. Operates Merkury identity resolution platform."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.merkle.com/en/privacy-policy/data-product-privacy-notice/control-your-personal-information.html"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://www.merkle.com/en/privacy-policy/data-product-privacy-notice/control-your-personal-information.html"
+          description: "Go to Merkle 'Control Your Personal Information' page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: submit
+          description: "Submit the privacy rights request"
+    - type: email
+      email_to: dpous@merkleinc.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-833-457-0192"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Merkle is a dentsu company. Operates Merkury, a major identity resolution platform that links PII to digital identifiers across channels. Data products include consumer marketing data, B2B data, and identity resolution services. Also contact Americas.DPO@dentsu.com for dentsu-wide privacy concerns."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: true
+    oregon: true
+    texas: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186477), merkle.com/en/privacy-policy/data-product-privacy-notice, JoinDeleteMe opt-out guide. Merkle is one of the largest data-driven CXM companies. Owned by dentsu. Registered as data broker in California, Vermont, Oregon, and Texas."

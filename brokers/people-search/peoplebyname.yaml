@@ -1,0 +1,72 @@
+id: peoplebyname
+name: PeopleByName
+domain: peoplebyname.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.peoplebyname.com/people/{last_name}/{first_name}"
+  detection:
+    - method: selector_present
+      value: ".record-item"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.peoplebyname.com/remove.php"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.peoplebyname.com/remove.php"
+          description: "Go to PeopleByName removal page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+    - type: email
+      email_to: support@peoplebyname.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 5
+  legal_max_days: 45
+  notes: "May require government-issued ID for verification when contacting via email."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: State of Surveillance Master List, Big Ass Data Broker Opt-Out List."

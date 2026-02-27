@@ -1,0 +1,61 @@
+id: cognism
+name: Cognism
+domain: cognism.com
+aliases: []
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+
+scan:
+  scannable: false
+  reason: "B2B sales intelligence platform. Requires paid subscription to search contacts."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.cognism.com/data-opt-out"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.cognism.com/data-opt-out"
+          description: "Go to Cognism data opt-out form"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit opt-out request"
+        - action: verify_email
+          description: "Check email for verification link — only verified requests will be processed"
+    - type: email
+      email_to: privacy@cognism.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 5
+  legal_max_days: 45
+  notes: "Cognism removes data within 120 hours of verified opt-out request. Owns Kaspr (LinkedIn scraper). Proactively notifies data subjects per GDPR Article 14 transparency obligations. Uses 'legitimate interest' as lawful basis under GDPR. Diamond Data product includes phone-verified mobile numbers."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 5
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #185986), cognism.com/en/privacy-policy, cognism.com/data-opt-out, help.cognism.com. UK-headquartered B2B sales intelligence company. Owns Kaspr. Claims GDPR compliance via Article 14 notifications. Fast 120-hour removal window."

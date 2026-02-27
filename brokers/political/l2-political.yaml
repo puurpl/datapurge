@@ -1,0 +1,61 @@
+id: l2-political
+name: L2 Political
+domain: l2-data.com
+aliases: [l2political.com, l2datamapping.com]
+category: political
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - voter-registration
+  - party-affiliation
+  - voting-history
+  - demographic
+  - ethnicity
+  - religion
+  - consumer-interests
+
+scan:
+  scannable: false
+  reason: "Political data provider. No public consumer search. Provides enhanced voter and consumer data to campaigns, PACs, and political organizations."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@L2political.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.l2-data.com/l2-privacy-policy/"
+      required_fields: [full_name, email, address]
+      template_id: null
+      notes: "Privacy Rights Portal webform accessible from L2 privacy policy page."
+    - type: phone
+      phone_number: "1-800-842-5478"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Trusted source for voter and consumer data for 50+ years. National voter file with 250+ million consumer records. Collects demographic, psychographic, and behavioral data. Opt-out available for sale of personal information under CCPA. California DELETE/DROP platform also available as of Jan 1, 2026."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, utah]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry, L2 privacy policy, PrivacyHawk opt-out guide. Registered data broker in California. One of the largest political data providers in the US."

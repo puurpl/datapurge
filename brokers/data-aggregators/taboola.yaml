@@ -1,0 +1,70 @@
+id: taboola
+name: Taboola
+domain: taboola.com
+aliases: [ccparequest.taboola.com, accessrequest.taboola.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B content discovery and native advertising platform. No consumer-facing search. Recommends sponsored content on publisher websites and tracks user engagement."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://ccparequest.taboola.com/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://ccparequest.taboola.com/"
+          description: "Go to Taboola California Consumer Rights Portal"
+        - action: click
+          description: "Submit opt-out of sale/sharing of personal information"
+    - type: web_form
+      url: "https://www.taboola.com/privacy-policy#optout"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.taboola.com/privacy-policy#optout"
+          description: "Go to Taboola global opt-out tool"
+        - action: click
+          description: "Opt out of personalized content recommendations"
+    - type: web_form
+      url: "https://accessrequest.taboola.com"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://accessrequest.taboola.com"
+          description: "Go to Taboola Data Subject Access Request Portal"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit data access or deletion request"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 14
+  legal_max_days: 45
+  notes: "Taboola processes only pseudonymous data — cookie IDs, IP addresses, and mobile ad IDs. Does not store names or email addresses. Opt-out via CCPA portal, global opt-out tool, or industry tools (DAA, NAI). Embedded on thousands of publisher websites (e.g., NBC, Business Insider)."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186589), taboola.com/policies/privacy-policy, ccparequest.taboola.com. Native advertising platform. Processes pseudonymous data only (no PII). Embedded on thousands of publisher websites globally."
