@@ -33,7 +33,7 @@ const IFRAME_SNIPPET = `<iframe
   loading="lazy">
 </iframe>`;
 
-const SHARE_TEXT = 'Remove your personal data from 200+ data brokers for free. DataPurge generates legally-backed opt-out emails.';
+const SHARE_TEXT = 'Remove your personal data from 700+ data brokers for free. DataPurge generates legally-backed opt-out emails.';
 const SHARE_TITLE = 'DataPurge — Free Data Broker Opt-Out Tool';
 
 export const Share = {
