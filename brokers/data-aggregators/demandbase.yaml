@@ -1,0 +1,64 @@
+id: demandbase
+name: Demandbase
+domain: demandbase.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - ip-address
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B account-based marketing (ABM) platform. No consumer-facing search. Identifies companies visiting websites and provides intent data."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.demandbase.com/privacy/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.demandbase.com/privacy/"
+          description: "Go to Demandbase Privacy Notice page"
+        - action: click
+          description: "Click 'Do Not Sell My Info' or use the privacy rights request form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit privacy rights request"
+    - type: email
+      email_to: privacy@demandbase.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Demandbase is a leading account-based marketing (ABM) platform. Identifies companies visiting websites using IP-to-company mapping, and provides B2B intent data and contact information. Opt-out can also be done via 'Do Not Sell My Info' button on website."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #550546), demandbase.com/privacy. B2B ABM platform headquartered at 680 Folsom, Suite 400, San Francisco, CA 94107. Uses IP-to-company mapping and intent signals."

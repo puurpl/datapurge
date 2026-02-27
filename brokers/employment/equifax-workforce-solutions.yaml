@@ -1,0 +1,57 @@
+id: equifax-workforce-solutions
+name: Equifax Workforce Solutions (The Work Number)
+domain: theworknumber.com
+aliases: [employees.theworknumber.com, workforce.equifax.com]
+category: employment
+data_types:
+  - name
+  - address
+  - dob
+  - ssn
+  - employment
+  - salary-history
+  - income-estimates
+
+scan:
+  scannable: false
+  reason: "Employment and income verification database. No public consumer search. Consumers can view their own data at employees.theworknumber.com."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://employees.theworknumber.com/employee-data-freeze"
+      required_fields: [full_name, dob, ssn, employer]
+      template_id: null
+      notes: "Employment Data Freeze Placement form. Freezing prevents verifiers from viewing your data. Processed within 3 days."
+    - type: web_form
+      url: "https://theworknumber.com/cpra"
+      required_fields: [full_name, dob, address]
+      template_id: null
+      notes: "California Privacy Rights Act (CPRA) request form for California residents."
+    - type: phone
+      phone_number: "1-800-367-2884"
+      required_fields: [full_name, dob]
+  difficulty: hard
+  estimated_minutes: 20
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Holds 296+ million employment records covering ~1/3 of US working population. 75% of Fortune 500 companies send employment and salary data to Equifax. Data freeze prevents third-party verification access but does not delete data. CPRA request form available for California residents. FCRA-regulated for employment verification."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.90
+  notes: "Source: CFPB consumer reporting companies list, theworknumber.com employee resources, Krebs on Security opt-out guide. FCRA-regulated. Data freeze is the primary consumer protection mechanism. Separate from main Equifax credit bureau entry."

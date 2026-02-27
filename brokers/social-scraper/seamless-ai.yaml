@@ -1,0 +1,68 @@
+id: seamless-ai
+name: Seamless.AI
+domain: seamless.ai
+aliases: [login.seamless.ai]
+category: social-scraper
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - social-media
+  - address
+
+scan:
+  scannable: false
+  reason: "B2B sales intelligence platform. Requires paid subscription to search contacts."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://login.seamless.ai/personalDataRequest"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://login.seamless.ai/personalDataRequest"
+          description: "Go to Seamless.AI personal data request form"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: input
+          value: "{address}"
+          description: "Enter your mailing address"
+        - action: submit
+          description: "Submit opt-out / data deletion request"
+    - type: email
+      email_to: privacy@seamlessleads.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "855-953-3265"
+      required_fields: [full_name]
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Seamless.AI is a B2B contact and company data search engine. Scrapes LinkedIn, company websites, and other sources to build contact profiles. May sell personal information to third-party data brokers and aggregation services. 'Do Not Sell' link available in website footer."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #186158), seamless.ai/policies/ccpa-policy, JoinDeleteMe opt-out guide. Registered as Seamless Contacts, Inc. d/b/a Seamless.AI. Headquartered at 7652 Sawmill Road, Suite 341, Dublin, Ohio 43016."

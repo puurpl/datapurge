@@ -1,0 +1,47 @@
+id: verve-group
+name: Verve Group
+domain: verve.com
+aliases: [vervemobile.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B programmatic advertising and location data platform. No consumer-facing search. Provides location-based audience targeting for mobile and CTV advertising."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@verve.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-866-467-8688"
+      notes: "Toll-free number. Use Verve Service Code: 2178#."
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Verve Group provides location-based mobile and connected TV (CTV) advertising. Uses location data associated with device identifiers for ad targeting and audience segmentation. Identity verification required before processing requests."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: verve.com/product-privacy-policies. Headquartered at 60 Madison Avenue, 8th Floor, New York, NY 10010. Programmatic advertising platform specializing in location-based mobile and CTV targeting."

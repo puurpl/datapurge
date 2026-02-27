@@ -1,0 +1,55 @@
+id: transunion-smartmove
+name: TransUnion SmartMove
+domain: mysmartmove.com
+aliases: [transunion.com/product/smartmove]
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - ssn
+  - credit-history
+  - criminal-records
+  - eviction-records
+
+scan:
+  scannable: false
+  reason: "Tenant screening service. No public consumer search. Landlords order reports with tenant consent."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.transunion.com/consumer-privacy"
+      required_fields: [full_name, email, address, dob, ssn_last4]
+      template_id: null
+      notes: "Submit a verifiable consumer privacy request via TransUnion Consumer Privacy Rights page."
+    - type: phone
+      phone_number: "1-833-395-6938"
+      required_fields: [full_name, dob]
+      notes: "TransUnion consumer privacy line."
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated tenant screening service by TransUnion. Reports include credit, criminal, and eviction history. FCRA data cannot be fully opted out but inaccuracies can be disputed. For CCPA opt-out of non-FCRA data, use TransUnion Consumer Privacy Rights page. Identity verification requires name, address, email, phone, DOB, and last 4 of SSN."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: TransUnion Rental Screening Solutions privacy notice, CFPB consumer reporting companies list, mysmartmove.com. FCRA-regulated CRA. Part of TransUnion's rental screening division."

@@ -9,10 +9,16 @@ let data = null;
 export const Templates = {
     async load() {
         const resp = await fetch('data/templates.json');
+        if (!resp.ok) throw new Error(`Failed to load templates: ${resp.status}`);
         data = await resp.json();
     },
 
+    isLoaded() {
+        return data !== null;
+    },
+
     selectBestTemplate(userState, userCountry, broker) {
+        if (!data) return 'preemptive_blanket';
         const euCountries = new Set(data.eu_countries);
 
         // GDPR for EU/UK residents
@@ -29,7 +35,7 @@ export const Templates = {
         }
 
         // State law priority map
-        if (data.state_law_priority[stateLower]) {
+        if (data.state_law_priority && data.state_law_priority[stateLower]) {
             return data.state_law_priority[stateLower];
         }
 
@@ -46,12 +52,10 @@ export const Templates = {
     },
 
     interpolate(text, fields) {
-        // First pass: replace placeholders
         let result = text.replace(/\{(\w+)\}/g, (match, key) => {
             const val = fields[key];
             return (val !== undefined && val !== '') ? String(val) : '';
         });
-        // Clean up blank lines left by empty optional fields
         result = result.replace(/\n\s*\n\s*\n/g, '\n\n');
         return result;
     },
@@ -61,8 +65,8 @@ export const Templates = {
         if (!tmpl) return null;
         const fields = {
             ...userFields,
-            broker_name: broker.name,
-            broker_domain: broker.domain,
+            broker_name: broker.name || broker.domain || 'your organization',
+            broker_domain: broker.domain || '',
         };
         return {
             templateId,
@@ -73,6 +77,8 @@ export const Templates = {
     },
 
     generateMailtoLink(sendTo, subject, body) {
-        return `mailto:${sendTo}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        // Validate email format to prevent mailto injection
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sendTo)) return '#';
+        return `mailto:${encodeURIComponent(sendTo)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     },
 };

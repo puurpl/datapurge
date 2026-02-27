@@ -1,0 +1,54 @@
+id: milliman-intelliscript
+name: Milliman IntelliScript
+domain: rxhistories.com
+aliases: [us.milliman.com]
+category: health
+data_types:
+  - name
+  - address
+  - dob
+  - prescription-history
+  - health-data
+
+scan:
+  scannable: false
+  reason: "Prescription history consumer reporting agency. Consumers can request their own report but there is no public search. Provides prescription risk scores to life insurance underwriters."
+
+optout:
+  methods:
+    - type: phone
+      phone_number: "1-866-467-8688"
+      required_fields: [full_name, dob, address]
+      notes: "Call and enter service code 742 at prompt for IntelliScript requests. Service code 740 for general Milliman CCPA requests."
+    - type: email
+      email_to: intelliscriptsupport@milliman.com
+      required_fields: [full_name, dob, address]
+      template_id: ccpa_maximum
+    - type: postal
+      postal_address: "Milliman IntelliScript, P.O. Box 2223, Brookfield, WI 53008"
+      required_fields: [full_name, dob, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 20
+  processing_days: 30
+  legal_max_days: 45
+  notes: "FCRA-regulated specialty consumer reporting agency. Collects prescription drug purchase history for life/health insurance underwriting. Requires HIPAA-compliant authorization before gathering data. Consumers can request a free disclosure report annually. CCPA opt-out via phone (service code 740) or Milliman CCPA Consumer Request Portal."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 365
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: CFPB consumer reporting companies list, rxhistories.com privacy policy, Milliman US privacy policy. FCRA-regulated specialty CRA. Milliman states it does not sell personal information but CCPA opt-out is available."

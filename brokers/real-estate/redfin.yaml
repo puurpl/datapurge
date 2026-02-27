@@ -1,0 +1,58 @@
+id: redfin
+name: Redfin
+domain: redfin.com
+aliases: []
+category: real-estate
+data_types:
+  - name
+  - address
+  - email
+  - phone
+  - property-records
+  - home-values
+  - tax-assessments
+  - browsing-behavior
+  - ip-address
+  - location-data
+
+scan:
+  search_url: "https://www.redfin.com/"
+  scannable: true
+  scan_type: address_lookup
+  reason: "Public property search available. Shows property details, estimated values, tax history, and ownership."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.redfin.com/about/privacy-policy"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "Privacy policy page with CCPA rights links. Use 'Do Not Sell or Share' link. If you have entered your email on Redfin, you also need to use the LiveRamp opt-out tool to fully opt out."
+    - type: email
+      email_to: privacy@redfin.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Real estate marketplace showing property data, home estimates, and ownership records. Does not sell personal information for monetary consideration but discloses data to ad companies for targeted advertising (which constitutes 'selling/sharing' under CCPA). Full opt-out may require using LiveRamp opt-out tool in addition to Redfin's opt-out."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Redfin privacy policy, targeted advertising opt-out page. Property data sourced from MLS and public records. Full data sharing opt-out may require multiple steps including LiveRamp."

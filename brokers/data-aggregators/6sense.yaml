@@ -1,0 +1,67 @@
+id: 6sense
+name: 6sense
+domain: 6sense.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - employment
+  - ip-address
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B account-based marketing and intent data platform. No consumer-facing search. Identifies anonymous website visitors and provides buyer intent signals."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://6sense.com/privacy-policy/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://6sense.com/privacy-policy/"
+          description: "Go to 6sense Privacy Policy page"
+        - action: click
+          description: "Click 'Do Not Sell or Share My Personal Information' link"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit opt-out request"
+    - type: email
+      email_to: privacy@6sense.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-844-271-9399"
+      required_fields: [full_name]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "6sense is a B2B predictive intelligence platform that uses AI to identify accounts showing buying intent. Tracks website visitor behavior and maps it to companies. Third-party CCPA validation through TRUSTe LLC. Three opt-out methods: email, web form, or toll-free phone."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: California Data Broker Registry (registration #563658), 6sense.com/privacy-policy, JoinDeleteMe opt-out guide. B2B predictive intelligence platform headquartered at 450 Mission Street, Suite 201, San Francisco, CA 94015. CCPA validated by TRUSTe."

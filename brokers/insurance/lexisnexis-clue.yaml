@@ -1,0 +1,62 @@
+id: lexisnexis-clue
+name: LexisNexis C.L.U.E.
+domain: consumer.risk.lexisnexis.com
+aliases: [risk.lexisnexis.com, personalreports.lexisnexis.com]
+category: insurance
+data_types:
+  - name
+  - address
+  - dob
+  - insurance-claims
+  - property-records
+  - auto-claims
+  - driving-records
+
+scan:
+  scannable: false
+  reason: "Insurance claims history database. No public search. Consumers can request their own CLUE report (Comprehensive Loss Underwriting Exchange)."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://consumer.risk.lexisnexis.com/request"
+      required_fields: [full_name, dob, address, ssn]
+      template_id: null
+      notes: "Request your CLUE consumer disclosure report online. Covers auto and property claims history."
+    - type: email
+      email_to: privacy.information.mgr@lexisnexis.com
+      required_fields: [full_name, email, address, dob]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://optout.lexisnexis.com/"
+      required_fields: [full_name, email, address, dob]
+      template_id: null
+      notes: "LexisNexis Information Suppression Request form. Suppresses data from non-FCRA products."
+    - type: phone
+      phone_number: "1-800-456-6004"
+      required_fields: [full_name, dob]
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "CLUE (Comprehensive Loss Underwriting Exchange) is a claims history database used by insurance companies. FCRA-regulated for insurance reports. Information Suppression removes data from non-FCRA LexisNexis products. CLUE data itself is FCRA-protected and cannot be fully opted out of, but inaccuracies can be disputed. Prescreened offers opt-out available separately."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: LexisNexis consumer disclosure site, CFPB consumer reporting companies list, optout.lexisnexis.com. CLUE reports track 5-7 years of auto and property insurance claims. Separate from main LexisNexis entry which covers broader data aggregation."
