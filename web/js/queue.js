@@ -215,6 +215,22 @@ function getLocationNotices() {
     return notices.join('');
 }
 
+// mailto: URLs have platform-specific length limits (~2KB on macOS, ~8KB on Linux,
+// ~32KB on Windows). With 600+ broker addresses we can easily exceed these limits.
+// MAILTO_BATCH_SIZE controls how many BCC addresses go in each mailto link.
+const MAILTO_BATCH_SIZE = 50;
+
+function buildMailtoBatches(allEmails, subject, body) {
+    const batches = [];
+    for (let i = 0; i < allEmails.length; i += MAILTO_BATCH_SIZE) {
+        const slice = allEmails.slice(i, i + MAILTO_BATCH_SIZE);
+        const bcc = slice.join(', ');
+        const link = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        batches.push({ bcc, link, count: slice.length, start: i + 1, end: i + slice.length });
+    }
+    return batches;
+}
+
 function renderMassMode(container) {
     const mass = buildMassEmail();
     if (!mass) return;
@@ -222,7 +238,8 @@ function renderMassMode(container) {
     const brokers = getEmailableBrokers();
     const nonEmailBrokers = getNonEmailBrokers();
 
-    const mailtoLink = `mailto:?bcc=${encodeURIComponent(mass.bccString)}&subject=${encodeURIComponent(mass.subject)}&body=${encodeURIComponent(mass.body)}`;
+    const batches = buildMailtoBatches(mass.bccList, mass.subject, mass.body);
+    const singleBatch = batches.length === 1;
 
     container.innerHTML = `
         <h2 class="mb-2">Send to All Brokers at Once</h2>
@@ -241,18 +258,61 @@ function renderMassMode(container) {
 
         <div class="card mt-2">
             <div class="card-header">
-                <div class="card-title">Open in your email client</div>
+                <div class="card-title">Step 1 — Copy the email</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                One click — opens a new email with all ${mass.count} broker addresses in BCC, subject and body pre-filled.
+                Copy the subject and body, then paste into a new email in your email client.
             </p>
-            <a href="${mailtoLink}" class="btn btn-primary btn-lg" id="btn-mailto" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
-                Send to ${mass.count} Brokers
-            </a>
-            <p class="text-sm text-secondary mt-1">
-                After sending, come back and mark them as done below.
-            </p>
+            <div class="email-preview">
+                <button class="email-preview-toggle" id="toggle-body">
+                    <span>Preview email</span>
+                    <span>&#9662;</span>
+                </button>
+                <div class="email-preview-content" id="email-body"><strong>Subject:</strong> ${esc(mass.subject)}
+
+${esc(mass.body)}</div>
+            </div>
+            <div class="mt-1">
+                <button class="btn btn-primary" id="btn-copy-email" style="width:100%;">Copy Subject + Body</button>
+            </div>
         </div>
+
+        <div class="card mt-2">
+            <div class="card-header">
+                <div class="card-title">Step 2 — Add the BCC addresses</div>
+            </div>
+            <p class="text-sm text-secondary mb-1">
+                Copy all ${mass.count} addresses and paste into the <strong>BCC</strong> field.
+                Using BCC means brokers can't see each other's addresses.
+            </p>
+            <div class="email-preview">
+                <button class="email-preview-toggle" id="toggle-bcc">
+                    <span>Show all ${mass.count} addresses</span>
+                    <span>&#9662;</span>
+                </button>
+                <div class="email-preview-content" id="bcc-list">${esc(mass.bccString)}</div>
+            </div>
+            <div class="mt-1">
+                <button class="btn btn-primary" id="btn-copy-bcc" style="width:100%;">Copy All ${mass.count} BCC Addresses</button>
+            </div>
+        </div>
+
+        <details class="mt-2">
+            <summary class="text-sm text-secondary" style="cursor:pointer;">Prefer one-click mailto links? Open in batches of ${MAILTO_BATCH_SIZE}</summary>
+            <p class="text-sm text-secondary mt-1 mb-1">
+                Email clients limit how many addresses fit in a single link, so we split them into
+                ${batches.length} batches. Click each one to open a pre-filled email.
+            </p>
+            <div id="mailto-batches">
+                ${batches.map((b, i) => `
+                    <div class="card mt-1">
+                        <a href="${b.link}" class="btn btn-outline btn-mailto-batch" data-batch="${i}" style="display:inline-block; text-align:center; width:100%;" target="_blank" rel="noopener">
+                            Batch ${i + 1}: Brokers ${b.start}–${b.end} (${b.count} addresses)
+                        </a>
+                    </div>
+                `).join('')}
+            </div>
+        </details>
 
         <!-- Post-send prompt (hidden initially, shown on return) -->
         <div class="card mt-2" id="post-send-prompt" style="display:none; border-color: var(--color-success);">
@@ -267,54 +327,15 @@ function renderMassMode(container) {
             </button>
         </div>
 
-        <details class="mt-2">
-            <summary class="text-sm text-secondary" style="cursor:pointer;">Email client didn't work? Copy manually instead</summary>
-            <div class="card mt-1">
-                <div class="card-header">
-                    <div class="card-title">BCC addresses</div>
-                </div>
-                <p class="text-sm text-secondary mb-1">
-                    Paste into the BCC field of a new email.
-                </p>
-                <div class="email-preview">
-                    <button class="email-preview-toggle" id="toggle-bcc">
-                        <span>Show all ${mass.count} addresses</span>
-                        <span>&#9662;</span>
-                    </button>
-                    <div class="email-preview-content" id="bcc-list">${esc(mass.bccString)}</div>
-                </div>
-                <div class="mt-1">
-                    <button class="btn btn-outline" id="btn-copy-bcc">Copy All BCC Addresses</button>
-                </div>
-            </div>
-
-            <div class="card mt-1">
-                <div class="card-header">
-                    <div class="card-title">Email subject + body</div>
-                </div>
-                <div class="email-preview">
-                    <button class="email-preview-toggle" id="toggle-body">
-                        <span>Preview email</span>
-                        <span>&#9662;</span>
-                    </button>
-                    <div class="email-preview-content" id="email-body"><strong>Subject:</strong> ${esc(mass.subject)}
-
-${esc(mass.body)}</div>
-                </div>
-                <div class="mt-1">
-                    <button class="btn btn-outline" id="btn-copy-email">Copy Subject + Body</button>
-                </div>
-            </div>
-        </details>
-
         <div class="card mt-2" id="mark-done-card">
             <div class="card-header">
-                <div class="card-title">Mark as done</div>
+                <div class="card-title">Step 3 — Mark as done</div>
             </div>
             <p class="text-sm text-secondary mb-1">
-                After you've sent the email, click below to mark all brokers as contacted.
+                After you've sent the email, click below to mark all brokers as contacted
+                and start tracking legal deadlines.
             </p>
-            <button class="btn btn-success" id="btn-mark-all-sent">Mark All ${mass.count} Brokers as Sent</button>
+            <button class="btn btn-success" id="btn-mark-all-sent" style="width:100%;">Mark All ${mass.count} Brokers as Sent</button>
         </div>
 
         ${nonEmailBrokers.length > 0 ? `
@@ -342,16 +363,14 @@ ${esc(mass.body)}</div>
         </div>
     `;
 
-    // Post-send UX: detect when user clicks mailto then returns
+    // Post-send UX: detect when user returns after clicking a mailto batch
     let mailtoClicked = false;
-    const mailtoBtn = container.querySelector('#btn-mailto');
     const postSendPrompt = container.querySelector('#post-send-prompt');
 
-    mailtoBtn.addEventListener('click', () => {
-        mailtoClicked = true;
+    container.querySelectorAll('.btn-mailto-batch').forEach(btn => {
+        btn.addEventListener('click', () => { mailtoClicked = true; });
     });
 
-    // Show prompt when user returns to tab after clicking mailto
     const handleVisibility = () => {
         if (mailtoClicked && !document.hidden && postSendPrompt) {
             postSendPrompt.style.display = '';
