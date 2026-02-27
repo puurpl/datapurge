@@ -1,0 +1,78 @@
+id: rehold
+name: Rehold
+domain: rehold.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://rehold.com/search?address={address}"
+  detection:
+    - method: selector_present
+      value: ".property-record"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://rehold.com"
+      required_fields: [full_name, email, address]
+      steps:
+        - action: navigate
+          url: "https://rehold.com"
+          description: "Search for your address on Rehold"
+        - action: input
+          value: "{address}"
+          description: "Enter your full address"
+        - action: click
+          description: "Click Search to find your property record"
+        - action: click
+          description: "Find 'Information Control' link under the map and click it"
+        - action: click
+          description: "Click 'Remove' button next to each detail to remove"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email"
+        - action: captcha
+          description: "Complete the CAPTCHA"
+        - action: click
+          description: "Click Apply"
+      template_id: null
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Property-focused people search. Must remove individual details one at a time. Look for red 'Remove' button next to each data point."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: medium
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Real estate navigator. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"

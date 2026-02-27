@@ -1,0 +1,71 @@
+id: usa-official
+name: USA-Official
+domain: usa-official.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://usa-official.com/people/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://usa-official.com/remove.php"
+      required_fields: [full_name, email, listing_url]
+      steps:
+        - action: navigate
+          url: "https://usa-official.com"
+          description: "Search for your name to find your listing"
+        - action: navigate
+          url: "https://usa-official.com/remove.php"
+          description: "Go to the removal page"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your name"
+        - action: input
+          value: "{listing_url}"
+          description: "Enter the URL of your listing"
+        - action: click
+          description: "Submit removal request"
+      template_id: null
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 7
+  legal_max_days: 45
+  notes: "Find your profile URL first, then submit via the removal form."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia]
+
+timing:
+  typical_removal_days: 7
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Related to OfficialUSA. Source: State of Surveillance Master List"

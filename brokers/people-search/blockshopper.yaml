@@ -1,0 +1,54 @@
+id: blockshopper
+name: BlockShopper
+domain: blockshopper.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - property-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://blockshopper.com/search?q={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-result"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: email
+      email_to: info@blockshopper.com
+      required_fields: [full_name, listing_url]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Email info@blockshopper.com with listing URL and reason for removal. Phone: (314) 485-4882 (St. Louis) or (312) 436-1880 (Chicago). Removal may be limited to government officials, law enforcement, public safety workers, or those with documented threats. Processing can take over a month."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Real estate transaction data from public records. Removal not guaranteed for all requesters. Source: Big Ass Data Broker Opt-Out List, Incogni"

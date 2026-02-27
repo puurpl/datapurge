@@ -1,0 +1,64 @@
+id: precisely-placeiq
+name: Precisely PlaceIQ
+domain: precisely.com
+aliases: [placeiq.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B location intelligence and advertising platform. Collects device location data for audience targeting and foot traffic analytics."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@placeiq.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.precisely.com/legal/privacy-policy/your-privacy-choices"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://www.precisely.com/legal/privacy-policy/your-privacy-choices"
+          description: "Go to Precisely Your Privacy Choices page"
+        - action: select
+          value: "opt-out"
+          description: "Select opt-out of sale/sharing of personal information"
+        - action: input
+          value: "{email}"
+          description: "Enter email address"
+        - action: submit
+          description: "Submit privacy request"
+      template_id: null
+    - type: phone
+      phone_number: "866-249-1670"
+      required_fields: [full_name, email]
+      notes: "Call toll-free for privacy rights requests"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Precisely acquired PlaceIQ, a major location intelligence platform. Collects device location data for advertising targeting and foot traffic analytics. Adheres to NAI Enhanced Standards for Precise Location Information, which prohibit use of location data from sensitive places (healthcare, religious worship, military bases, LGBTQ+ venues). May need to provide your Mobile Advertising ID (MAID) for data deletion. Honors Global Privacy Control signal."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Location intelligence platform (PlaceIQ acquired by Precisely). Source: precisely.com/legal/placeiq-product-privacy-notice, precisely.com/legal/privacy-notice, NAI Enhanced Standards."

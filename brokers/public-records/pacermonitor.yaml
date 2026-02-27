@@ -1,0 +1,70 @@
+id: pacermonitor
+name: PacerMonitor
+domain: pacermonitor.com
+aliases: []
+category: public-records
+data_types:
+  - name
+  - address
+  - court-records
+  - criminal-records
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://www.pacermonitor.com/search/cases?q={first_name}+{last_name}"
+  detection:
+    - method: selector_present
+      value: ".search-results"
+      means: listed
+    - method: text_match
+      value: "No results"
+      means: not_listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.pacermonitor.com"
+      required_fields: [full_name, email, case_url]
+      steps:
+        - action: navigate
+          url: "https://www.pacermonitor.com"
+          description: "Create a PacerMonitor account if you don't have one"
+        - action: input
+          value: "{case_url}"
+          description: "Find and navigate to your specific case"
+        - action: click
+          value: "Request Removal"
+          description: "Follow on-site instructions for removal request"
+        - action: submit
+          description: "Submit removal request (may require notarized form for non-sealed cases)"
+      template_id: null
+  difficulty: hard
+  estimated_minutes: 30
+  processing_days: 45
+  legal_max_days: 90
+  notes: "PacerMonitor aggregates federal court records from PACER. Free basic removal available. Sealed cases removed with valid court order. Unsealed cases may be blocked from search engines but remain on platform. PacerMonitor no longer allows direct opt-out from website display. Expedited Google removal available for $59.99. Mail-in notarized form available as alternative. Underlying data originates from PACER where removal is nearly impossible due to government regulations."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 45
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Federal court records aggregator from PACER. Public records largely exempt from privacy laws. Source: pacermonitor.com/privacy, pacermonitor.com/terms."

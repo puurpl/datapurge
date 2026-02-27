@@ -1,0 +1,60 @@
+id: ibotta
+name: Ibotta
+domain: ibotta.com
+aliases: []
+category: data-aggregator
+data_types:
+  - name
+  - email
+  - phone
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Consumer cashback app and retail media platform. No consumer-facing data broker search. Collects purchase data for advertising and brand insights."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://legal.ibotta.com/policies?name=ibotta-privacy-policy"
+      required_fields: [email]
+      steps:
+        - action: navigate
+          url: "https://legal.ibotta.com/policies?name=ibotta-privacy-policy"
+          description: "Go to Ibotta privacy policy and click 'Make a Privacy Request'"
+        - action: click
+          value: "Make a Privacy Request"
+          description: "Click to access privacy request form"
+        - action: select
+          value: "Delete all my data"
+          description: "Select 'Delete all my data' option"
+        - action: input
+          value: "{email}"
+          description: "Enter your email to verify identity"
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Ibotta is a consumer cashback app and retail media platform (publicly traded, NYSE: IBTA). Provides 'Make a Privacy Request' in privacy policy to delete data or download data. Verify identity via email confirmation link."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: legal.ibotta.com, help.ibotta.com. Consumer cashback and retail media platform. Publicly traded (NYSE: IBTA). Denver-based."

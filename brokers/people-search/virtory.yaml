@@ -1,0 +1,79 @@
+id: virtory
+name: Virtory
+domain: virtory.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://virtory.com/people/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".person-record"
+      means: listed
+  anti_bot:
+    captcha: true
+    cloudflare: true
+    rate_limit_per_minute: 3
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://virtory.com/ng/control/privacy"
+      required_fields: [full_name, email, listing_url]
+      steps:
+        - action: navigate
+          url: "https://virtory.com/ng/control/privacy"
+          description: "Go to Virtory privacy control page"
+        - action: input
+          value: "{listing_url}"
+          description: "Paste the URL of your listing"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: captcha
+          description: "Complete the CAPTCHA verification"
+        - action: click
+          description: "Click 'Submit Opt Out Request'"
+        - action: verify_email
+          description: "Check email for verification link and click it"
+      template_id: null
+    - type: email
+      email_to: remove@virtory.com
+      required_fields: [full_name, email, listing_url]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 1
+  legal_max_days: 45
+  notes: "Usually removes data within 24 hours. If web form shows error, email remove@virtory.com with full name and listing URL. Data may reappear over time."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 1
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Onerep removal guide, MyDataRemoval, PrivacyCaptain"

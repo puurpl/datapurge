@@ -1,0 +1,51 @@
+id: mparticle
+name: mParticle (by Rokt)
+domain: mparticle.com
+aliases: []
+category: data-aggregator
+data_types:
+  - email
+  - device-ids
+  - ip-address
+  - purchase-history
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B customer data platform (CDP). No consumer-facing search. Processes customer data on behalf of enterprise clients."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@mparticle.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-888-441-2022"
+      required_fields: [full_name, email]
+      notes: "Toll-free CCPA privacy number"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "mParticle is a customer data platform (CDP) acquired by Rokt. States it does not sell identifiable personal data. However, marketing co-promotions may constitute a sale under CCPA. Contact privacy@mparticle.com or toll-free 1-888-441-2022."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Source: mparticle.com/privacypolicy. Customer data platform acquired by Rokt. Claims not to sell data but may share attendee lists with co-promotion partners. Contact: privacy@mparticle.com."

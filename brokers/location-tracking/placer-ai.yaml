@@ -1,0 +1,44 @@
+id: placer-ai
+name: Placer.ai (Placer Labs)
+domain: placer.ai
+aliases: [placerlabs.com]
+category: location-tracking
+data_types:
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "B2B location analytics platform. Claims not to collect PII or MAIDs. Provides aggregate foot traffic data only."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@placer.ai
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Placer.ai claims it is not a data broker and does not sell user-level data. States it strips personal identifiers and only provides aggregate data. Despite this, it collects location panel data through SDK partners embedded in third-party apps. Opt-out of location collection at the device level by disabling location services for apps. Privacy contact: privacy@placer.ai."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.70
+  notes: "Location analytics platform. Claims aggregate-only data without PII. Source: placer.ai/privacy-policy, placer.ai/company/privacy-faq, US Senate letter to Placer.ai (2022)."

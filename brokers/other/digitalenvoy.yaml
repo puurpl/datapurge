@@ -1,0 +1,44 @@
+id: digitalenvoy
+name: Digital Envoy (Digital Element)
+domain: digitalelement.com
+aliases: [digitalenvoy.net]
+category: other
+data_types:
+  - ip-address
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "IP geolocation intelligence provider. No consumer-facing product. Provides IP-to-location mapping for enterprises."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@digitalelement.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Digital Element (formerly Digital Envoy) provides IP intelligence data including geolocation, connection type, ISP, proxy detection, and VPN identification. Does not collect PII directly but maps IP addresses to physical locations. Used by ad platforms, content providers, cybersecurity firms, and compliance teams. IP-based data generally considered non-PII under some frameworks but may qualify as personal information under CCPA/GDPR."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "IP geolocation intelligence provider. Source: digitalelement.com privacy policy."

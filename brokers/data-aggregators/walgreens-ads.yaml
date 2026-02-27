@@ -1,0 +1,60 @@
+id: walgreens-ads
+name: Walgreens Advertising Group (wag)
+domain: walgreens.com
+aliases: [wag.com]
+category: data-aggregator
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - purchase-history
+  - location-history
+  - device-ids
+
+scan:
+  scannable: false
+  reason: "Retail media platform (Walgreens subsidiary). No consumer-facing data broker search. Uses myWalgreens loyalty and shopper purchase data for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.walgreens.com/privacycenter/Do-Not-Sell-My-Data"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.walgreens.com/privacycenter/Do-Not-Sell-My-Data"
+          description: "Go to Walgreens 'Do Not Sell My Data' page to opt out"
+    - type: phone
+      phone_number: "1-800-925-4733"
+      required_fields: [full_name]
+      notes: "1-800-WALGREENS — request to opt out of data sale/sharing"
+    - type: postal
+      postal_address: "Walgreens, Attn: Privacy Officer, 108 Wilmot Road, Mail Stop 3213, Deerfield, IL 60015"
+      required_fields: [full_name, address]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Walgreens Advertising Group uses myWalgreens loyalty data for retail media. Walgreens does not sell demographic or contact data, but certain data sharing for advertising may constitute 'sale' under state privacy laws. Opt-out does not require email verification. Contact: 1-800-WALGREENS (1-800-925-4733)."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, utah]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: walgreens.com/privacycenter, walgreens.com/topic/help/generalhelp/privacyandsecurity.jsp. Walgreens retail media using myWalgreens loyalty data. Contact: Privacy Officer, 108 Wilmot Road, Deerfield, IL 60015. Phone: 1-800-925-4733."

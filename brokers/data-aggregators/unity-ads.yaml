@@ -1,0 +1,52 @@
+id: unity-ads
+name: Unity Ads (IronSource)
+domain: unity.com
+aliases: [ironsource.com, unity3d.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile gaming ad platform. No consumer-facing search. Collects device identifiers and in-app behavior data for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://unity.com/legal/do-not-sell-my-personal-information"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://unity.com/legal/do-not-sell-my-personal-information"
+          description: "Go to Unity 'Do Not Sell My Personal Information' page"
+    - type: email
+      email_to: DPO@unity3d.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Unity merged with IronSource in 2022, combining two major mobile ad platforms. Game players can opt out of personalized ads via the Unity Data Privacy icon displayed during ads, or via the 'Do Not Sell' page. For data deletion, email DPO@unity3d.com. IronSource privacy requests also go to DPO@unity3d.com."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas, oregon]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: unity.com/legal, unity.com/legal/game-player-and-app-user-privacy-policy. Unity merged with IronSource 2022. Major mobile gaming ad and monetization platform. Publicly traded (NYSE: U). Contact: DPO@unity3d.com."

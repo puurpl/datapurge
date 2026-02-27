@@ -1,0 +1,61 @@
+id: inmobi
+name: InMobi
+domain: inmobi.com
+aliases: [advertising.inmobi.com]
+category: data-aggregator
+data_types:
+  - device-ids
+  - ip-address
+  - location-history
+  - purchase-history
+
+scan:
+  scannable: false
+  reason: "B2B mobile advertising platform. No consumer-facing search. Collects mobile device identifiers and location data for ad targeting."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.inmobi.com/page/opt-out/"
+      required_fields: []
+      steps:
+        - action: navigate
+          url: "https://www.inmobi.com/page/opt-out/"
+          description: "Go to InMobi opt-out page"
+        - action: click
+          value: "Opt Out"
+          description: "Click opt-out to stop data collection for targeted advertising"
+    - type: email
+      email_to: privacy@inmobi.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: email
+      email_to: ccpa@inmobi.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Dedicated CCPA email for California consumers"
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "InMobi is a major mobile advertising platform headquartered in India. For CCPA requests, write to privacy@inmobi.com or ccpa@inmobi.com. Opt-out link available on privacy policy page. Collects device IDs, location, and behavioral data for mobile ad targeting."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: true
+    vermont: false
+  state_laws: [california, virginia, colorado, connecticut, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 60
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.85
+  notes: "Source: inmobi.com/page/opt-out, California Data Broker Registry (reg #186419). Major mobile ad platform. Headquarters: Bangalore, India. Contact: privacy@inmobi.com, ccpa@inmobi.com."
