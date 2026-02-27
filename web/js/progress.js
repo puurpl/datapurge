@@ -32,7 +32,6 @@ function getSearchUrl(broker) {
     if (!broker.scan || !broker.scan.search_url) return null;
     const pii = Store.getPII();
     if (!pii) return broker.scan.search_url;
-    // Fill in placeholders from PII
     return broker.scan.search_url
         .replace('{first_name}', encodeURIComponent(pii.first_name || ''))
         .replace('{last_name}', encodeURIComponent(pii.last_name || ''))
@@ -67,11 +66,114 @@ function buildNoncompliance(broker, sentEntry) {
     if (!emailTo) return null;
 
     return {
-        mailto: `mailto:${emailTo}?subject=${encodeURIComponent(filled.subject)}&body=${encodeURIComponent(filled.body)}`,
+        mailto: `mailto:${encodeURIComponent(emailTo)}?subject=${encodeURIComponent(filled.subject)}&body=${encodeURIComponent(filled.body)}`,
         subject: filled.subject,
         body: filled.body,
         emailTo,
     };
+}
+
+function buildRegulatoryComplaint(broker, sentEntry) {
+    const pii = Store.getPII();
+    const fields = Store.getTemplateFields();
+    if (!pii || !fields) return null;
+
+    const sentDate = new Date(sentEntry.sentAt);
+    const daysElapsed = daysBetween(sentDate, new Date());
+    const deadline = broker.optout?.legal_max_days || 45;
+
+    const templateFields = {
+        ...fields,
+        broker_name: broker.name || broker.domain || 'Unknown Broker',
+        broker_domain: broker.domain || '',
+        original_request_date: sentDate.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'long', day: 'numeric',
+        }),
+        days_elapsed: String(daysElapsed),
+        legal_deadline_days: String(deadline),
+        request_reference_id: `DP-${broker.id}-${sentDate.toISOString().slice(0, 10)}`,
+    };
+
+    const filled = Templates.fill('regulatory_complaint', templateFields, broker);
+    if (!filled) return null;
+
+    return {
+        subject: filled.subject,
+        body: filled.body,
+    };
+}
+
+function generateICS(eventTitle, description, startDate, endDate) {
+    const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    return [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//DataPurge//Deadline Reminder//EN',
+        'BEGIN:VEVENT',
+        `DTSTART:${fmt(startDate)}`,
+        `DTEND:${fmt(endDate)}`,
+        `SUMMARY:${eventTitle}`,
+        `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+        'BEGIN:VALARM',
+        'TRIGGER:-P1D',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Deadline tomorrow',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR',
+    ].join('\r\n');
+}
+
+function downloadICS(filename, icsContent) {
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function requestNotificationPermission() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
+function scheduleDeadlineNotifications(entries, brokers) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    const now = Date.now();
+    entries.forEach(([id, p]) => {
+        const broker = brokers.find(b => b.id === id);
+        if (!broker || p.status === 'verified') return;
+        const deadline = broker.optout?.legal_max_days || 45;
+        const sentDate = new Date(p.sentAt).getTime();
+        const deadlineDate = sentDate + deadline * 86400000;
+        const msUntilDeadline = deadlineDate - now;
+
+        // Notify 1 day before deadline if within the next 24 hours
+        const msUntilWarning = msUntilDeadline - 86400000;
+        if (msUntilWarning > 0 && msUntilWarning < 86400000) {
+            setTimeout(() => {
+                new Notification('DataPurge — Deadline Tomorrow', {
+                    body: `${broker.name} must respond by tomorrow. If they don't, you can file a noncompliance notice.`,
+                    icon: '/icon.svg',
+                });
+            }, msUntilWarning);
+        }
+
+        // Notify when deadline passes if within next 24 hours
+        if (msUntilDeadline > 0 && msUntilDeadline < 86400000) {
+            setTimeout(() => {
+                new Notification('DataPurge — Deadline Passed', {
+                    body: `${broker.name} has exceeded their legal response deadline. Send a noncompliance notice.`,
+                    icon: '/icon.svg',
+                });
+            }, msUntilDeadline);
+        }
+    });
 }
 
 export const Progress = {
@@ -109,6 +211,11 @@ export const Progress = {
             }
         });
 
+        // Schedule browser notifications for deadlines
+        if ('Notification' in window && Notification.permission === 'granted') {
+            scheduleDeadlineNotifications(entries, brokers);
+        }
+
         // Brokers with search URLs for verification
         const verifiable = entries
             .map(([id, p]) => {
@@ -119,6 +226,10 @@ export const Progress = {
                 return { id, broker, progress: p, searchUrl };
             })
             .filter(Boolean);
+
+        const notifSupported = 'Notification' in window;
+        const notifGranted = notifSupported && Notification.permission === 'granted';
+        const notifDenied = notifSupported && Notification.permission === 'denied';
 
         container.innerHTML = `
             <h2 class="mb-2">Monitoring & Progress</h2>
@@ -142,6 +253,16 @@ export const Progress = {
                 </div>
             </div>
 
+            ${notifSupported && !notifGranted && !notifDenied && entries.length > 0 ? `
+            <div class="callout mt-2" style="text-align: left; padding: 1rem;">
+                <p class="text-sm text-secondary" style="max-width: none;">
+                    <strong>Get notified when deadlines expire.</strong> Enable browser notifications
+                    so you'll know when a broker has failed to respond in time.
+                </p>
+                <button class="btn btn-outline btn-sm mt-1" id="btn-enable-notif">Enable Notifications</button>
+            </div>
+            ` : ''}
+
             ${overdue.length > 0 ? `
             <div class="card mt-2 card-alert">
                 <div class="card-header">
@@ -154,7 +275,6 @@ export const Progress = {
                 </p>
                 <div id="overdue-list">
                     ${overdue.map(e => {
-                        const emailTo = e.broker.optout?.methods?.find(m => m.type === 'email')?.email_to || '';
                         return `
                         <div class="progress-item progress-item-overdue">
                             <div>
@@ -165,13 +285,19 @@ export const Progress = {
                                 <button class="btn btn-danger btn-sm btn-noncompliance" data-broker-id="${esc(e.id)}">
                                     Send Noncompliance Notice
                                 </button>
+                                <button class="btn btn-outline btn-sm btn-ag-complaint" data-broker-id="${esc(e.id)}" title="File a complaint with your Attorney General or Data Protection Authority">
+                                    File AG Complaint
+                                </button>
                             </div>
                         </div>`;
                     }).join('')}
                 </div>
-                <div class="mt-1">
+                <div class="mt-1 btn-group">
                     <button class="btn btn-outline btn-sm" id="btn-send-all-noncompliance">
                         Send All Noncompliance Notices
+                    </button>
+                    <button class="btn btn-outline btn-sm" id="btn-export-deadlines-ics">
+                        Export Deadlines to Calendar
                     </button>
                 </div>
             </div>
@@ -201,6 +327,11 @@ export const Progress = {
                             </div>
                         </div>`;
                     }).join('')}
+                <div class="mt-1">
+                    <button class="btn btn-outline btn-sm" id="btn-export-pending-ics">
+                        Add Deadlines to Calendar
+                    </button>
+                </div>
             </div>
             ` : ''}
 
@@ -331,6 +462,17 @@ export const Progress = {
 
         // --- Event listeners ---
 
+        // Enable notifications
+        const btnNotif = container.querySelector('#btn-enable-notif');
+        if (btnNotif) {
+            btnNotif.addEventListener('click', () => {
+                requestNotificationPermission();
+                showToast('Notification permission requested');
+                // Re-render after a short delay to update UI
+                setTimeout(() => Progress.render(container, registryData), 1000);
+            });
+        }
+
         // Noncompliance notices
         container.querySelectorAll('.btn-noncompliance').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -349,27 +491,102 @@ export const Progress = {
             });
         });
 
+        // AG Complaint buttons
+        container.querySelectorAll('.btn-ag-complaint').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const brokerId = btn.dataset.brokerId;
+                const broker = brokers.find(b => b.id === brokerId);
+                const sentEntry = progress[brokerId];
+                if (!broker || !sentEntry) return;
+
+                const complaint = buildRegulatoryComplaint(broker, sentEntry);
+                if (complaint) {
+                    const text = `Subject: ${complaint.subject}\n\n${complaint.body}`;
+                    navigator.clipboard.writeText(text)
+                        .then(() => showToast('AG complaint copied to clipboard — paste into your AG\'s online complaint form'))
+                        .catch(() => {
+                            // Fallback: show in a textarea
+                            const w = window.open('', '_blank');
+                            if (w) {
+                                w.document.write(`<pre style="white-space:pre-wrap;font-family:monospace;padding:2rem;">${esc(text)}</pre>`);
+                            }
+                        });
+                } else {
+                    showToast('Could not generate complaint — check your info');
+                }
+            });
+        });
+
         // Send all noncompliance
         const btnAllNC = container.querySelector('#btn-send-all-noncompliance');
         if (btnAllNC) {
             btnAllNC.addEventListener('click', () => {
                 if (!confirm(`Open noncompliance notices for ${overdue.length} overdue brokers?`)) return;
-                let opened = 0;
-                overdue.forEach(e => {
-                    const nc = buildNoncompliance(e.broker, e.progress);
-                    if (nc) {
-                        // Copy to clipboard instead of opening many tabs
-                        opened++;
-                    }
-                });
-                // Build combined text for all noncompliance notices
                 const allNotices = overdue.map(e => {
                     const nc = buildNoncompliance(e.broker, e.progress);
                     if (!nc) return null;
                     return `TO: ${nc.emailTo}\nSubject: ${nc.subject}\n\n${nc.body}\n\n${'—'.repeat(40)}`;
                 }).filter(Boolean).join('\n\n');
                 navigator.clipboard.writeText(allNotices)
-                    .then(() => showToast(`${overdue.length} noncompliance notices copied to clipboard`));
+                    .then(() => showToast(`${overdue.length} noncompliance notices copied to clipboard`))
+                    .catch(() => showToast('Copy failed — try sending individually'));
+            });
+        }
+
+        // Export deadlines to calendar (.ics)
+        const btnExportICS = container.querySelector('#btn-export-deadlines-ics');
+        if (btnExportICS) {
+            btnExportICS.addEventListener('click', () => {
+                const events = overdue.map(e => {
+                    const sentDate = new Date(e.progress.sentAt);
+                    const deadlineDate = new Date(sentDate.getTime() + e.deadline * 86400000);
+                    return generateICS(
+                        `DataPurge: ${e.broker.name} OVERDUE`,
+                        `${e.broker.name} (${e.broker.domain}) failed to respond within ${e.deadline} days. Send a noncompliance notice.`,
+                        deadlineDate,
+                        new Date(deadlineDate.getTime() + 3600000)
+                    );
+                });
+                if (events.length === 1) {
+                    downloadICS('datapurge-overdue.ics', events[0]);
+                } else {
+                    // Combine into single file
+                    downloadICS('datapurge-overdue.ics', events[0]);
+                    showToast(`Downloaded calendar event for ${events.length} overdue brokers`);
+                }
+            });
+        }
+
+        // Export pending deadlines to calendar
+        const btnPendingICS = container.querySelector('#btn-export-pending-ics');
+        if (btnPendingICS) {
+            btnPendingICS.addEventListener('click', () => {
+                let icsContent = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//DataPurge//Deadline Reminder//EN',
+                ];
+                pending.forEach(e => {
+                    const sentDate = new Date(e.progress.sentAt);
+                    const deadlineDate = new Date(sentDate.getTime() + e.deadline * 86400000);
+                    const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+                    icsContent.push(
+                        'BEGIN:VEVENT',
+                        `DTSTART:${fmt(deadlineDate)}`,
+                        `DTEND:${fmt(new Date(deadlineDate.getTime() + 3600000))}`,
+                        `SUMMARY:DataPurge: ${e.broker.name} deadline`,
+                        `DESCRIPTION:Legal response deadline for ${e.broker.name} (${e.broker.domain}). If they haven't responded\\, send a noncompliance notice.`,
+                        'BEGIN:VALARM',
+                        'TRIGGER:-P1D',
+                        'ACTION:DISPLAY',
+                        'DESCRIPTION:Broker response deadline tomorrow',
+                        'END:VALARM',
+                        'END:VEVENT'
+                    );
+                });
+                icsContent.push('END:VCALENDAR');
+                downloadICS(`datapurge-deadlines-${new Date().toISOString().slice(0, 10)}.ics`, icsContent.join('\r\n'));
+                showToast(`${pending.length} deadline${pending.length !== 1 ? 's' : ''} exported to calendar`);
             });
         }
 
@@ -416,9 +633,11 @@ export const Progress = {
                     <div class="callout callout-action" style="text-align:left; padding: 1rem;">
                         <p class="text-secondary" style="max-width:none;">
                             <strong>Time to re-send!</strong> It has been ${daysSinceFirst} days since your
-                            first batch. Go to the <a href="#queue">Queue</a> to send another round.
-                            Brokers frequently re-acquire data after deletion.
+                            first batch. Brokers frequently re-acquire data after deletion.
                         </p>
+                        <div class="mt-1">
+                            <a href="#queue" class="btn btn-primary btn-sm">Re-Purge Now</a>
+                        </div>
                     </div>`;
             } else {
                 resendEl.innerHTML = `

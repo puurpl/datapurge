@@ -1,0 +1,57 @@
+id: realtor-com
+name: Realtor.com (Move, Inc.)
+domain: realtor.com
+aliases: [move.com]
+category: real-estate
+data_types:
+  - name
+  - address
+  - email
+  - phone
+  - property-records
+  - home-values
+  - tax-assessments
+  - browsing-behavior
+
+scan:
+  search_url: "https://www.realtor.com/"
+  scannable: true
+  scan_type: address_lookup
+  reason: "Public property search available. Address lookup shows property details, estimated values, and ownership history."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@move.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+      notes: "Contact Move, Inc. (operator of Realtor.com) for privacy requests."
+    - type: web_form
+      url: "https://www.realtor.com/privacy/"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "Privacy page with Do Not Sell/Share opt-out link."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Official real estate marketplace of the National Association of Realtors. Operated by Move, Inc. (a subsidiary of News Corp). Displays property data, home estimates, and ownership records. Privacy requests go to Move, Inc. at privacy@move.com."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: high
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.75
+  notes: "Source: Realtor.com privacy policy. Operated by Move, Inc., subsidiary of News Corp. Property data sourced from public records and MLS listings."

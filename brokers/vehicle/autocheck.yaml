@@ -1,0 +1,57 @@
+id: autocheck
+name: AutoCheck (Experian)
+domain: autocheck.com
+aliases: [experian.com/automotive/autocheck-business]
+category: vehicle
+data_types:
+  - name
+  - address
+  - email
+  - vehicle-history
+  - vehicle-registration
+  - accident-history
+  - odometer-readings
+  - title-records
+
+scan:
+  search_url: "https://www.autocheck.com/vehiclehistory/"
+  scannable: true
+  scan_type: vin_lookup
+  reason: "VIN-based vehicle history reports available to consumers."
+
+optout:
+  methods:
+    - type: email
+      email_to: optout@experian.com
+      required_fields: [full_name, address, email]
+      template_id: ccpa_maximum
+      notes: "Email optout@experian.com with full name and mailing address. Opt-out lasts 5 years. Covers sale of personal information, targeted advertising, and profiling."
+    - type: email
+      email_to: customersupport@experian.com
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "For modification of personal information, email customersupport@experian.com with 'request to change personal information' in the message."
+  difficulty: medium
+  estimated_minutes: 10
+  processing_days: 10
+  legal_max_days: 45
+  notes: "Vehicle history report service operated by Experian. Backed by NMVTIS (National Motor Vehicle Title Information System) data. Consumer opt-out via Experian optout@experian.com. Opt-out lasts 5 years. Vehicle history data sourced from public records, salvage yards, fire/flood/hail reports, and state agencies."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 10
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Experian AutoCheck privacy policy (experian.com/privacy/auto_check), Experian opt-out page. Part of Experian Automotive division. Uses NMVTIS data."

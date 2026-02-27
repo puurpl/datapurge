@@ -1,0 +1,58 @@
+id: national-tenant-network
+name: National Tenant Network
+domain: ntnonline.com
+aliases: []
+category: tenant-screening
+data_types:
+  - name
+  - address
+  - phone
+  - dob
+  - eviction-records
+  - criminal-records
+  - credit-history
+  - rental-history
+
+scan:
+  scannable: false
+  reason: "Tenant screening consumer reporting agency. No public search. Reports available only to landlord subscribers with permissible purpose."
+
+optout:
+  methods:
+    - type: email
+      email_to: consumerrelations@ntnonline.com
+      required_fields: [full_name, address]
+      template_id: ccpa_maximum
+      notes: "For California Privacy Rights Requests, include 'California Privacy Rights Request' in the first line. NTN responds to one request per customer per year."
+    - type: phone
+      phone_number: "1-800-228-0989"
+      required_fields: [full_name, address]
+      notes: "Consumer Relations Department."
+    - type: postal
+      postal_address: "National Tenant Network, Inc., Consumer Relations Department, P.O. Box 1664, Lake Grove, OR 97035"
+      required_fields: [full_name, address, dob]
+      template_id: ccpa_maximum
+  difficulty: medium
+  estimated_minutes: 15
+  processing_days: 14
+  legal_max_days: 30
+  notes: "FCRA-regulated consumer reporting agency for residential tenant screening. Maintains the largest resident history database in the country. Evaluates information from public records and landlord-tenant court filings. Consumer disclosure sent within 14 business days. Disputes investigated within 30 days under FCRA."
+
+legal:
+  ccpa: false
+  gdpr: false
+  registered_broker:
+    california: false
+  state_laws: [california]
+
+timing:
+  typical_removal_days: 14
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: NTN consumer information page (ntnonline.com/consumers), NTN privacy policy, consumer disclosure request packet. Based in Lake Grove, Oregon."

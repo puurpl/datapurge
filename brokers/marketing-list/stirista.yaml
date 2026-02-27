@@ -1,0 +1,69 @@
+id: stirista
+name: Stirista
+domain: stirista.com
+aliases: []
+category: marketing-list
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - age
+  - income-estimates
+  - device-ids
+  - ip-address
+
+scan:
+  scannable: false
+  reason: "B2B identity-based marketing data platform. No consumer-facing search. Provides identity graphs, data enrichment, and programmatic advertising."
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://www.stirista.com/privacy-policy/"
+      required_fields: [full_name, email]
+      steps:
+        - action: navigate
+          url: "https://www.stirista.com/privacy-policy/"
+          description: "Go to Stirista Privacy Policy page"
+        - action: click
+          description: "Find and click the opt-out / removal request form link"
+        - action: input
+          value: "{full_name}"
+          description: "Enter your full name"
+        - action: input
+          value: "{email}"
+          description: "Enter your email address"
+        - action: submit
+          description: "Submit removal request"
+    - type: email
+      email_to: privacyinfo@stirista.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+    - type: phone
+      phone_number: "1-888-320-6083"
+      required_fields: [full_name]
+  difficulty: easy
+  estimated_minutes: 5
+  processing_days: 30
+  legal_max_days: 45
+  notes: "Stirista builds identity graphs linking offline PII to digital identifiers (email, device IDs, IPs, cookies). Provides data enrichment, audience targeting, and programmatic ad delivery. Opt-out suppresses data from marketing database ('do not sell' rights)."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws: [california, virginia, colorado, texas]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: medium
+  recheck_interval_days: 90
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (registration #186866), stirista.com/privacy-policy. Headquartered at 16414 San Pedro Ave, Suite 150, San Antonio, TX 78232. Identity-based marketing data company."

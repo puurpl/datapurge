@@ -1,0 +1,60 @@
+id: adp
+name: ADP (Automatic Data Processing)
+domain: adp.com
+aliases: [adpresearch.com]
+category: employment
+data_types:
+  - name
+  - address
+  - phone
+  - email
+  - dob
+  - ssn
+  - employment
+  - salary-history
+  - tax-records
+  - financial
+
+scan:
+  scannable: false
+  reason: "HR, payroll, and employment verification platform. No public consumer search. Processes employment and payroll data for employers."
+
+optout:
+  methods:
+    - type: email
+      email_to: privacy@adp.com
+      required_fields: [full_name, email, address]
+      template_id: ccpa_maximum
+    - type: web_form
+      url: "https://www.adp.com/contact-us/privacy-form.aspx"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "California Privacy Rights Request Form. Available for CA residents."
+    - type: postal
+      postal_address: "ADP Global Data Privacy and Governance Team MS 325, One ADP Boulevard, Roseland, NJ 07068-1728"
+      required_fields: [full_name, address]
+      template_id: ccpa_maximum
+  difficulty: hard
+  estimated_minutes: 15
+  processing_days: 30
+  legal_max_days: 45
+  notes: "One of the largest payroll and HR service providers. ADP states it does not sell personal data of consumers or minors. Consumers can request disclosure, correction, deletion, or opt-out of sharing for cross-context behavioral advertising. Contact privacy@adp.com or use California Privacy Rights Request Form."
+
+legal:
+  ccpa: true
+  gdpr: true
+  registered_broker:
+    california: false
+  state_laws: [california, virginia, colorado, connecticut]
+
+timing:
+  typical_removal_days: 30
+  relisting_likelihood: low
+  recheck_interval_days: 180
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: ADP privacy page, California Consumer Privacy Statement, ADP California Privacy Rights Request Form. ADP claims it does not sell personal data. Processes payroll and employment data for millions of employees."

@@ -1,0 +1,71 @@
+id: openpeoplesearch
+name: OpenPeopleSearch
+domain: openpeoplesearch.com
+aliases: []
+category: people-search
+data_types:
+  - name
+  - address
+  - phone
+  - age
+  - relatives
+
+scan:
+  scannable: true
+  method: web_search
+  search_url: "https://openpeoplesearch.com/results/{first_name}-{last_name}"
+  detection:
+    - method: selector_present
+      value: ".result-card"
+      means: listed
+  anti_bot:
+    captcha: false
+    cloudflare: false
+    rate_limit_per_minute: 5
+
+optout:
+  methods:
+    - type: web_form
+      url: "https://openpeoplesearch.com/Consumer"
+      required_fields: [full_name]
+      steps:
+        - action: navigate
+          url: "https://openpeoplesearch.com"
+          description: "Go to OpenPeopleSearch homepage"
+        - action: click
+          description: "Scroll down and click 'Remove My Info' link in footer"
+        - action: input
+          value: "{full_name}"
+          description: "Search for your name"
+        - action: click
+          description: "Select your record and request removal"
+      template_id: null
+    - type: email
+      email_to: info@openpeoplesearch.com
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+  difficulty: easy
+  estimated_minutes: 3
+  processing_days: 3
+  legal_max_days: 45
+  notes: "Use a disposable email when contacting. Primary opt-out via web form at /Consumer endpoint."
+
+legal:
+  ccpa: true
+  gdpr: false
+  registered_broker:
+    california: true
+  state_laws:
+    - california
+
+timing:
+  typical_removal_days: 3
+  relisting_likelihood: high
+  recheck_interval_days: 30
+
+meta:
+  added: "2026-02-26"
+  last_verified: "2026-02-26"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: Optery, DeleteMe, GuaranteedRemovals."

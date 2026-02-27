@@ -126,6 +126,12 @@ templates/                    Legal email templates (templates.yaml)
 server/                       Python backend (registry, templates, build tooling)
 ```
 
+## Acknowledgements
+
+- **Kristine Socall** — For support and inspiration behind this project.
+- **[Gifted Dreamers](https://gifteddreamers.org)** — Supporting gifted and neurodivergent individuals.
+- **[Digital Disconnections](https://digitaldisconnections.com)** — Exploring our relationship with technology.
+
 ## License
 
 MIT — Free to use, modify, and distribute with attribution.

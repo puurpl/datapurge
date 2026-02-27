@@ -125,6 +125,7 @@ templates:
 
       Full Name: {full_name}
       Email: {email}
+      {additional_emails}
       Phone: {phone}
       Address: {address}
       Date of Birth: {dob}
@@ -260,6 +261,7 @@ templates:
       Identifying Information:
       Full Name: {full_name}
       Email: {email}
+      {additional_emails}
       Address: {address}
 
       You are required to respond within one calendar month per
@@ -349,6 +351,7 @@ templates:
       Identifying Information:
       Full Name: {full_name}
       Email: {email}
+      {additional_emails}
       Phone: {phone}
       Address: {address}
 
@@ -362,7 +365,8 @@ templates:
       Delete Act's registration and deletion requirements apply,
       including $200 per day penalties for unfulfilled requests.
 
-      Please confirm deletion and disclosure in writing within 30 days.
+      Please confirm deletion and disclosure in writing within 45 days,
+      or such shorter period as required by applicable law.
       This communication is timestamped and archived.
 
       {full_name}
@@ -617,4 +621,80 @@ templates:
 
     required_fields: ["full_name", "email"]
     optional_fields: ["phone", "address", "dob", "additional_emails"]
+    auto_fields: ["date"]
+
+  # ===========================================================================
+  # Regulatory complaint — Pre-filled AG / CPPA / DPA complaint
+  # ===========================================================================
+  regulatory_complaint:
+    id: "regulatory_complaint"
+    name: "Regulatory Complaint — Attorney General / CPPA / DPA"
+    legal_basis: "any"
+    applicable_when: "Broker failed to comply and user wants to escalate to regulators"
+
+    subject: "Consumer Privacy Complaint — Non-Compliance with Data Deletion Request — {broker_name}"
+
+    body: |
+      To the Privacy Enforcement Division:
+
+      I am filing a formal complaint against the following data broker for
+      failure to comply with a legally valid data deletion request.
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      BROKER INFORMATION
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Company Name: {broker_name}
+      Website: {broker_domain}
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      COMPLAINT DETAILS
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      On {original_request_date}, I submitted a verifiable data deletion
+      request to the above company via email. As of today, {days_elapsed}
+      days have elapsed. The applicable legal deadline was
+      {legal_deadline_days} days.
+
+      The company has failed to:
+      — Acknowledge my request within the required timeframe
+      — Delete my personal information
+      — Provide the required written confirmation of deletion
+      — Disclose what data was held and with whom it was shared
+
+      On {followup_date}, I sent a formal noncompliance notice (second
+      request). The company has still not responded.
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      APPLICABLE LAWS VIOLATED
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      — CCPA/CPRA (Cal. Civ. Code § 1798.105) — 45-day deadline
+      — California Delete Act (Cal. Civ. Code § 1798.99.86) — $200/day
+        penalty per unfulfilled request
+      — GDPR Article 12(3) / Article 17 — 30-day deadline (if applicable)
+      — Additional state privacy laws as applicable to the broker's
+        jurisdiction
+
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      COMPLAINANT INFORMATION
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+      Full Name: {full_name}
+      Email: {email}
+      State of Residence: {state}
+
+      I have retained copies of all correspondence, including the
+      original deletion request and subsequent noncompliance notice,
+      and can provide them upon request.
+
+      I request that your office investigate this matter and take
+      appropriate enforcement action.
+
+      Respectfully,
+      {full_name}
+      Date: {date}
+
+    required_fields: ["full_name", "email", "broker_name", "broker_domain", "original_request_date", "days_elapsed", "legal_deadline_days"]
+    optional_fields: ["state", "followup_date"]
     auto_fields: ["date"]

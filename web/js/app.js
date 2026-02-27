@@ -32,6 +32,8 @@ const EU_COUNTRIES = {
     GB: 'United Kingdom',
 };
 
+let dataLoaded = false;
+
 // --- Router ---
 
 function getHash() {
@@ -179,9 +181,9 @@ function renderSetup(container) {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="location">Location *</label>
-                        <select class="form-select" id="location" required>
-                            <option value="">Select your state or region</option>
+                        <label class="form-label" for="location">Location</label>
+                        <select class="form-select" id="location">
+                            <option value="">Select your state or region (optional)</option>
                             <optgroup label="United States">
                                 ${US_STATES.map(s => `<option value="${s}" ${existing?.state === s ? 'selected' : ''}>${s}</option>`).join('')}
                             </optgroup>
@@ -192,7 +194,7 @@ function renderSetup(container) {
                             </optgroup>
                             <option value="other" ${existing?.country === '' && existing?.state === '' && existing?.full_name ? 'selected' : ''}>Other / Prefer not to say</option>
                         </select>
-                        <div class="form-hint">Used to select the strongest legal template for your jurisdiction.</div>
+                        <div class="form-hint">Used to select the strongest legal template for your jurisdiction. If not provided, we'll use a general template citing multiple laws.</div>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-lg" style="width:100%">
@@ -289,7 +291,7 @@ function renderSetup(container) {
         if (locationVal.startsWith('EU:')) {
             country = locationVal.slice(3);
             state = '';
-        } else if (locationVal === 'other') {
+        } else if (locationVal === 'other' || locationVal === '') {
             country = '';
             state = '';
         } else {
@@ -326,6 +328,22 @@ function esc(str) {
     return div.innerHTML;
 }
 
+// --- Error Banner ---
+
+function showErrorBanner(message) {
+    let banner = document.getElementById('error-banner');
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'error-banner';
+        banner.className = 'error-banner';
+        document.body.prepend(banner);
+    }
+    banner.innerHTML = `
+        <span>${esc(message)}</span>
+        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-sm">&times;</button>
+    `;
+}
+
 // --- Boot ---
 
 async function boot() {
@@ -335,14 +353,21 @@ async function boot() {
             Queue.load(),
             Brokers.load(),
         ]);
+        dataLoaded = true;
     } catch (err) {
         console.error('Failed to load data:', err);
+        showErrorBanner('Some data failed to load. Parts of the app may not work correctly. Try reloading.');
     }
 
     // Register service worker for PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(() => {});
     }
+
+    // Cross-tab sync: re-render current view when another tab changes data
+    window.addEventListener('datapurge-storage-sync', () => {
+        route();
+    });
 
     window.addEventListener('hashchange', route);
     route();
