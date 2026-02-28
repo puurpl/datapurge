@@ -649,6 +649,113 @@ h4 { font-size: 1rem; font-weight: 600; }
     opacity: 0.5;
 }
 
+/* --- Batch progress bar (segmented) --- */
+.batch-progress {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.batch-progress-segment {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--color-border);
+    transition: background 300ms ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.batch-progress-segment.sent {
+    background: var(--color-success);
+}
+
+.batch-progress-segment:hover {
+    opacity: 0.8;
+}
+
+/* --- Batch card header with step circle --- */
+.batch-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.batch-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+
+.batch-card.batch-sent .batch-number {
+    background: var(--color-success-light);
+    color: var(--color-success);
+}
+
+.batch-card-title {
+    font-weight: 600;
+    font-size: 0.9375rem;
+}
+
+.batch-card-count {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+/* --- Batch card sent state --- */
+.batch-card.batch-sent {
+    border-color: var(--color-success);
+    opacity: 0.6;
+}
+
+.batch-card.batch-sent .batch-card-body {
+    display: none;
+}
+
+/* --- Drip signup card --- */
+.drip-signup-card {
+    border: 2px solid var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 3%, var(--color-surface));
+}
+
+.drip-signup-card .card-header {
+    margin-bottom: 0.75rem;
+}
+
+.drip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.drip-confirmation {
+    text-align: center;
+    padding: 2rem;
+    border: 2px solid var(--color-success);
+    background: var(--color-success-light);
+}
+
 .queue-item-name { font-weight: 500; font-size: 0.9375rem; }
 .queue-item-meta { display: flex; align-items: center; gap: 0.5rem; }
 
