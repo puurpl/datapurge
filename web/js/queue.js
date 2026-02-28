@@ -246,6 +246,9 @@ function detectProviderId(email) {
     return domain ? (DOMAIN_TO_PROVIDER[domain] || null) : null;
 }
 
+const DRIP_API_URL = 'https://drip.datapurge.iamnottheproduct.com';
+const DRIP_SIGNUP_KEY = 'datapurge_drip_signup';
+
 const BATCH_SIZE_KEY = 'datapurge_batch_size';
 
 function getSavedBatchSize() {
@@ -270,16 +273,230 @@ function buildBatches(allEmails, maxBcc, subject, body) {
     return batches;
 }
 
+function getDripSignup() {
+    try {
+        return JSON.parse(localStorage.getItem(DRIP_SIGNUP_KEY));
+    } catch { return null; }
+}
+
+function saveDripSignup(data) {
+    try { localStorage.setItem(DRIP_SIGNUP_KEY, JSON.stringify(data)); } catch { /* ignore */ }
+}
+
+function renderDripSignup(container, mass) {
+    const pii = Store.getPII();
+    const existing = getDripSignup();
+
+    // If already signed up, show confirmation
+    if (existing) {
+        const card = document.createElement('div');
+        card.className = 'card drip-confirmation mb-2';
+        card.innerHTML = `
+            <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
+            <h3 style="margin-bottom: 0.5rem;">You're signed up for daily opt-out emails!</h3>
+            <p class="text-secondary" style="max-width: 520px; margin: 0 auto 1rem;">
+                Check your email for your next batch. You'll receive a new batch daily until all
+                <strong>${mass.count}</strong> brokers are covered, then compliance reminders every 45 days.
+            </p>
+            <p class="text-sm text-secondary">
+                Signed up as <strong>${esc(existing.email)}</strong>
+                <button class="btn-link text-sm" id="btn-drip-unsubscribe" style="background:none; border:none; color:var(--color-danger); cursor:pointer; padding:0; margin-left:0.5rem; text-decoration:underline;">Unsubscribe</button>
+            </p>
+        `;
+        container.appendChild(card);
+
+        card.querySelector('#btn-drip-unsubscribe').addEventListener('click', async () => {
+            if (!confirm('Unsubscribe from daily opt-out emails?')) return;
+            try {
+                await fetch(`${DRIP_API_URL}/api/unsubscribe`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: existing.email }),
+                });
+            } catch { /* best effort */ }
+            localStorage.removeItem(DRIP_SIGNUP_KEY);
+            container.innerHTML = '';
+            renderMassMode(container);
+        });
+        return;
+    }
+
+    // Signup form
+    const card = document.createElement('div');
+    card.className = 'card drip-signup-card mb-2';
+    card.innerHTML = `
+        <div class="card-header">
+            <div>
+                <div class="drip-badge mb-1">Recommended</div>
+                <div class="card-title">Daily Opt-Out Emails</div>
+            </div>
+        </div>
+        <p class="text-secondary mb-2" style="max-width: none;">
+            We'll email you daily with pre-filled opt-out links — just click each one to
+            send from your own email client. Your name and email are embedded in the legal
+            text only, never stored as raw PII.
+        </p>
+
+        <form id="drip-signup-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="drip-email">Email address *</label>
+                    <input type="email" id="drip-email" class="form-input" required
+                        value="${esc(pii?.email || '')}" placeholder="you@example.com">
+                    <div class="form-hint">Where we'll send your daily batch</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="drip-name">Full name *</label>
+                    <input type="text" id="drip-name" class="form-input" required
+                        value="${esc(pii?.full_name || '')}" placeholder="Your full name">
+                    <div class="form-hint">Used in the legal opt-out text</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="drip-state">State / location</label>
+                    <input type="text" id="drip-state" class="form-input"
+                        value="${esc(pii?.state || '')}" placeholder="e.g. California">
+                    <div class="form-hint">Selects the strongest legal template</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="drip-batch-size">Brokers per email</label>
+                    <select id="drip-batch-size" class="form-select">
+                        <option value="50">50 per email</option>
+                        <option value="100" selected>100 per email (default)</option>
+                    </select>
+                    <div class="form-hint">How many mailto links per daily email</div>
+                </div>
+            </div>
+            <div id="drip-error" class="text-sm" style="color: var(--color-danger); display: none; margin-bottom: 0.75rem;"></div>
+            <button type="submit" class="btn btn-primary" id="drip-submit-btn" style="width: 100%;">
+                Sign Up for Daily Emails
+            </button>
+        </form>
+    `;
+    container.appendChild(card);
+
+    card.querySelector('#drip-signup-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = card.querySelector('#drip-email').value.trim();
+        const name = card.querySelector('#drip-name').value.trim();
+        const state = card.querySelector('#drip-state').value.trim();
+        const brokersPerEmail = parseInt(card.querySelector('#drip-batch-size').value);
+        const errorEl = card.querySelector('#drip-error');
+        const submitBtn = card.querySelector('#drip-submit-btn');
+
+        if (!email || !name) {
+            errorEl.textContent = 'Email and full name are required.';
+            errorEl.style.display = '';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Generating opt-out queue...';
+        errorEl.style.display = 'none';
+
+        try {
+            // Build fields for template interpolation
+            const fields = Store.getTemplateFields() || {};
+            fields.full_name = name;
+            fields.email = email;
+            if (state) fields.state = state;
+
+            const emailableBrokers = getEmailableBrokers();
+            const piiData = Store.getPII() || {};
+            const userCountry = piiData.country || 'US';
+            const userState = state || piiData.state || '';
+
+            // Generate all broker emails client-side
+            const queue = emailableBrokers.map(broker => {
+                const method = getEmailMethod(broker);
+                const templateId = Templates.selectBestTemplate(userState, userCountry, broker);
+                const filled = Templates.fill(templateId, fields, broker);
+                if (!filled) return null;
+
+                // Pre-generate noncompliance notice with date placeholders preserved
+                const ncFields = {
+                    ...fields,
+                    original_request_date: '{original_request_date}',
+                    days_elapsed: '{days_elapsed}',
+                    legal_deadline_days: '45',
+                };
+                const nc = Templates.fill('noncompliance_notice', ncFields, broker);
+
+                return {
+                    broker_id: broker.id,
+                    broker_name: broker.name,
+                    email_to: method.email_to,
+                    subject: filled.subject,
+                    body: filled.body,
+                    nc_subject: nc?.subject || '',
+                    nc_body: nc?.body || '',
+                };
+            }).filter(Boolean);
+
+            submitBtn.textContent = `Uploading ${queue.length} items...`;
+
+            const resp = await fetch(`${DRIP_API_URL}/api/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, brokers_per_email: brokersPerEmail, queue }),
+            });
+
+            if (!resp.ok) {
+                const data = await resp.json().catch(() => ({}));
+                throw new Error(data.error || `Signup failed (${resp.status})`);
+            }
+
+            // Save signup state locally
+            saveDripSignup({ email, brokers_per_email: brokersPerEmail, signedUpAt: new Date().toISOString() });
+
+            // Replace form with confirmation
+            card.className = 'card drip-confirmation mb-2';
+            card.innerHTML = `
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
+                <h3 style="margin-bottom: 0.5rem;">You're signed up!</h3>
+                <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
+                    Check your email for your first batch. You'll receive a new batch daily
+                    until all <strong>${queue.length}</strong> brokers are covered, then compliance
+                    reminders every 45 days.
+                </p>
+            `;
+        } catch (err) {
+            errorEl.textContent = err.message || 'Something went wrong. Please try again.';
+            errorEl.style.display = '';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign Up for Daily Emails';
+        }
+    });
+}
+
 function renderMassMode(container) {
     const mass = buildMassEmail();
     if (!mass) return;
 
+    // Clear container for fresh render
+    container.innerHTML = '';
+
+    // Drip signup at the top
+    renderDripSignup(container, mass);
+
+    // Divider
+    const divider = document.createElement('div');
+    divider.className = 'mt-2 mb-2';
+    divider.style.cssText = 'border-top: 1px solid var(--color-border); padding-top: 1rem; text-align: center;';
+    divider.innerHTML = '<span class="text-sm text-secondary">Or send manually now</span>';
+    container.appendChild(divider);
+
+    // Manual send section
+    const manualContainer = document.createElement('div');
+    container.appendChild(manualContainer);
+
     // Check if user already chose a batch size
     const saved = getSavedBatchSize();
     if (saved) {
-        renderBatchSendFlow(container, mass, saved);
+        renderBatchSendFlow(manualContainer, mass, saved);
     } else {
-        renderProviderPicker(container, mass);
+        renderProviderPicker(manualContainer, mass);
     }
 }
 
@@ -413,6 +630,41 @@ function renderBatchSendFlow(container, mass, batchSize) {
     const batches = buildBatches(mass.bccList, batchSize, mass.subject, mass.body);
     const totalEmails = batches.length;
 
+    // Batch state tracking
+    const batchState = new Array(batches.length).fill(false);
+
+    function renderProgressBar() {
+        const sentCount = batchState.filter(Boolean).length;
+        const bar = container.querySelector('#batch-progress');
+        if (!bar) return;
+        bar.innerHTML = batches.map((_, i) =>
+            `<div class="batch-progress-segment ${batchState[i] ? 'sent' : ''}" data-seg="${i}" title="Email ${i + 1} of ${totalEmails}"></div>`
+        ).join('');
+        const label = container.querySelector('#progress-label');
+        if (label) label.textContent = `${sentCount} of ${totalEmails} sent`;
+    }
+
+    function markBatchSent(idx) {
+        batchState[idx] = true;
+        const card = container.querySelector(`.batch-card[data-batch="${idx}"]`);
+        if (card) {
+            card.classList.add('batch-sent');
+            const status = card.querySelector('.batch-status');
+            if (status) { status.textContent = 'Sent'; status.className = 'badge badge-sent batch-status'; }
+        }
+        renderProgressBar();
+        showToast(`Email ${idx + 1} of ${totalEmails} marked as sent`);
+
+        // Auto-prompt when all batches are sent
+        if (batchState.every(Boolean)) {
+            const prompt = container.querySelector('#all-complete-prompt');
+            if (prompt) {
+                prompt.style.display = '';
+                prompt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    }
+
     container.innerHTML = `
         <h2 class="mb-2">Send to All Brokers at Once</h2>
 
@@ -434,60 +686,69 @@ function renderBatchSendFlow(container, mass, batchSize) {
 
         ${getLocationNotices()}
 
+        <!-- Email body preview (collapsible, above batch list) -->
         <div class="card mt-2">
-            <div class="card-header">
-                <div class="card-title">Step 1 — Copy the email body</div>
-            </div>
-            <p class="text-sm text-secondary mb-1">
-                This is the same for ${totalEmails === 1 ? 'the email' : 'every batch'} — copy once${totalEmails > 1 ? ', reuse for each email' : ''}.
-            </p>
-            <div class="email-preview">
+            <div class="email-preview" style="margin: 0;">
                 <button class="email-preview-toggle" id="toggle-body">
-                    <span>Preview email</span>
+                    <span>Preview email body (same for ${totalEmails === 1 ? 'the email' : 'all batches'})</span>
                     <span>&#9662;</span>
                 </button>
                 <div class="email-preview-content" id="email-body"><strong>Subject:</strong> ${esc(mass.subject)}
 
 ${esc(mass.body)}</div>
             </div>
-            <div class="mt-1">
-                <button class="btn btn-primary" id="btn-copy-email" style="width:100%;">Copy Subject + Body</button>
+            <div class="mt-1" style="padding: 0 1rem 1rem;">
+                <button class="btn btn-outline btn-sm" id="btn-copy-email" style="width:100%;">Copy Subject + Body</button>
             </div>
         </div>
 
-        <div class="card mt-2">
-            <div class="card-header">
-                <div class="card-title">Step 2 — Send ${totalEmails} email${totalEmails > 1 ? 's' : ''}</div>
+        <!-- Batch progress bar -->
+        ${totalEmails > 1 ? `
+        <div class="mt-2" style="text-align: center;">
+            <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-secondary">Batch progress</span>
+                <span class="text-sm text-secondary" id="progress-label">0 of ${totalEmails} sent</span>
             </div>
-            <p class="text-sm text-secondary mb-1">
-                ${totalEmails === 1
-                    ? 'Copy the BCC addresses below and paste into the <strong>BCC</strong> field of a new email.'
-                    : 'For each batch: create a new email, paste the subject + body, then copy and paste the BCC addresses.'}
-            </p>
-            <div id="batch-list">
-                ${batches.map((b, i) => `
-                    <div class="card mt-1 batch-card" data-batch="${i}" style="border-left: 3px solid var(--color-border);">
-                        <div class="flex items-center justify-between mb-1">
-                            <strong class="text-sm">
-                                ${totalEmails === 1 ? `All ${b.count} addresses` : `Email ${i + 1} of ${totalEmails} — ${b.count} addresses`}
-                            </strong>
-                            <span class="badge batch-status" id="batch-status-${i}"></span>
+            <div class="batch-progress" id="batch-progress">
+                ${batches.map((_, i) =>
+                    `<div class="batch-progress-segment" data-seg="${i}" title="Email ${i + 1} of ${totalEmails}"></div>`
+                ).join('')}
+            </div>
+        </div>
+        ` : ''}
+
+        <!-- Batch list -->
+        <div id="batch-list">
+            ${batches.map((b, i) => `
+                <div class="card mt-1 batch-card" data-batch="${i}">
+                    <div class="batch-card-header">
+                        <span class="batch-number">${i + 1}</span>
+                        <div>
+                            <div class="batch-card-title">
+                                ${totalEmails === 1 ? `All ${b.count} brokers` : `EMAIL ${i + 1} OF ${totalEmails} — ${b.count} brokers`}
+                            </div>
+                            <div class="batch-card-count">Addresses #${b.start}–${b.end}</div>
                         </div>
-                        <div class="email-preview">
+                        <span class="badge batch-status" id="batch-status-${i}" style="margin-left: auto;"></span>
+                    </div>
+                    <div class="batch-card-body">
+                        <a href="${b.link}" class="btn btn-primary btn-mailto-batch" data-batch="${i}" target="_blank" rel="noopener" style="width:100%; margin-bottom: 0.5rem;">
+                            Open in Email Client
+                        </a>
+                        <div class="flex" style="gap: 0.5rem;">
+                            <button class="btn btn-outline btn-sm btn-copy-batch" data-batch="${i}" style="flex:1;">Copy BCC Addresses</button>
+                            <button class="btn btn-success btn-sm btn-batch-done" data-batch="${i}">Mark Sent</button>
+                        </div>
+                        <div class="email-preview mt-1">
                             <button class="email-preview-toggle" data-toggle-batch="${i}">
                                 <span>${totalEmails === 1 ? `Show all ${b.count} addresses` : `Show ${b.count} addresses (#${b.start}–${b.end})`}</span>
                                 <span>&#9662;</span>
                             </button>
                             <div class="email-preview-content batch-bcc" id="batch-bcc-${i}">${esc(b.bcc)}</div>
                         </div>
-                        <div class="mt-1 flex" style="gap: 0.5rem; flex-wrap: wrap;">
-                            <button class="btn btn-primary btn-sm btn-copy-batch" data-batch="${i}">Copy BCC Addresses</button>
-                            <a href="${b.link}" class="btn btn-outline btn-sm btn-mailto-batch" data-batch="${i}">Open via mailto</a>
-                            <button class="btn btn-success btn-sm btn-batch-done" data-batch="${i}">Sent</button>
-                        </div>
                     </div>
-                `).join('')}
-            </div>
+                </div>
+            `).join('')}
         </div>
 
         <!-- Post-send prompt (hidden initially, shown on return) -->
@@ -503,13 +764,24 @@ ${esc(mass.body)}</div>
             </button>
         </div>
 
-        <div class="card mt-2" id="mark-done-card">
+        <!-- All-complete auto-prompt (shown when all segments green) -->
+        <div class="card mt-2" id="all-complete-prompt" style="display:none; border-color: var(--color-success); background: var(--color-success-light);">
             <div class="card-header">
-                <div class="card-title">Step 3 — Mark all as done</div>
+                <div class="card-title" style="color: var(--color-success);">All batches sent!</div>
             </div>
             <p class="text-sm text-secondary mb-1">
+                Click below to mark all ${mass.count} brokers as contacted and start tracking legal deadlines.
+            </p>
+            <button class="btn btn-success" id="btn-mark-all-complete" style="width:100%;">
+                Mark All ${mass.count} Brokers as Sent
+            </button>
+        </div>
+
+        <!-- Mark all (always visible fallback) -->
+        <div class="card mt-2" id="mark-done-card">
+            <p class="text-sm text-secondary mb-1">
                 Once you've sent ${totalEmails === 1 ? 'the email' : `all ${totalEmails} emails`},
-                click below to mark all brokers as contacted and start tracking legal deadlines.
+                mark all brokers as contacted to start tracking legal deadlines.
             </p>
             <button class="btn btn-success" id="btn-mark-all-sent" style="width:100%;">Mark All ${mass.count} Brokers as Sent</button>
         </div>
@@ -570,6 +842,12 @@ ${esc(mass.body)}</div>
         renderCompletionCard(container, mass.count);
     });
 
+    container.querySelector('#btn-mark-all-complete')?.addEventListener('click', () => {
+        brokers.forEach(b => Store.markSent(b.id));
+        showToast(`${mass.count} brokers marked as sent`);
+        renderCompletionCard(container, mass.count);
+    });
+
     // Toggle email body preview
     container.querySelector('#toggle-body').addEventListener('click', () => {
         container.querySelector('#email-body').classList.toggle('open');
@@ -591,17 +869,11 @@ ${esc(mass.body)}</div>
         });
     });
 
-    // Mark individual batch as sent (visual indicator only)
+    // Mark individual batch as sent
     container.querySelectorAll('.btn-batch-done').forEach(btn => {
         btn.addEventListener('click', () => {
-            const idx = btn.getAttribute('data-batch');
-            const card = container.querySelector(`.batch-card[data-batch="${idx}"]`);
-            const status = container.querySelector(`#batch-status-${idx}`);
-            if (card) card.style.borderLeftColor = 'var(--color-success)';
-            if (status) { status.textContent = 'Sent'; status.className = 'badge badge-sent batch-status'; }
-            btn.disabled = true;
-            btn.textContent = 'Done';
-            showToast(`Email ${parseInt(idx) + 1} of ${totalEmails} marked as sent`);
+            const idx = parseInt(btn.getAttribute('data-batch'));
+            markBatchSent(idx);
         });
     });
 
