@@ -809,6 +809,23 @@ h4 { font-size: 1rem; font-weight: 600; }
     color: var(--color-text-secondary);
 }
 
+/* --- Scan / Find My Data --- */
+.scan-card {
+    transition: border-color 0.15s ease;
+}
+
+.scan-card-sent {
+    opacity: 0.6;
+    border-color: var(--color-success);
+}
+
+.scan-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 /* --- Progress --- */
 .progress-header {
     display: grid;
