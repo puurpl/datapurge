@@ -1120,3 +1120,46 @@ h4 { font-size: 1rem; font-weight: 600; }
 .error-banner span {
     flex: 1;
 }
+
+/* --- About page --- */
+.about-philosophy {
+    border-left: 4px solid var(--color-primary);
+    text-align: left;
+    background: color-mix(in srgb, var(--color-primary) 3%, var(--color-surface));
+}
+
+.about-philosophy p {
+    text-align: left;
+    max-width: none;
+}
+
+/* --- Involved / suggestion grid --- */
+.involved-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .involved-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Donate page --- */
+.donate-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.donate-card {
+    text-align: center;
+}
+
+.donate-card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .donate-grid { grid-template-columns: 1fr; }
+}
