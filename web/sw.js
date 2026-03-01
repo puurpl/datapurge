@@ -1,4 +1,4 @@
-const CACHE_NAME = 'datapurge-v5';
+const CACHE_NAME = 'datapurge-v6';
 const ASSETS = [
     '/',
     '/index.html',
@@ -10,6 +10,7 @@ const ASSETS = [
     '/js/templates.js',
     '/js/queue.js',
     '/js/brokers.js',
+    '/js/scan.js',
     '/js/progress.js',
     '/js/share.js',
     '/js/stats.js',

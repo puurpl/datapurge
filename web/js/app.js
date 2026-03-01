@@ -6,6 +6,7 @@ import { Store } from './store.js';
 import { Templates } from './templates.js';
 import { Queue } from './queue.js';
 import { Brokers } from './brokers.js';
+import { Scan } from './scan.js';
 import { Progress } from './progress.js';
 import { Share } from './share.js';
 
@@ -44,7 +45,7 @@ function route() {
     const hash = getHash();
 
     // Redirect to setup if PII required but missing
-    if ((hash === 'queue' || hash === 'progress') && !Store.hasPII()) {
+    if ((hash === 'queue' || hash === 'progress' || hash === 'scan') && !Store.hasPII()) {
         location.hash = '#setup';
         return;
     }
@@ -73,6 +74,7 @@ function initView(name, el) {
     switch (name) {
         case 'setup': renderSetup(el); break;
         case 'queue': Queue.render(el); break;
+        case 'scan': Scan.render(el); break;
         case 'brokers': Brokers.render(el); break;
         case 'progress': Progress.render(el, Queue.getRegistryData()); break;
         case 'share': Share.render(el); break;
