@@ -283,6 +283,9 @@ function saveDripSignup(data) {
     try { localStorage.setItem(DRIP_SIGNUP_KEY, JSON.stringify(data)); } catch { /* ignore */ }
 }
 
+// Set to true once the email drip worker is deployed and ready
+const DRIP_LIVE = false;
+
 function renderDripSignup(container, mass) {
     const pii = Store.getPII();
     const existing = getDripSignup();
@@ -293,10 +296,11 @@ function renderDripSignup(container, mass) {
         card.className = 'card drip-confirmation mb-2';
         card.innerHTML = `
             <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
-            <h3 style="margin-bottom: 0.5rem;">You're signed up for daily opt-out emails!</h3>
+            <h3 style="margin-bottom: 0.5rem;">You're signed up for opt-out emails!</h3>
             <p class="text-secondary" style="max-width: 520px; margin: 0 auto 1rem;">
-                Check your email for your next batch. You'll receive a new batch daily until all
-                <strong>${mass.count}</strong> brokers are covered, then compliance reminders every 45 days.
+                We'll send you one email per day with opt-out links for 50&ndash;100 brokers at a time.
+                Once all <strong>${mass.count}</strong> brokers are covered, the cycle restarts every 45 days
+                with compliance reminders.
             </p>
             <p class="text-sm text-secondary">
                 Signed up as <strong>${esc(existing.email)}</strong>
@@ -306,7 +310,7 @@ function renderDripSignup(container, mass) {
         container.appendChild(card);
 
         card.querySelector('#btn-drip-unsubscribe').addEventListener('click', async () => {
-            if (!confirm('Unsubscribe from daily opt-out emails?')) return;
+            if (!confirm('Unsubscribe from opt-out emails?')) return;
             try {
                 await fetch(`${DRIP_API_URL}/api/unsubscribe`, {
                     method: 'POST',
@@ -321,20 +325,50 @@ function renderDripSignup(container, mass) {
         return;
     }
 
-    // Signup form
+    // Coming soon state — show preview card without functional signup
+    if (!DRIP_LIVE) {
+        const card = document.createElement('div');
+        card.className = 'card drip-signup-card mb-2';
+        card.innerHTML = `
+            <div class="card-header">
+                <div>
+                    <div class="drip-badge mb-1">Coming Soon</div>
+                    <div class="card-title">Automated Opt-Out Emails</div>
+                </div>
+            </div>
+            <p class="text-secondary mb-2" style="max-width: none;">
+                We're building an email service that sends you one email per day with
+                pre-filled opt-out links for 50&ndash;100 brokers at a time. Just click each link to
+                send from your own email client. Once all ${mass.count} brokers are covered,
+                the cycle restarts every 45 days with follow-up compliance reminders.
+            </p>
+            <p class="text-secondary text-sm mb-2" style="max-width: none;">
+                Your name and email are embedded in the legal text only &mdash; never stored as raw PII.
+            </p>
+            <button class="btn btn-primary" disabled style="width: 100%; opacity: 0.6; cursor: not-allowed;">
+                Coming Soon
+            </button>
+        `;
+        container.appendChild(card);
+        return;
+    }
+
+    // Signup form (enabled when DRIP_LIVE = true)
     const card = document.createElement('div');
     card.className = 'card drip-signup-card mb-2';
     card.innerHTML = `
         <div class="card-header">
             <div>
                 <div class="drip-badge mb-1">Recommended</div>
-                <div class="card-title">Daily Opt-Out Emails</div>
+                <div class="card-title">Automated Opt-Out Emails</div>
             </div>
         </div>
         <p class="text-secondary mb-2" style="max-width: none;">
-            We'll email you daily with pre-filled opt-out links — just click each one to
-            send from your own email client. Your name and email are embedded in the legal
-            text only, never stored as raw PII.
+            We'll send you one email per day with pre-filled opt-out links for
+            50&ndash;100 brokers at a time &mdash; just click each link to send from your own
+            email client. Once all brokers are covered, the cycle restarts every
+            45 days with follow-up compliance reminders. Your name and email are
+            embedded in the legal text only, never stored as raw PII.
         </p>
 
         <form id="drip-signup-form">
@@ -343,7 +377,7 @@ function renderDripSignup(container, mass) {
                     <label class="form-label" for="drip-email">Email address *</label>
                     <input type="email" id="drip-email" class="form-input" required
                         value="${esc(pii?.email || '')}" placeholder="you@example.com">
-                    <div class="form-hint">Where we'll send your daily batch</div>
+                    <div class="form-hint">Where we'll send your opt-out batches</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="drip-name">Full name *</label>
@@ -365,12 +399,18 @@ function renderDripSignup(container, mass) {
                         <option value="50">50 per email</option>
                         <option value="100" selected>100 per email (default)</option>
                     </select>
-                    <div class="form-hint">How many mailto links per daily email</div>
+                    <div class="form-hint">How many opt-out links per email</div>
                 </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="drip-news" style="margin-top: 0.2rem;">
+                    <span class="text-secondary">Also send me occasional updates about online privacy news and DataPurge features (optional)</span>
+                </label>
             </div>
             <div id="drip-error" class="text-sm" style="color: var(--color-danger); display: none; margin-bottom: 0.75rem;"></div>
             <button type="submit" class="btn btn-primary" id="drip-submit-btn" style="width: 100%;">
-                Sign Up for Daily Emails
+                Sign Up for Opt-Out Emails
             </button>
         </form>
     `;
@@ -382,6 +422,7 @@ function renderDripSignup(container, mass) {
         const name = card.querySelector('#drip-name').value.trim();
         const state = card.querySelector('#drip-state').value.trim();
         const brokersPerEmail = parseInt(card.querySelector('#drip-batch-size').value);
+        const privacyNews = card.querySelector('#drip-news').checked;
         const errorEl = card.querySelector('#drip-error');
         const submitBtn = card.querySelector('#drip-submit-btn');
 
@@ -439,7 +480,7 @@ function renderDripSignup(container, mass) {
             const resp = await fetch(`${DRIP_API_URL}/api/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, brokers_per_email: brokersPerEmail, queue }),
+                body: JSON.stringify({ email, brokers_per_email: brokersPerEmail, privacy_news: privacyNews, queue }),
             });
 
             if (!resp.ok) {
@@ -448,7 +489,7 @@ function renderDripSignup(container, mass) {
             }
 
             // Save signup state locally
-            saveDripSignup({ email, brokers_per_email: brokersPerEmail, signedUpAt: new Date().toISOString() });
+            saveDripSignup({ email, brokers_per_email: brokersPerEmail, privacy_news: privacyNews, signedUpAt: new Date().toISOString() });
 
             // Replace form with confirmation
             card.className = 'card drip-confirmation mb-2';
@@ -456,16 +497,16 @@ function renderDripSignup(container, mass) {
                 <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
                 <h3 style="margin-bottom: 0.5rem;">You're signed up!</h3>
                 <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
-                    Check your email for your first batch. You'll receive a new batch daily
-                    until all <strong>${queue.length}</strong> brokers are covered, then compliance
-                    reminders every 45 days.
+                    We'll send you one email per day with opt-out links for 50&ndash;100 brokers.
+                    Once all <strong>${queue.length}</strong> brokers are covered, the cycle restarts
+                    every 45 days with compliance reminders.
                 </p>
             `;
         } catch (err) {
             errorEl.textContent = err.message || 'Something went wrong. Please try again.';
             errorEl.style.display = '';
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Sign Up for Daily Emails';
+            submitBtn.textContent = 'Sign Up for Opt-Out Emails';
         }
     });
 }
