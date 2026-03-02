@@ -1163,3 +1163,14 @@ h4 { font-size: 1rem; font-weight: 600; }
 @media (max-width: 640px) {
     .donate-grid { grid-template-columns: 1fr; }
 }
+
+/* --- App download page --- */
+.download-btn {
+    font-size: 1.125rem;
+    padding: 1rem 2.5rem;
+}
+
+.feature-icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}

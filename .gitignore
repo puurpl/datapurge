@@ -32,6 +32,15 @@ letters/
 # Generated (root only — web/data/*.json is tracked)
 /registry.json
 
+# Capacitor / Android
+node_modules/
+android/app/build/
+android/.gradle/
+android/build/
+android/local.properties
+*.apk
+*.aab
+
 # OS
 .DS_Store
 Thumbs.db

@@ -4,10 +4,16 @@
  * Replicates server/templates.py logic exactly.
  */
 
+import { isCapacitor, RegistryUpdater } from './capacitor-bridge.js';
+
 let data = null;
 
 export const Templates = {
     async load() {
+        if (isCapacitor()) {
+            const cached = RegistryUpdater.getCachedTemplates();
+            if (cached) { data = cached; return; }
+        }
         const resp = await fetch('data/templates.json');
         if (!resp.ok) throw new Error(`Failed to load templates: ${resp.status}`);
         data = await resp.json();

@@ -1,0 +1,17 @@
+{
+  "appId": "com.datapurge.app",
+  "appName": "DataPurge",
+  "webDir": "web",
+  "server": {
+    "allowNavigation": ["raw.githubusercontent.com"]
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_notify",
+      "iconColor": "#2563eb"
+    }
+  },
+  "android": {
+    "path": "android"
+  }
+}

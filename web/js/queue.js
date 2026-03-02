@@ -8,8 +8,21 @@
 import { Store } from './store.js';
 import { Templates } from './templates.js';
 import { Share } from './share.js';
+import { isCapacitor, RegistryUpdater, Notifier } from './capacitor-bridge.js';
 
 let registryData = null;
+
+/** Mark broker as sent and schedule a deadline notification in the native app */
+function markSentWithNotification(brokerId) {
+    Store.markSent(brokerId);
+    if (isCapacitor() && registryData) {
+        const broker = registryData.brokers?.find(b => b.id === brokerId);
+        if (broker) {
+            const deadline = broker.optout?.legal_max_days || 45;
+            Notifier.scheduleReminder(brokerId, broker.name, deadline);
+        }
+    }
+}
 
 const CATEGORY_PRIORITY = {
     'data-aggregator': 0,
@@ -879,13 +892,13 @@ ${esc(mass.body)}</div>
     document.addEventListener('visibilitychange', handleVisibility);
 
     container.querySelector('#btn-mark-all-sent-prompt')?.addEventListener('click', () => {
-        brokers.forEach(b => Store.markSent(b.id));
+        brokers.forEach(b => markSentWithNotification(b.id));
         showToast(`${mass.count} brokers marked as sent`);
         renderCompletionCard(container, mass.count);
     });
 
     container.querySelector('#btn-mark-all-complete')?.addEventListener('click', () => {
-        brokers.forEach(b => Store.markSent(b.id));
+        brokers.forEach(b => markSentWithNotification(b.id));
         showToast(`${mass.count} brokers marked as sent`);
         renderCompletionCard(container, mass.count);
     });
@@ -928,7 +941,7 @@ ${esc(mass.body)}</div>
     // Mark all sent
     container.querySelector('#btn-mark-all-sent').addEventListener('click', () => {
         if (confirm(`Mark all ${mass.count} brokers as sent?`)) {
-            brokers.forEach(b => Store.markSent(b.id));
+            brokers.forEach(b => markSentWithNotification(b.id));
             showToast(`${mass.count} brokers marked as sent`);
             renderCompletionCard(container, mass.count);
         }
@@ -1100,7 +1113,7 @@ ${esc(filled.body)}</div>
                 copyToClipboard(`Subject: ${filled.subject}\n\n${filled.body}`, 'Copied to clipboard');
             });
             currentSlot.querySelector('#btn-sent').addEventListener('click', () => {
-                Store.markSent(broker.id);
+                markSentWithNotification(broker.id);
                 renderAll();
             });
             currentSlot.querySelector('#btn-skip').addEventListener('click', renderAll);
@@ -1133,6 +1146,10 @@ ${esc(filled.body)}</div>
 
 export const Queue = {
     async load() {
+        if (isCapacitor()) {
+            const cached = RegistryUpdater.getCachedRegistry();
+            if (cached) { registryData = cached; return; }
+        }
         const resp = await fetch('data/registry.json');
         if (!resp.ok) throw new Error(`Failed to load registry: ${resp.status}`);
         registryData = await resp.json();
