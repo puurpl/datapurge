@@ -343,7 +343,7 @@ function renderDripSignup(container, mass) {
                 the cycle restarts every 45 days with follow-up compliance reminders.
             </p>
             <p class="text-secondary text-sm mb-2" style="max-width: none;">
-                Your name and email are embedded in the legal text only &mdash; never stored as raw PII.
+                We securely store your data (name, email, location) and use it only for sending the requested opt-out emails. Nothing else.
             </p>
             <button class="btn btn-primary" disabled style="width: 100%; opacity: 0.6; cursor: not-allowed;">
                 Coming Soon
@@ -367,8 +367,9 @@ function renderDripSignup(container, mass) {
             We'll send you one email per day with pre-filled opt-out links for
             50&ndash;100 brokers at a time &mdash; just click each link to send from your own
             email client. Once all brokers are covered, the cycle restarts every
-            45 days with follow-up compliance reminders. Your name and email are
-            embedded in the legal text only, never stored as raw PII.
+            45 days with follow-up compliance reminders. We securely store your
+            data (name, email, location) and use it only for sending the requested
+            opt-out emails. Nothing else.
         </p>
 
         <form id="drip-signup-form">
