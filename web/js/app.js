@@ -9,6 +9,7 @@ import { Brokers } from './brokers.js';
 import { Scan } from './scan.js';
 import { Progress } from './progress.js';
 import { Share } from './share.js';
+import { isCapacitor, applyCapacitorUI, checkForUpdates, Notifier } from './capacitor-bridge.js';
 
 const US_STATES = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -361,9 +362,16 @@ async function boot() {
         showErrorBanner('Some data failed to load. Parts of the app may not work correctly. Try reloading.');
     }
 
-    // Register service worker for PWA
-    if ('serviceWorker' in navigator) {
+    // Register service worker for PWA (skip in native app)
+    if ('serviceWorker' in navigator && !isCapacitor()) {
         navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
+    // Capacitor-specific initialization
+    if (isCapacitor()) {
+        applyCapacitorUI();
+        await checkForUpdates();
+        await Notifier.requestPermission();
     }
 
     // Cross-tab sync: re-render current view when another tab changes data

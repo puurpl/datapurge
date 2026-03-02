@@ -1,0 +1,18 @@
+{
+  "name": "datapurge",
+  "version": "1.0.0",
+  "description": "Data broker opt-out tool — Android app",
+  "private": true,
+  "scripts": {
+    "cap:sync": "cap sync android",
+    "cap:build": "cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/app": "^8.0.1",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/local-notifications": "^8.0.1"
+  }
+}

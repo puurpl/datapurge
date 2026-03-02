@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DataPurge</string>
+    <string name="title_activity_main">DataPurge</string>
+    <string name="package_name">com.datapurge.app</string>
+    <string name="custom_url_scheme">com.datapurge.app</string>
+</resources>

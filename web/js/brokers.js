@@ -2,6 +2,8 @@
  * DataPurge Brokers — Searchable broker directory
  */
 
+import { isCapacitor, RegistryUpdater } from './capacitor-bridge.js';
+
 let allBrokers = [];
 
 const CATEGORY_LABELS = {
@@ -108,6 +110,10 @@ function renderBrokerCard(broker) {
 
 export const Brokers = {
     async load() {
+        if (isCapacitor()) {
+            const cached = RegistryUpdater.getCachedRegistry();
+            if (cached) { allBrokers = cached.brokers || []; return; }
+        }
         const resp = await fetch('data/registry.json');
         if (!resp.ok) throw new Error(`Failed to load broker directory: ${resp.status}`);
         const data = await resp.json();
