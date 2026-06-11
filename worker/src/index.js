@@ -1,8 +1,15 @@
 /**
  * DataPurge Drip Service — Cloudflare Worker
  *
- * Handles email drip signup, daily batch sending via Resend,
- * and 45-day compliance reminder rotation.
+ * Emails subscribers their next batch of ready-to-send opt-out links on a
+ * daily cadence, plus 45-day compliance reminders. We never email brokers
+ * directly — every message goes to the subscriber, who sends the opt-outs
+ * from their own mail client via mailto: links.
+ *
+ * The opt-out text is one shared template fill per subscriber (stored on the
+ * subscriber row); each drip email contains a small number of BCC-batch
+ * buttons (up to MAX_BCC_PER_LINK recipients each) rather than one button
+ * per broker.
  */
 
 const CORS_HEADERS = {
@@ -10,6 +17,9 @@ const CORS_HEADERS = {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
 };
+
+// Matches the most restrictive mainstream provider limit (Gmail ~100 BCC).
+const MAX_BCC_PER_LINK = 100;
 
 function jsonResponse(data, status = 200) {
     return new Response(JSON.stringify(data), {
@@ -25,10 +35,19 @@ function generateId() {
 // --- Route handlers ---
 
 async function handleSignup(request, env) {
-    const { email, brokers_per_email = 100, queue } = await request.json();
+    const {
+        email,
+        brokers_per_email = 100,
+        privacy_news = false,
+        subject,
+        body,
+        nc_subject = '',
+        nc_body = '',
+        queue,
+    } = await request.json();
 
-    if (!email || !Array.isArray(queue) || queue.length === 0) {
-        return jsonResponse({ error: 'Email and queue are required' }, 400);
+    if (!email || !subject || !body || !Array.isArray(queue) || queue.length === 0) {
+        return jsonResponse({ error: 'Email, subject, body, and queue are required' }, 400);
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -36,6 +55,7 @@ async function handleSignup(request, env) {
     }
 
     const brokersPerEmail = Math.min(Math.max(parseInt(brokers_per_email) || 100, 10), 200);
+    const now = new Date().toISOString();
 
     // Check for existing subscriber
     const existing = await env.DB.prepare(
@@ -48,8 +68,13 @@ async function handleSignup(request, env) {
         // Reactivate and replace queue
         subscriberId = existing.id;
         await env.DB.prepare(
-            'UPDATE subscribers SET status = ?, brokers_per_email = ?, queue_position = 0, total_items = ?, rotation_count = 0, created_at = ? WHERE id = ?'
-        ).bind('active', brokersPerEmail, queue.length, new Date().toISOString(), subscriberId).run();
+            `UPDATE subscribers SET status = 'active', brokers_per_email = ?, queue_position = 0,
+             total_items = ?, rotation_count = 0, created_at = ?, privacy_news = ?,
+             subject = ?, body = ?, nc_subject = ?, nc_body = ? WHERE id = ?`
+        ).bind(
+            brokersPerEmail, queue.length, now, privacy_news ? 1 : 0,
+            subject, body, nc_subject, nc_body, subscriberId
+        ).run();
 
         // Clear old queue and sent log
         await env.DB.prepare('DELETE FROM queue_items WHERE subscriber_id = ?').bind(subscriberId).run();
@@ -57,22 +82,22 @@ async function handleSignup(request, env) {
     } else {
         subscriberId = generateId();
         await env.DB.prepare(
-            'INSERT INTO subscribers (id, email, brokers_per_email, queue_position, total_items, created_at, status) VALUES (?, ?, ?, 0, ?, ?, ?)'
-        ).bind(subscriberId, email, brokersPerEmail, queue.length, new Date().toISOString(), 'active').run();
+            `INSERT INTO subscribers (id, email, brokers_per_email, queue_position, total_items,
+             created_at, status, privacy_news, subject, body, nc_subject, nc_body)
+             VALUES (?, ?, ?, 0, ?, ?, 'active', ?, ?, ?, ?, ?)`
+        ).bind(
+            subscriberId, email, brokersPerEmail, queue.length, now,
+            privacy_news ? 1 : 0, subject, body, nc_subject, nc_body
+        ).run();
     }
 
-    // Insert queue items in batches of 50
+    // Insert queue items in batches of 50 (broker identity only — no PII)
     for (let i = 0; i < queue.length; i += 50) {
         const batch = queue.slice(i, i + 50);
         const stmts = batch.map((item, j) =>
             env.DB.prepare(
-                'INSERT INTO queue_items (subscriber_id, position, broker_id, broker_name, email_to, subject, body, nc_subject, nc_body) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-            ).bind(
-                subscriberId, i + j,
-                item.broker_id, item.broker_name, item.email_to,
-                item.subject, item.body,
-                item.nc_subject || '', item.nc_body || ''
-            )
+                'INSERT INTO queue_items (subscriber_id, position, broker_id, broker_name, email_to) VALUES (?, ?, ?, ?, ?)'
+            ).bind(subscriberId, i + j, item.broker_id, item.broker_name, item.email_to)
         );
         await env.DB.batch(stmts);
     }
@@ -87,11 +112,27 @@ async function handleUnsubscribe(request, env) {
     const { email } = await request.json();
     if (!email) return jsonResponse({ error: 'Email is required' }, 400);
 
-    await env.DB.prepare(
-        'UPDATE subscribers SET status = ? WHERE email = ?'
-    ).bind('inactive', email).run();
-
+    await deactivateSubscriber(env, email);
     return jsonResponse({ ok: true });
+}
+
+// Unsubscribe deletes everything except the email address itself, which is
+// kept (marked inactive) purely as a suppression record so we never email
+// that address again. The privacy policy promises this.
+async function deactivateSubscriber(env, email) {
+    const sub = await env.DB.prepare(
+        'SELECT id FROM subscribers WHERE email = ?'
+    ).bind(email).first();
+    if (!sub) return;
+
+    await env.DB.batch([
+        env.DB.prepare('DELETE FROM sent_log WHERE subscriber_id = ?').bind(sub.id),
+        env.DB.prepare('DELETE FROM queue_items WHERE subscriber_id = ?').bind(sub.id),
+        env.DB.prepare(
+            `UPDATE subscribers SET status = 'inactive', subject = '', body = '',
+             nc_subject = '', nc_body = '', queue_position = 0, total_items = 0 WHERE id = ?`
+        ).bind(sub.id),
+    ]);
 }
 
 async function handleStatus(request, env) {
@@ -164,12 +205,11 @@ async function sendBatchToSubscriber(env, subscriberId) {
     const complianceItems = await getComplianceItems(env, subscriberId, sub.rotation_count);
 
     // Build email HTML
-    const emailHtml = buildDripEmail(items.results, {
+    const emailHtml = buildDripEmail(items.results, sub, {
         batchNumber,
         totalBatches,
         queuePos,
         totalItems,
-        brokersPerEmail,
         complianceItems,
         unsubscribeUrl: `${getBaseUrl(env)}/api/unsubscribe`,
         subscriberEmail: sub.email,
@@ -226,7 +266,7 @@ async function handleQueueCompletion(env, sub) {
         const complianceItems = await getComplianceItems(env, sub.id, sub.rotation_count);
 
         if (complianceItems.length > 0) {
-            const emailHtml = buildComplianceOnlyEmail(complianceItems, {
+            const emailHtml = buildComplianceOnlyEmail(complianceItems, sub, {
                 daysSinceFirst,
                 unsubscribeUrl: `${getBaseUrl(env)}/api/unsubscribe`,
                 subscriberEmail: sub.email,
@@ -240,11 +280,11 @@ async function handleQueueCompletion(env, sub) {
     }
 }
 
-// --- Phase 4: Compliance reminders ---
+// --- Compliance reminders ---
 
 async function getComplianceItems(env, subscriberId, rotation) {
     const results = await env.DB.prepare(`
-        SELECT qi.broker_name, qi.email_to, qi.nc_subject, qi.nc_body, sl.sent_at
+        SELECT qi.broker_name, qi.email_to, sl.sent_at
         FROM sent_log sl
         JOIN queue_items qi ON sl.queue_item_id = qi.id
         WHERE sl.subscriber_id = ? AND sl.rotation = ?
@@ -270,16 +310,26 @@ function fillCompliancePlaceholders(text, sentAt) {
 
 // --- Email building ---
 
-function buildDripEmail(items, opts) {
+function chunkItems(items, size) {
+    const chunks = [];
+    for (let i = 0; i < items.length; i += size) {
+        chunks.push(items.slice(i, i + size));
+    }
+    return chunks;
+}
+
+function buildDripEmail(items, sub, opts) {
     const {
         batchNumber, totalBatches, queuePos, totalItems,
-        brokersPerEmail, complianceItems, unsubscribeUrl, subscriberEmail,
+        complianceItems, unsubscribeUrl, subscriberEmail,
     } = opts;
 
     const sentSoFar = queuePos + items.length;
     const progressPct = Math.round((sentSoFar / totalItems) * 100);
     const progressBarFilled = Math.round(progressPct / 5);
-    const progressBar = '\u2588'.repeat(progressBarFilled) + '\u2591'.repeat(20 - progressBarFilled);
+    const progressBar = '█'.repeat(progressBarFilled) + '░'.repeat(20 - progressBarFilled);
+
+    const chunks = chunkItems(items, MAX_BCC_PER_LINK);
 
     let html = `
 <!DOCTYPE html>
@@ -295,16 +345,31 @@ function buildDripEmail(items, opts) {
 </div>
 
 <div style="margin-bottom: 24px;">
-    <h2 style="font-size: 16px; font-weight: 600; margin: 0 0 12px;">Today's batch (${items.length} brokers)</h2>
-    <p style="font-size: 13px; color: #64748b; margin: 0 0 12px;">Click each button to open a pre-filled opt-out email in your email client.</p>
+    <h2 style="font-size: 16px; font-weight: 600; margin: 0 0 12px;">Today's batch (${items.length} brokers, ${chunks.length} email${chunks.length > 1 ? 's' : ''} to send)</h2>
+    <p style="font-size: 13px; color: #64748b; margin: 0 0 12px;">
+        Each button opens one pre-filled email in your mail client with up to ${MAX_BCC_PER_LINK} broker
+        addresses in BCC. Hit send, then move to the next button. If a button doesn't work in your
+        client, copy the addresses from the list below it into the BCC field manually.
+    </p>
 `;
 
-    for (const item of items) {
-        const mailtoLink = buildMailtoLink(item.email_to, item.subject, item.body);
+    let offset = queuePos;
+    for (const chunk of chunks) {
+        const bcc = chunk.map(item => item.email_to).join(',');
+        const mailtoLink = `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(sub.subject)}&body=${encodeURIComponent(sub.body)}`;
+        const start = offset + 1;
+        const end = offset + chunk.length;
+        offset = end;
+
         html += `
     <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px;">
-        <div style="font-weight: 500; margin-bottom: 6px;">${escHtml(item.broker_name)}</div>
-        <a href="${mailtoLink}" style="display: inline-block; padding: 8px 20px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">Send Opt-Out Email</a>
+        <div style="font-weight: 500; margin-bottom: 6px;">Brokers ${start}–${end}</div>
+        <a href="${mailtoLink}" style="display: inline-block; padding: 8px 20px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500;">Send to ${chunk.length} brokers (BCC)</a>
+        <div style="font-size: 12px; color: #64748b; margin-top: 8px;">${chunk.map(item => escHtml(item.broker_name)).join(', ')}</div>
+        <details style="margin-top: 8px;">
+            <summary style="font-size: 12px; color: #64748b; cursor: pointer;">Copy BCC addresses manually</summary>
+            <div style="font-family: monospace; font-size: 11px; color: #475569; word-break: break-all; padding: 8px; background: #f8fafc; border-radius: 4px; margin-top: 4px;">${escHtml(bcc)}</div>
+        </details>
     </div>`;
     }
 
@@ -312,13 +377,14 @@ function buildDripEmail(items, opts) {
 
     // Compliance section
     if (complianceItems && complianceItems.length > 0) {
-        html += buildComplianceSection(complianceItems);
+        html += buildComplianceSection(complianceItems, sub);
     }
 
     // Footer
     html += `
 <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
-    <p>You're receiving this because you signed up for DataPurge daily opt-out emails.</p>
+    <p>You're receiving this because you signed up for DataPurge daily opt-out reminders.
+    We only ever email you — opt-out requests are sent by you, from your own email account.</p>
     <p><a href="${unsubscribeUrl}?email=${encodeURIComponent(subscriberEmail)}" style="color: #64748b;">Unsubscribe</a></p>
 </div>
 
@@ -328,7 +394,7 @@ function buildDripEmail(items, opts) {
     return html;
 }
 
-function buildComplianceSection(complianceItems) {
+function buildComplianceSection(complianceItems, sub) {
     let html = `
 <div style="border: 2px solid #dc2626; border-radius: 8px; padding: 16px; margin-bottom: 24px; background: #fef2f2;">
     <h2 style="font-size: 16px; font-weight: 600; color: #dc2626; margin: 0 0 8px;">
@@ -356,9 +422,9 @@ function buildComplianceSection(complianceItems) {
         });
 
         let mailtoLink = '#';
-        if (item.nc_subject && item.nc_body) {
-            const filledSubject = fillCompliancePlaceholders(item.nc_subject, item.sent_at);
-            const filledBody = fillCompliancePlaceholders(item.nc_body, item.sent_at);
+        if (sub.nc_subject && sub.nc_body) {
+            const filledSubject = fillCompliancePlaceholders(sub.nc_subject, item.sent_at);
+            const filledBody = fillCompliancePlaceholders(sub.nc_body, item.sent_at);
             mailtoLink = buildMailtoLink(item.email_to, filledSubject, filledBody);
         }
 
@@ -385,7 +451,7 @@ function buildComplianceSection(complianceItems) {
     return html;
 }
 
-function buildComplianceOnlyEmail(complianceItems, opts) {
+function buildComplianceOnlyEmail(complianceItems, sub, opts) {
     const { daysSinceFirst, unsubscribeUrl, subscriberEmail } = opts;
     const daysUntilReset = 45 - daysSinceFirst;
 
@@ -403,11 +469,12 @@ function buildComplianceOnlyEmail(complianceItems, opts) {
 </div>
 `;
 
-    html += buildComplianceSection(complianceItems);
+    html += buildComplianceSection(complianceItems, sub);
 
     html += `
 <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8;">
-    <p>You're receiving this because you signed up for DataPurge daily opt-out emails.</p>
+    <p>You're receiving this because you signed up for DataPurge daily opt-out reminders.
+    We only ever email you — opt-out requests are sent by you, from your own email account.</p>
     <p><a href="${unsubscribeUrl}?email=${encodeURIComponent(subscriberEmail)}" style="color: #64748b;">Unsubscribe</a></p>
 </div>
 
@@ -486,9 +553,7 @@ export default {
                 // Handle unsubscribe from email link (GET with ?email=)
                 const email = url.searchParams.get('email');
                 if (email) {
-                    await env.DB.prepare(
-                        'UPDATE subscribers SET status = ? WHERE email = ?'
-                    ).bind('inactive', email).run();
+                    await deactivateSubscriber(env, email);
                     return new Response(
                         '<html><body style="font-family:sans-serif;text-align:center;padding:4rem;"><h2>Unsubscribed</h2><p>You will no longer receive DataPurge emails.</p></body></html>',
                         { status: 200, headers: { 'Content-Type': 'text/html' } }

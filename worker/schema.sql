@@ -1,5 +1,10 @@
 -- DataPurge Drip Service — D1 Schema
 -- Run: wrangler d1 execute datapurge-drip --file=schema.sql
+--
+-- The opt-out email text (subject/body) is shared across all brokers in a
+-- subscriber's queue and stored ONCE on the subscriber row — queue items
+-- hold only broker identity + address. This keeps the PII footprint minimal:
+-- one copy of the filled template per subscriber, not 700.
 
 CREATE TABLE IF NOT EXISTS subscribers (
     id TEXT PRIMARY KEY,
@@ -10,7 +15,12 @@ CREATE TABLE IF NOT EXISTS subscribers (
     created_at TEXT NOT NULL,
     last_sent_at TEXT,
     status TEXT NOT NULL DEFAULT 'active',
-    rotation_count INTEGER NOT NULL DEFAULT 0
+    rotation_count INTEGER NOT NULL DEFAULT 0,
+    privacy_news INTEGER NOT NULL DEFAULT 0,
+    subject TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    nc_subject TEXT NOT NULL DEFAULT '',
+    nc_body TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS queue_items (
@@ -20,10 +30,6 @@ CREATE TABLE IF NOT EXISTS queue_items (
     broker_id TEXT NOT NULL,
     broker_name TEXT NOT NULL,
     email_to TEXT NOT NULL,
-    subject TEXT NOT NULL,
-    body TEXT NOT NULL,
-    nc_subject TEXT NOT NULL DEFAULT '',
-    nc_body TEXT NOT NULL DEFAULT '',
     first_sent_at TEXT,
     FOREIGN KEY (subscriber_id) REFERENCES subscribers(id)
 );
