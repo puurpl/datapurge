@@ -63,17 +63,22 @@ async function handleSignup(request, env) {
     ).bind(email).first();
 
     let subscriberId;
+    // Double opt-in: nothing beyond a single confirmation email is sent
+    // until the address owner clicks the confirm link. An already-active
+    // subscriber re-signing has proven the address, so they stay active.
+    const alreadyConfirmed = existing && existing.status === 'active';
+    const confirmToken = alreadyConfirmed ? null : generateId();
+    const status = alreadyConfirmed ? 'active' : 'pending';
 
     if (existing) {
-        // Reactivate and replace queue
         subscriberId = existing.id;
         await env.DB.prepare(
-            `UPDATE subscribers SET status = 'active', brokers_per_email = ?, queue_position = 0,
+            `UPDATE subscribers SET status = ?, brokers_per_email = ?, queue_position = 0,
              total_items = ?, rotation_count = 0, created_at = ?, privacy_news = ?,
-             subject = ?, body = ?, nc_subject = ?, nc_body = ? WHERE id = ?`
+             subject = ?, body = ?, nc_subject = ?, nc_body = ?, confirm_token = ? WHERE id = ?`
         ).bind(
-            brokersPerEmail, queue.length, now, privacy_news ? 1 : 0,
-            subject, body, nc_subject, nc_body, subscriberId
+            status, brokersPerEmail, queue.length, now, privacy_news ? 1 : 0,
+            subject, body, nc_subject, nc_body, confirmToken, subscriberId
         ).run();
 
         // Clear old queue and sent log
@@ -83,11 +88,11 @@ async function handleSignup(request, env) {
         subscriberId = generateId();
         await env.DB.prepare(
             `INSERT INTO subscribers (id, email, brokers_per_email, queue_position, total_items,
-             created_at, status, privacy_news, subject, body, nc_subject, nc_body)
-             VALUES (?, ?, ?, 0, ?, ?, 'active', ?, ?, ?, ?, ?)`
+             created_at, status, privacy_news, subject, body, nc_subject, nc_body, confirm_token)
+             VALUES (?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
         ).bind(
-            subscriberId, email, brokersPerEmail, queue.length, now,
-            privacy_news ? 1 : 0, subject, body, nc_subject, nc_body
+            subscriberId, email, brokersPerEmail, queue.length, now, status,
+            privacy_news ? 1 : 0, subject, body, nc_subject, nc_body, confirmToken
         ).run();
     }
 
@@ -102,10 +107,59 @@ async function handleSignup(request, env) {
         await env.DB.batch(stmts);
     }
 
-    // Send first batch immediately
-    await sendBatchToSubscriber(env, subscriberId);
+    if (alreadyConfirmed) {
+        // Address already proven — start (or restart) immediately
+        await sendBatchToSubscriber(env, subscriberId);
+    } else {
+        await sendEmail(env, email, 'DataPurge — Confirm your email',
+            buildConfirmEmail(`${getBaseUrl(env)}/api/confirm?token=${confirmToken}`, queue.length));
+    }
 
-    return jsonResponse({ ok: true, subscriber_id: subscriberId, total_items: queue.length });
+    return jsonResponse({
+        ok: true,
+        subscriber_id: subscriberId,
+        total_items: queue.length,
+        confirmation_required: !alreadyConfirmed,
+    });
+}
+
+async function handleConfirm(env, token) {
+    if (!token) return null;
+    const sub = await env.DB.prepare(
+        "SELECT id FROM subscribers WHERE confirm_token = ? AND status = 'pending'"
+    ).bind(token).first();
+    if (!sub) return null;
+
+    await env.DB.prepare(
+        "UPDATE subscribers SET status = 'active', confirm_token = NULL WHERE id = ?"
+    ).bind(sub.id).run();
+
+    // Send the first batch right away as the confirmation payoff
+    await sendBatchToSubscriber(env, sub.id);
+    return sub.id;
+}
+
+function buildConfirmEmail(confirmUrl, totalItems) {
+    return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 24px; color: #0f172a; background: #ffffff;">
+<h1 style="font-size: 20px; font-weight: 600; margin: 0 0 12px;">Confirm your DataPurge signup</h1>
+<p style="color: #475569; font-size: 14px;">
+    Someone (hopefully you) asked DataPurge to send this address daily opt-out reminder
+    emails covering ${totalItems} data brokers. Confirm to start — your first batch
+    arrives immediately.
+</p>
+<p style="margin: 24px 0;">
+    <a href="${confirmUrl}" style="display: inline-block; padding: 10px 24px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 15px; font-weight: 500;">Confirm and start</a>
+</p>
+<p style="color: #94a3b8; font-size: 12px;">
+    If this wasn't you, ignore this email — nothing else will be sent to this address,
+    and the signup data is deleted automatically.
+</p>
+</body>
+</html>`;
 }
 
 async function handleUnsubscribe(request, env) {
@@ -160,6 +214,16 @@ async function handleStatus(request, env) {
 // --- Daily cron: send next batch to each active subscriber ---
 
 async function handleCron(env) {
+    // Purge unconfirmed signups after 7 days (the confirmation email
+    // promises this) — queue first, then the subscriber rows
+    await env.DB.prepare(`
+        DELETE FROM queue_items WHERE subscriber_id IN
+        (SELECT id FROM subscribers WHERE status = 'pending' AND created_at < datetime('now', '-7 days'))
+    `).run();
+    await env.DB.prepare(
+        "DELETE FROM subscribers WHERE status = 'pending' AND created_at < datetime('now', '-7 days')"
+    ).run();
+
     const subscribers = await env.DB.prepare(
         "SELECT * FROM subscribers WHERE status = 'active'"
     ).all();
@@ -560,6 +624,15 @@ export default {
                     );
                 }
                 return jsonResponse({ error: 'Email parameter required' }, 400);
+            }
+            if (path === '/api/confirm' && request.method === 'GET') {
+                const confirmed = await handleConfirm(env, url.searchParams.get('token'));
+                return new Response(
+                    confirmed
+                        ? '<html><body style="font-family:sans-serif;text-align:center;padding:4rem;"><h2>Confirmed!</h2><p>Your first batch of opt-out emails is on its way. One email per day until every broker is covered.</p></body></html>'
+                        : '<html><body style="font-family:sans-serif;text-align:center;padding:4rem;"><h2>Link expired or already used</h2><p>Sign up again at datapurge.iamnottheproduct.com if you still want the reminders.</p></body></html>',
+                    { status: confirmed ? 200 : 404, headers: { 'Content-Type': 'text/html' } }
+                );
             }
             if (path === '/api/status' && request.method === 'GET') {
                 return await handleStatus(request, env);
