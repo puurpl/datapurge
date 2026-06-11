@@ -2,6 +2,10 @@ name = "datapurge-drip"
 main = "src/index.js"
 compatibility_date = "2024-12-01"
 
+routes = [
+    { pattern = "drip.datapurge.iamnottheproduct.com", custom_domain = true }
+]
+
 [triggers]
 crons = ["0 8 * * *"]
 

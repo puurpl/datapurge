@@ -411,7 +411,7 @@ function renderDripSignup(container, mass) {
             <div style="margin-bottom: 1rem;">
                 <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer; font-size: 0.875rem;">
                     <input type="checkbox" id="drip-news" style="margin-top: 0.2rem;">
-                    <span class="text-secondary">Also send me occasional updates about online privacy news and DataPurge features (optional)</span>
+                    <span class="text-secondary">Also send me occasional updates about online privacy news, DataPurge features, and related privacy services we offer (optional)</span>
                 </label>
             </div>
             <div id="drip-error" class="text-sm" style="color: var(--color-danger); display: none; margin-bottom: 0.75rem;"></div>
@@ -508,15 +508,28 @@ function renderDripSignup(container, mass) {
             saveDripSignup({ email, brokers_per_email: brokersPerEmail, privacy_news: privacyNews, signedUpAt: new Date().toISOString() });
 
             // Replace form with confirmation
+            const data = await resp.json().catch(() => ({}));
             card.className = 'card drip-confirmation mb-2';
-            card.innerHTML = `
+            card.innerHTML = data.confirmation_required === false ? `
                 <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
                 <h3 style="margin-bottom: 0.5rem;">You're signed up!</h3>
                 <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
-                    We'll send you one email per day with ready-to-send BCC batches covering
-                    50&ndash;100 brokers each. You send every opt-out from your own email account
-                    &mdash; we never email brokers for you. Once all <strong>${queue.length}</strong>
-                    brokers are covered, the cycle restarts every 45 days with compliance reminders.
+                    Your first batch is on its way. We'll send you one email per day with
+                    ready-to-send BCC batches covering 50&ndash;100 brokers each. You send every
+                    opt-out from your own email account &mdash; we never email brokers for you.
+                    Once all <strong>${queue.length}</strong> brokers are covered, the cycle
+                    restarts every 45 days with compliance reminders.
+                </p>
+            ` : `
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
+                <h3 style="margin-bottom: 0.5rem;">Check your inbox</h3>
+                <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
+                    We've sent a confirmation link to <strong>${esc(email)}</strong>. Click it to
+                    start &mdash; your first batch of opt-out links arrives immediately after.
+                    We'll then send one email per day until all <strong>${queue.length}</strong>
+                    brokers are covered, restarting every 45 days with compliance reminders.
+                    You send every opt-out from your own email account &mdash; we never email
+                    brokers for you.
                 </p>
             `;
         } catch (err) {
