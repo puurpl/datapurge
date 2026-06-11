@@ -132,9 +132,10 @@
                   "properties": {
                     "action": {
                       "type": "string",
+                      "description": "Step action. 'captcha' means pause and hand the challenge to the human — automation must never attempt to solve or bypass anti-bot measures.",
                       "enum": [
                         "navigate", "input", "click", "select", "submit",
-                        "wait_for", "verify_email", "captcha", "solve_captcha",
+                        "wait_for", "verify_email", "captcha",
                         "upload", "checkbox", "confirm", "copy_url", "redirect",
                         "redirect_notice", "scroll_to_footer", "select_listing",
                         "select_reason", "search_and_select", "open_app", "sms_verify"

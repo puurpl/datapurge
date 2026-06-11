@@ -45,7 +45,7 @@ datapurge/
 - **Legal templates are thorough and assertive.** Every template includes
   consent withdrawal, disclosure demands, dual-jurisdiction coverage, and paper trails.
 - **Preemptive requests are the default.** Don't wait to confirm presence — send
-  deletion demands to every broker regardless. This makes coverage complete.
+  deletion requests to every broker so coverage is complete.
 - **Multi-profile support.** Users can manage separate identities with independent progress.
 
 ## Template Selection Logic
@@ -93,6 +93,9 @@ python -c "from server.registry import BrokerRegistry; BrokerRegistry().export_j
 
 - All functionality must work in a static site context (no server-side logic)
 - Email-based methods are preferred because they create paper trails
+- Any browser automation (current or future) must pause and hand control to the
+  human at every captcha or anti-bot challenge — never attempt to solve or
+  circumvent them. The `captcha` step action means exactly that.
 - Every broker contact should include consent withdrawal language
 - Templates should reference every plausibly applicable law
 - Test broker YAML files against the JSON Schema before committing
@@ -100,8 +103,11 @@ python -c "from server.registry import BrokerRegistry; BrokerRegistry().export_j
 
 ## Strategic Notes
 
-The goal is to support the thorough, well-documented exercise of privacy rights.
-Every paper trail records your wishes.
-Every consent withdrawal may become legally enforceable as laws change.
-Volume matters — even if individual requests are ignored, the aggregate
-coverage of hundreds of brokers makes your rights real.
+The goal is the thorough, well-documented exercise of privacy rights.
+Every request creates a paper trail the user can rely on later. Every
+consent withdrawal puts the user's wishes on the record and may become
+enforceable as laws evolve. Volume matters because coverage matters —
+a user's data should be gone from every broker, not just the handful
+they happened to know about. Requests must always be genuine exercises
+of the user's own rights: documented, legally grounded, and tracked
+to completion.

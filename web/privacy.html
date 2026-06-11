@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — DataPurge</title>
+    <meta name="description" content="DataPurge's privacy policy: your personal information stays in your browser. The only data we ever hold is what you give the optional email reminder service.">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://datapurge.iamnottheproduct.com/privacy.html">
+
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav class="nav" aria-label="Main navigation">
+            <div class="nav-inner">
+                <a href="/" class="nav-brand">DataPurge</a>
+                <div class="nav-tabs">
+                    <a href="about.html" class="nav-tab">About</a>
+                    <a href="app.html" class="nav-tab">Start</a>
+                    <a href="app.html#brokers" class="nav-tab">Brokers</a>
+                    <a href="donate.html" class="nav-tab">Donate</a>
+                    <a href="https://github.com/puurpl/datapurge" class="nav-tab" target="_blank" rel="noopener">GitHub</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Privacy Policy</h1>
+                <p class="subtitle">
+                    A privacy tool should be able to explain its own data handling in one page.
+                    Here it is. Last updated: June 10, 2026.
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container-narrow">
+                <h2>The short version</h2>
+                <p class="text-secondary mt-1 mb-2">
+                    Everything you type into DataPurge stays in your browser. The site has no
+                    accounts, no analytics scripts, no tracking pixels, and no third-party
+                    embeds. The only personal data we ever hold is what you explicitly give
+                    the optional email reminder service — and you can delete that at any time.
+                </p>
+
+                <h2 class="mt-3">Using the app</h2>
+                <p class="text-secondary mt-1">
+                    Your profile (name, email, address, date of birth, and any other fields you
+                    fill in) is stored in your browser's <code>localStorage</code> on your device.
+                    It is never transmitted to us. Opt-out emails are assembled locally in your
+                    browser and sent from your own email client — DataPurge never sees them.
+                    Clearing your browser data or using the in-app profile controls removes it.
+                </p>
+                <p class="text-secondary mt-1">
+                    One practical note: because your data lives in <code>localStorage</code>
+                    unencrypted, treat shared or public computers with care — use a private
+                    window or delete your profile when you're done.
+                </p>
+
+                <h2 class="mt-3">The optional email reminder service ("drip")</h2>
+                <p class="text-secondary mt-1">
+                    If you sign up for daily opt-out reminder emails, we store the minimum needed
+                    to build them:
+                </p>
+                <ul class="text-secondary mt-1">
+                    <li>your signup email address;</li>
+                    <li>one copy of your filled opt-out text (which contains the personal details you chose to include, such as your name and location);</li>
+                    <li>the list of brokers in your queue and a log of which reminder emails we've sent you;</li>
+                    <li>whether you opted into occasional project news.</li>
+                </ul>
+                <p class="text-secondary mt-1">
+                    These reminder emails go to <strong>you and only you</strong>. We never email
+                    brokers on your behalf — every opt-out request is sent by you, from your own
+                    email account.
+                </p>
+                <p class="text-secondary mt-1">
+                    When you unsubscribe (one click in any email), we immediately delete your
+                    opt-out text, broker queue, and send history. We keep only your email
+                    address, marked inactive, so we never email you again. If you want even
+                    that removed, open a GitHub issue or contact us and we'll erase it.
+                </p>
+
+                <h2 class="mt-3">Infrastructure</h2>
+                <p class="text-secondary mt-1">
+                    The site is served by Cloudflare Pages, and the reminder service runs on
+                    Cloudflare Workers with data stored in Cloudflare D1. Reminder emails are
+                    delivered through Resend. Like any host, these providers process standard
+                    connection logs (such as IP addresses) to serve and protect the site; we
+                    add no logging of our own and have no analytics.
+                </p>
+
+                <h2 class="mt-3">Not legal advice</h2>
+                <p class="text-secondary mt-1">
+                    DataPurge generates request letters that cite privacy laws, and helps you
+                    track responses. This is information and tooling, not legal advice, and
+                    using DataPurge does not create an attorney–client relationship. Laws vary
+                    by jurisdiction and change over time; for advice about your specific
+                    situation, consult a lawyer.
+                </p>
+
+                <h2 class="mt-3">Changes & contact</h2>
+                <p class="text-secondary mt-1">
+                    This policy is versioned in the open-source repository alongside the code
+                    that implements it — you can verify every claim on
+                    <a href="https://github.com/puurpl/datapurge" target="_blank" rel="noopener">GitHub</a>.
+                    Questions or deletion requests: open an issue on the repository.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="about.html">About</a>
+                <a href="donate.html">Donate</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="https://github.com/puurpl/datapurge" target="_blank" rel="noopener">GitHub</a>
+            </div>
+            <p>MIT License &mdash; Broker data is CC0 public domain. Built to put you back in control of your data.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

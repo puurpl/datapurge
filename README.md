@@ -20,9 +20,9 @@ Your data never touches any server — all template filling happens client-side 
 
 ## Philosophy
 
-Data brokers profit from an asymmetry: it's trivially easy for them to collect your data and brutally hard for you to get it removed. DataPurge flips that. Every request you send is documented and tracked. Every documented request creates a paper trail. Every explicit withdrawal of consent puts your wishes on the record as privacy laws evolve.
+Data brokers profit from an asymmetry: it's trivially easy for them to collect your data and brutally hard for you to get it removed. DataPurge closes that gap. Every request you send is documented, legally cited, and tracked to a deadline. Every explicit withdrawal of consent puts your wishes on the record as privacy laws evolve.
 
-We don't wait to confirm presence. We send deletion requests to every broker. We cite every applicable law. We track every deadline.
+We don't wait to confirm presence. We send deletion requests to every broker, cite the laws that protect you, and follow up until they comply — so your data is actually gone, not just from the brokers you happened to know about.
 
 ## How It Works
 
@@ -125,6 +125,15 @@ brokers/                      YAML broker definitions (the core asset)
 templates/                    Legal email templates (templates.yaml)
 server/                       Python backend (registry, templates, build tooling)
 ```
+
+## Disclaimer
+
+DataPurge provides information and tooling to help you exercise your own privacy
+rights. It is not legal advice, and using it does not create an attorney–client
+relationship. Laws vary by jurisdiction and change over time — for advice about
+your specific situation, consult a lawyer. See the
+[privacy policy](https://datapurge.iamnottheproduct.com/privacy.html) for exactly
+what data the project does (and doesn't) handle.
 
 ## Acknowledgements
 

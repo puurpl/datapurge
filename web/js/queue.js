@@ -338,13 +338,16 @@ function renderDripSignup(container, mass) {
                 </div>
             </div>
             <p class="text-secondary mb-2" style="max-width: none;">
-                We're building an email service that sends you one email per day with
-                pre-filled opt-out links for 50&ndash;100 brokers at a time. Just click each link to
-                send from your own email client. Once all ${mass.count} brokers are covered,
-                the cycle restarts every 45 days with follow-up compliance reminders.
+                We're building a reminder service that sends you one email per day with
+                ready-to-send BCC batches covering 50&ndash;100 brokers at a time. You click
+                each button and send from your own email client &mdash; we never email
+                brokers for you. Once all ${mass.count} brokers are covered, the cycle
+                restarts every 45 days with follow-up compliance reminders.
             </p>
             <p class="text-secondary text-sm mb-2" style="max-width: none;">
-                We securely store your data (name, email, location) and use it only for sending the requested opt-out emails. Nothing else.
+                We store your signup email, one copy of your filled opt-out text, and the broker
+                list &mdash; used only to build your reminder emails. Nothing else. See the
+                <a href="privacy.html">privacy policy</a>.
             </p>
             <button class="btn btn-primary" disabled style="width: 100%; opacity: 0.6; cursor: not-allowed;">
                 Coming Soon
@@ -365,12 +368,13 @@ function renderDripSignup(container, mass) {
             </div>
         </div>
         <p class="text-secondary mb-2" style="max-width: none;">
-            We'll send you one email per day with pre-filled opt-out links for
-            50&ndash;100 brokers at a time &mdash; just click each link to send from your own
-            email client. Once all brokers are covered, the cycle restarts every
-            45 days with follow-up compliance reminders. We securely store your
-            data (name, email, location) and use it only for sending the requested
-            opt-out emails. Nothing else.
+            We'll send you one email per day with ready-to-send BCC batches covering
+            50&ndash;100 brokers at a time &mdash; you click each button and send from your
+            own email client. We never email brokers for you. Once all brokers are
+            covered, the cycle restarts every 45 days with follow-up compliance
+            reminders. We store your signup email, one copy of your filled opt-out
+            text, and the broker list &mdash; used only to build your reminder emails.
+            See the <a href="privacy.html">privacy policy</a>.
         </p>
 
         <form id="drip-signup-form">
@@ -450,39 +454,49 @@ function renderDripSignup(container, mass) {
             const userCountry = piiData.country || 'US';
             const userState = state || piiData.state || '';
 
-            // Generate all broker emails client-side
+            // One shared opt-out text for the whole queue (mass-mode style):
+            // the worker stores a single copy of the filled template and BCCs
+            // each batch, instead of holding a per-broker copy of the PII.
+            const genericBroker = { name: 'your organization', domain: '', legal: { ccpa: true } };
+            const templateId = Templates.selectBestTemplate(userState, userCountry, genericBroker);
+            const filled = Templates.fill(templateId, fields, genericBroker);
+            if (!filled) throw new Error('Could not generate the opt-out template.');
+
+            // Shared noncompliance notice with date placeholders preserved
+            // (the worker fills the dates per broker at reminder time)
+            const ncFields = {
+                ...fields,
+                original_request_date: '{original_request_date}',
+                days_elapsed: '{days_elapsed}',
+                legal_deadline_days: '45',
+            };
+            const nc = Templates.fill('noncompliance_notice', ncFields, genericBroker);
+
+            // Queue holds broker identity only — no PII
             const queue = emailableBrokers.map(broker => {
                 const method = getEmailMethod(broker);
-                const templateId = Templates.selectBestTemplate(userState, userCountry, broker);
-                const filled = Templates.fill(templateId, fields, broker);
-                if (!filled) return null;
-
-                // Pre-generate noncompliance notice with date placeholders preserved
-                const ncFields = {
-                    ...fields,
-                    original_request_date: '{original_request_date}',
-                    days_elapsed: '{days_elapsed}',
-                    legal_deadline_days: '45',
-                };
-                const nc = Templates.fill('noncompliance_notice', ncFields, broker);
-
                 return {
                     broker_id: broker.id,
                     broker_name: broker.name,
                     email_to: method.email_to,
-                    subject: filled.subject,
-                    body: filled.body,
-                    nc_subject: nc?.subject || '',
-                    nc_body: nc?.body || '',
                 };
-            }).filter(Boolean);
+            });
 
             submitBtn.textContent = `Uploading ${queue.length} items...`;
 
             const resp = await fetch(`${DRIP_API_URL}/api/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, brokers_per_email: brokersPerEmail, privacy_news: privacyNews, queue }),
+                body: JSON.stringify({
+                    email,
+                    brokers_per_email: brokersPerEmail,
+                    privacy_news: privacyNews,
+                    subject: filled.subject,
+                    body: filled.body,
+                    nc_subject: nc?.subject || '',
+                    nc_body: nc?.body || '',
+                    queue,
+                }),
             });
 
             if (!resp.ok) {
@@ -499,9 +513,10 @@ function renderDripSignup(container, mass) {
                 <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#9993;</div>
                 <h3 style="margin-bottom: 0.5rem;">You're signed up!</h3>
                 <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
-                    We'll send you one email per day with opt-out links for 50&ndash;100 brokers.
-                    Once all <strong>${queue.length}</strong> brokers are covered, the cycle restarts
-                    every 45 days with compliance reminders.
+                    We'll send you one email per day with ready-to-send BCC batches covering
+                    50&ndash;100 brokers each. You send every opt-out from your own email account
+                    &mdash; we never email brokers for you. Once all <strong>${queue.length}</strong>
+                    brokers are covered, the cycle restarts every 45 days with compliance reminders.
                 </p>
             `;
         } catch (err) {
@@ -513,12 +528,35 @@ function renderDripSignup(container, mass) {
     });
 }
 
+function renderDropCallout(container) {
+    const pii = Store.getPII();
+    if ((pii?.state || '').toLowerCase() !== 'california') return;
+
+    const card = document.createElement('div');
+    card.className = 'card mb-2';
+    card.innerHTML = `
+        <h3 style="margin-bottom: 0.5rem;">&#127796; You're in California — start with DROP</h3>
+        <p class="text-secondary text-sm" style="max-width: none;">
+            California's privacy regulator runs <strong>DROP</strong>: one free, verified request
+            that orders every data broker registered in California to delete your data. Registered
+            brokers must process DROP requests starting <strong>August 1, 2026</strong>, with 90 days
+            to act. Submit that first, then use the queue below for what DROP doesn't cover —
+            unregistered brokers, disclosure of what they held, and your own dated paper trail.
+        </p>
+        <a href="https://privacy.ca.gov/drop/" target="_blank" rel="noopener" class="btn btn-outline btn-sm mt-1">Open privacy.ca.gov/drop</a>
+    `;
+    container.appendChild(card);
+}
+
 function renderMassMode(container) {
     const mass = buildMassEmail();
     if (!mass) return;
 
     // Clear container for fresh render
     container.innerHTML = '';
+
+    // California residents: point at the state's official deletion platform first
+    renderDropCallout(container);
 
     // Drip signup at the top
     renderDripSignup(container, mass);
@@ -559,6 +597,13 @@ function renderProviderPicker(container, mass) {
                 <strong>${esc(mass.templateName)}</strong> — the strongest legal template for your
                 location. Every provider limits how many BCC recipients you can include per email,
                 so we'll split them into batches for you.
+            </p>
+            <p class="text-sm text-secondary mt-1" style="max-width: none;">
+                <strong>Worth knowing:</strong> a preemptive request shares the details in your
+                request with brokers that may not have had them. That's the trade-off for complete
+                coverage. To track who mishandles your request, consider adding a dedicated email
+                alias under <em>Additional Email Addresses</em> in your profile — it'll be included
+                in the deletion demand, and you'll know exactly where any mail to it came from.
             </p>
         </div>
 

@@ -1595,7 +1595,7 @@
                 "description": "Enter your name as it appears on the listing"
               },
               {
-                "action": "solve_captcha",
+                "action": "captcha",
                 "description": "Complete the CAPTCHA verification"
               },
               {
@@ -7969,7 +7969,7 @@
                 "description": "In the message field, include your phone number, name, address, and profile URL"
               },
               {
-                "action": "solve_captcha",
+                "action": "captcha",
                 "description": "Complete the CAPTCHA"
               },
               {
@@ -36061,7 +36061,7 @@
                 "description": "Enter your profile URL or unique ID"
               },
               {
-                "action": "solve_captcha",
+                "action": "captcha",
                 "description": "Complete the CAPTCHA"
               },
               {
@@ -51496,7 +51496,7 @@
                 "description": "Enter your email address"
               },
               {
-                "action": "solve_captcha",
+                "action": "captcha",
                 "description": "Complete the reCAPTCHA challenge"
               },
               {
