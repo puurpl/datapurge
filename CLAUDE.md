@@ -76,7 +76,11 @@ After adding/modifying brokers, run `python3 build.py` to regenerate `web/data/r
 
 ```bash
 # Rebuild data files after editing brokers/ or templates/
+# (also re-stamps the sw.js cache name from a content hash of web/)
 pip install pyyaml && python3 build.py
+
+# Run the test suite (registry integrity, schema validation, template logic)
+pip install pytest jsonschema && python3 -m pytest
 
 # Serve locally
 cd web && python3 -m http.server 8080

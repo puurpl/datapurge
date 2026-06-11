@@ -29,6 +29,7 @@ client = [
 dev = [
     "pytest>=8.0",
     "ruff>=0.5.0",
+    "jsonschema>=4.20",
 ]
 
 [project.scripts]

@@ -1,9 +1,11 @@
-const CACHE_NAME = 'datapurge-v6';
+const CACHE_NAME = 'datapurge-3b241e0f2b';
 const ASSETS = [
     '/',
     '/index.html',
     '/app.html',
     '/embed.html',
+    '/about.html',
+    '/donate.html',
     '/css/style.css',
     '/js/app.js',
     '/js/store.js',
@@ -14,9 +16,14 @@ const ASSETS = [
     '/js/progress.js',
     '/js/share.js',
     '/js/stats.js',
+    '/js/pwa.js',
     '/data/registry.json',
     '/data/templates.json',
     '/icon.svg',
+    '/icon-192.png',
+    '/icon-512.png',
+    '/icon-maskable-512.png',
+    '/apple-touch-icon.png',
     '/manifest.json',
 ];
 

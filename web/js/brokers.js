@@ -74,6 +74,7 @@ function renderBrokerCard(broker) {
                     ${broker.domain ? `<div class="broker-card-domain">${esc(broker.domain)}</div>` : ''}
                 </div>
                 <div class="flex gap-1">
+                    ${broker.meta?.defunct ? '<span class="badge badge-defunct">defunct</span>' : ''}
                     <span class="badge">${esc(catLabel)}</span>
                     <span class="badge badge-${difficulty === 'easy' ? 'success' : difficulty === 'hard' || difficulty === 'very_hard' ? 'overdue' : 'secondary'}">${esc(difficulty)}</span>
                 </div>
@@ -83,6 +84,7 @@ function renderBrokerCard(broker) {
             </div>
             <div class="broker-card-details" id="details-${esc(broker.id)}">
                 <div class="text-sm">
+                    ${broker.meta?.defunct && broker.meta?.notes ? `<p class="text-muted"><strong>Defunct:</strong> ${esc(broker.meta.notes)}</p>` : ''}
                     ${broker.data_types && broker.data_types.length
                         ? `<p><strong>Data collected:</strong></p>
                            <div class="tag-list mb-1" style="gap:0.375rem;">${broker.data_types.slice(0, 12).map(t => `<span class="tag">${esc(t.replace(/-/g, ' '))}</span>`).join('')}${broker.data_types.length > 12 ? `<span class="tag">+${broker.data_types.length - 12}</span>` : ''}</div>`
@@ -123,8 +125,9 @@ export const Brokers = {
                 <div class="empty-state">
                     <h3>Unable to load broker data</h3>
                     <p>Please check your connection and reload the page.</p>
-                    <button class="btn btn-outline mt-2" onclick="location.reload()">Reload</button>
+                    <button class="btn btn-outline mt-2" data-action="reload">Reload</button>
                 </div>`;
+            container.querySelector('[data-action="reload"]').addEventListener('click', () => location.reload());
             return;
         }
 

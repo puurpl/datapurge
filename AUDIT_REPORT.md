@@ -42,17 +42,23 @@ These issues would cause errors in application logic or deliver incorrect inform
 
 **Fix:** Either rename the directory to `data-aggregator` (singular) or update all 35 files to use `category: data-aggregators` (plural). The latter is recommended since the directory name is the canonical reference.
 
+> **RESOLVED 2026-06-10:** Directory renamed to `brokers/data-aggregator/` (singular). Singular won — contrary to the audit's suggestion — because the schema enum and every file's `category:` field already use the singular form; only the directory was the outlier. `import_ca_registry.py`'s plural mapping was removed, and a regression test (`tests/test_registry.py::test_category_matches_directory`) now enforces dir == category.
+
 ### CRITICAL-02: MediaMath is defunct -- filed for bankruptcy June 2023
 
 `brokers/data-aggregators/mediamath.yaml` lists MediaMath as an active data broker with opt-out URLs at `mediamath.com`. However, MediaMath filed for Chapter 11 bankruptcy on June 30, 2023, shut down all operations, and was subsequently acquired by Infillion in August 2023 for $22 million. The domain, opt-out portal, and privacy email (`privacy@mediamath.com`) are almost certainly non-functional.
 
 **Fix:** Either remove `mediamath.yaml` entirely, or update it to reflect the Infillion acquisition with correct opt-out information, and mark it with a prominent warning that the original company no longer exists.
 
+> **RESOLVED 2026-06-10:** `mediamath.yaml` carries `meta.defunct: true`, and the `defunct` flag is now actually honored end-to-end: schema field added, `registry.get_emailable()`/`get_scannable()` exclude defunct brokers, and the web app filters them from the email queue and scan view while badging them "defunct" in the directory.
+
 ### CRITICAL-03: Oracle Data Cloud advertising business shut down September 2024
 
 `brokers/data-aggregators/oracle-data-cloud.yaml` notes that Oracle shut down advertising services in September 2024 but claims the opt-out portal remains. The entire Oracle Advertising division (BlueKai, Datalogix, Moat, Grapeshot) was decommissioned. The opt-out URL `datacloudoptout.oracle.com/optout` may no longer function. The email `secalert_us@oracle.com` is a security alert address, not a privacy/opt-out address.
 
 **Fix:** Verify whether `datacloudoptout.oracle.com` is still operational. If not, remove or archive this entry. The email address should be updated to an actual Oracle privacy contact if retained.
+
+> **RESOLVED 2026-06-10:** Verified dead — `datacloudoptout.oracle.com/optout` now 301-redirects to `oracle.com/contracts/data-services/`, which only hosts an "Oracle Advertising End-of-Life FAQs" PDF. Entry marked `meta.defunct: true`; the bogus `secalert_us@oracle.com` email method was removed.
 
 ### CRITICAL-04: Duplicate broker entries -- Verisk and Infutor are the same company
 
@@ -64,11 +70,21 @@ Both point to the same opt-out form (`privacy.infutor.com/s/optout-form`) and sh
 
 **Fix:** Merge into a single entry. Recommend keeping `verisk.yaml` as the primary with `infutor.com` listed as an alias and former name noted.
 
+> **RESOLVED (prior to 2026-06-10):** `infutor.yaml` no longer exists; `verisk.yaml` is the single entry with `infutor.com` as an alias.
+
 ### CRITICAL-05: Gravy Analytics -- missing Venntel alias and FTC enforcement order
 
 `brokers/location-tracking/gravy-analytics.yaml` does not mention Venntel, which is a subsidiary of Gravy Analytics. In January 2025, the FTC finalized an order **prohibiting** Gravy Analytics and Venntel from selling sensitive location data. The file also does not mention Unacast (the parent company) in the aliases. Additionally, Gravy Analytics suffered a massive data breach in January 2025 exposing 17TB of location data.
 
 **Fix:** Add `venntel.com` and `unacast.com` to aliases. Add FTC enforcement order details to notes and legal section. Update confidence score given regulatory action.
+
+> **RESOLVED (prior to 2026-06-10):** `gravy-analytics.yaml` aliases now include `venntel.com` and `unacast.com`.
+
+### CRITICAL-06 (found 2026-06-10): Five duplicate broker ids across categories
+
+Registry growth after this audit introduced five ids that each existed in two category directories: `advanced-background-checks` (background-check + people-search), `nativo` (data-aggregator + other), `pimeyes` (people-search + social-scraper), `social-catfish` and `zoominfo` (people-search + social-scraper). Because `BrokerRegistry` keys brokers by id, one file of each pair was silently dropped at load time (721 brokers loaded from 726 files).
+
+> **RESOLVED 2026-06-10:** Kept the more detailed/accurate file of each pair (nativo was merged, retaining the email method and the privacy-portal steps); removed the rest. A regression test (`tests/test_registry.py`) now asserts file count == loaded count and explicit id uniqueness.
 
 ---
 

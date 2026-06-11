@@ -19,22 +19,18 @@ data_types:
 
 scan:
   scannable: false
-  reason: "B2B data aggregator. No consumer-facing search. Oracle shut down Advertising services Sept 2024 but Data Cloud opt-out portal remains."
+  reason: "DEFUNCT — Oracle decommissioned the entire Oracle Advertising division (BlueKai, Datalogix, Moat, Grapeshot) in Sept 2024. The opt-out portal now redirects to a contracts page with only an 'Oracle Advertising End-of-Life FAQs' PDF."
 
 optout:
   methods:
     - type: web_form
       url: "https://datacloudoptout.oracle.com/optout"
       required_fields: [full_name, email]
-    - type: email
-      email_to: secalert_us@oracle.com
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
   difficulty: medium
   estimated_minutes: 5
   processing_days: 30
   legal_max_days: 45
-  notes: "Oracle shut down Oracle Advertising services in Sept 2024 but the Data Cloud opt-out portal at datacloudoptout.oracle.com remains operational. Acquired BlueKai and Datalogix."
+  notes: "Opt-out portal is no longer functional — datacloudoptout.oracle.com/optout 301-redirects to oracle.com/contracts/data-services/ (Oracle Advertising End-of-Life FAQs). Kept for reference."
 
 legal:
   ccpa: true
@@ -51,7 +47,8 @@ timing:
 
 meta:
   added: "2026-02-25"
-  last_verified: "2026-02-25"
+  last_verified: "2026-06-10"
   verified_by: web_research
-  confidence: 0.80
-  notes: "Source: California Data Broker Registry, Oracle privacy portal. Oracle Advertising decommissioned Sept 2024 but Data Cloud opt-out still active."
+  confidence: 0.90
+  defunct: true
+  notes: "DEFUNCT — Oracle Advertising (BlueKai/Datalogix/Moat/Grapeshot) decommissioned Sept 2024. Verified 2026-06-10: datacloudoptout.oracle.com/optout redirects to oracle.com/contracts/data-services/ which only hosts an End-of-Life FAQ PDF. Previous email contact secalert_us@oracle.com was a security-alert address, not a privacy contact — removed."

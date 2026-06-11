@@ -1,6 +1,6 @@
 {
-  "version": "20260226",
-  "updated_at": "2026-02-26T23:32:57.204849",
+  "version": "20260610",
+  "updated_at": "2026-06-10",
   "broker_count": 721,
   "brokers": [
     {
@@ -1953,35 +1953,43 @@
     },
     {
       "id": "advanced-background-checks",
-      "name": "AdvancedBackgroundChecks",
+      "name": "Advanced Background Checks",
       "domain": "advancedbackgroundchecks.com",
-      "category": "people-search",
+      "category": "background-check",
       "data_types": [
         "name",
         "address",
         "phone",
         "email",
         "age",
+        "dob",
         "relatives",
+        "associates",
         "criminal-records",
+        "court-records",
         "property-records"
       ],
       "aliases": [],
       "scan": {
         "scannable": true,
         "method": "web_search",
-        "search_url": "https://www.advancedbackgroundchecks.com/{first_name}-{last_name}",
+        "search_url": "https://www.advancedbackgroundchecks.com/names/{first_name}-{last_name}/{state}",
         "detection": [
           {
             "method": "selector_present",
-            "value": ".record-card",
+            "value": ".result-card",
             "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "No results found",
+            "means": "not_listed"
           }
         ],
         "anti_bot": {
           "captcha": false,
           "cloudflare": true,
-          "rate_limit_per_minute": 3
+          "rate_limit_per_minute": 2
         }
       },
       "optout": {
@@ -1991,83 +1999,74 @@
             "url": "https://www.advancedbackgroundchecks.com/removal",
             "required_fields": [
               "full_name",
-              "listing_url"
+              "email"
             ],
             "steps": [
               {
                 "action": "navigate",
-                "url": "https://www.advancedbackgroundchecks.com",
-                "description": "Search for your name on AdvancedBackgroundChecks"
-              },
-              {
-                "action": "input",
-                "value": "{full_name}",
-                "description": "Enter your full name, optionally city/state/age"
-              },
-              {
-                "action": "click",
-                "description": "Click Search to find your listing"
-              },
-              {
-                "action": "navigate",
                 "url": "https://www.advancedbackgroundchecks.com/removal",
-                "description": "Go to the removal page"
+                "description": "Go to the opt-out removal page"
               },
               {
                 "action": "input",
-                "value": "{listing_url}",
-                "description": "Paste the URL of your listing"
+                "value": "{first_name}",
+                "description": "Enter first name"
+              },
+              {
+                "action": "input",
+                "value": "{last_name}",
+                "description": "Enter last name"
               },
               {
                 "action": "click",
-                "description": "Submit removal request"
+                "description": "Search for your record and click Remove"
+              },
+              {
+                "action": "verify_email",
+                "description": "Check email for confirmation link and click it"
               }
             ],
             "template_id": null
           },
           {
             "type": "email",
-            "email_to": "support@advancedbackgroundchecks.com",
+            "email_to": "support@advancebackgroundchecks.zendesk.com",
             "required_fields": [
               "full_name",
-              "listing_url"
+              "email"
             ],
             "template_id": "ccpa_maximum"
           }
         ],
         "difficulty": "easy",
         "estimated_minutes": 5,
-        "processing_days": 7,
+        "processing_days": 2,
         "legal_max_days": 45,
-        "notes": "Search for your profile first, then use the removal page. Optional fields include city, state, and age."
+        "notes": "Uses publicly available information from public records. Opt-out processed within 24-48 hours after email verification. Records may reappear and require repeated opt-out. CCPA opt-out via 'Do Not Sell My Personal Information' link on site."
       },
       "legal": {
         "ccpa": true,
         "gdpr": false,
         "registered_broker": {
-          "california": true,
-          "vermont": false
+          "california": true
         },
         "state_laws": [
           "california",
           "virginia",
-          "colorado",
-          "connecticut",
-          "texas",
-          "oregon"
+          "colorado"
         ]
       },
       "timing": {
-        "typical_removal_days": 7,
+        "typical_removal_days": 2,
         "relisting_likelihood": "high",
         "recheck_interval_days": 30
       },
       "meta": {
-        "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
         "verified_by": "web_research",
         "confidence": 0.85,
-        "notes": "Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"
+        "notes": "Public records aggregator categorized as identity verification service. Sacramento, CA based. Source: Privacy Rights Clearinghouse, California Data Broker Registry."
       }
     },
     {
@@ -17314,9 +17313,9 @@
       }
     },
     {
-      "id": "everconnect",
+      "id": "keywordconnects",
       "name": "EverConnect",
-      "domain": "33mileradius.com",
+      "domain": "keywordconnects.com",
       "category": "location-tracking",
       "data_types": [
         "name",
@@ -17324,7 +17323,7 @@
         "device-id"
       ],
       "aliases": [
-        "33 Mile Radius LLC"
+        "Keyword Connects LLC"
       ],
       "scan": {
         "scannable": false,
@@ -17334,7 +17333,7 @@
         "methods": [
           {
             "type": "email",
-            "email_to": "privacy@33mileradius.com",
+            "email_to": "privacy@keywordconnects.com",
             "required_fields": [
               "full_name",
               "email"
@@ -17343,7 +17342,75 @@
           },
           {
             "type": "web_form",
-            "url": "https://www.33mileradius.com/privacy-policy/",
+            "url": "https://www.keywordconnects.com/privacy-policy/",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": null,
+            "notes": "CCPA rights page from CA Data Broker Registry filing."
+          }
+        ],
+        "difficulty": "medium",
+        "estimated_minutes": 10,
+        "processing_days": 30,
+        "legal_max_days": 45,
+        "notes": "Registered California data broker. Imported from CPPA registry."
+      },
+      "legal": {
+        "ccpa": true,
+        "gdpr": false,
+        "registered_broker": {
+          "california": true
+        },
+        "state_laws": [
+          "california"
+        ]
+      },
+      "timing": {
+        "typical_removal_days": 30,
+        "relisting_likelihood": "medium",
+        "recheck_interval_days": 180
+      },
+      "meta": {
+        "added": "2026-02-26",
+        "last_verified": "2026-02-26",
+        "verified_by": "ca_data_broker_registry",
+        "confidence": 0.7,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+      }
+    },
+    {
+      "id": "remodeling",
+      "name": "EverConnect",
+      "domain": "remodeling.com",
+      "category": "location-tracking",
+      "data_types": [
+        "name",
+        "location-history",
+        "device-id"
+      ],
+      "aliases": [
+        "Remodeling.com, LLC"
+      ],
+      "scan": {
+        "scannable": false,
+        "reason": "Imported from California Data Broker Registry. Manual verification needed."
+      },
+      "optout": {
+        "methods": [
+          {
+            "type": "email",
+            "email_to": "privacy@remodeling.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum"
+          },
+          {
+            "type": "web_form",
+            "url": "https://www.remodeling.com/privacy-policy/",
             "required_fields": [
               "full_name",
               "email"
@@ -17450,9 +17517,9 @@
       }
     },
     {
-      "id": "keywordconnects",
+      "id": "everconnect",
       "name": "EverConnect",
-      "domain": "keywordconnects.com",
+      "domain": "33mileradius.com",
       "category": "location-tracking",
       "data_types": [
         "name",
@@ -17460,7 +17527,7 @@
         "device-id"
       ],
       "aliases": [
-        "Keyword Connects LLC"
+        "33 Mile Radius LLC"
       ],
       "scan": {
         "scannable": false,
@@ -17470,7 +17537,7 @@
         "methods": [
           {
             "type": "email",
-            "email_to": "privacy@keywordconnects.com",
+            "email_to": "privacy@33mileradius.com",
             "required_fields": [
               "full_name",
               "email"
@@ -17479,75 +17546,7 @@
           },
           {
             "type": "web_form",
-            "url": "https://www.keywordconnects.com/privacy-policy/",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
-          }
-        ],
-        "difficulty": "medium",
-        "estimated_minutes": 10,
-        "processing_days": 30,
-        "legal_max_days": 45,
-        "notes": "Registered California data broker. Imported from CPPA registry."
-      },
-      "legal": {
-        "ccpa": true,
-        "gdpr": false,
-        "registered_broker": {
-          "california": true
-        },
-        "state_laws": [
-          "california"
-        ]
-      },
-      "timing": {
-        "typical_removal_days": 30,
-        "relisting_likelihood": "medium",
-        "recheck_interval_days": 180
-      },
-      "meta": {
-        "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
-      }
-    },
-    {
-      "id": "remodeling",
-      "name": "EverConnect",
-      "domain": "remodeling.com",
-      "category": "location-tracking",
-      "data_types": [
-        "name",
-        "location-history",
-        "device-id"
-      ],
-      "aliases": [
-        "Remodeling.com, LLC"
-      ],
-      "scan": {
-        "scannable": false,
-        "reason": "Imported from California Data Broker Registry. Manual verification needed."
-      },
-      "optout": {
-        "methods": [
-          {
-            "type": "email",
-            "email_to": "privacy@remodeling.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
-            "type": "web_form",
-            "url": "https://www.remodeling.com/privacy-policy/",
+            "url": "https://www.33mileradius.com/privacy-policy/",
             "required_fields": [
               "full_name",
               "email"
@@ -22886,8 +22885,6 @@
       "aliases": [],
       "scan": {
         "scannable": false,
-        "method": null,
-        "search_url": null,
         "notes": "Hiya does not offer a public web search. Caller ID data is accessible through the Hiya app and integrated Samsung phone features."
       },
       "optout": {
@@ -33090,13 +33087,14 @@
       "data_types": [
         "name",
         "email",
-        "online-activity",
-        "demographics"
+        "device-ids",
+        "ip-address",
+        "purchase-history"
       ],
       "aliases": [],
       "scan": {
         "scannable": false,
-        "reason": "Imported from California Data Broker Registry. Manual verification needed."
+        "reason": "Native advertising platform. No consumer-facing search. Tracks users for programmatic ad targeting."
       },
       "optout": {
         "methods": [
@@ -33111,42 +33109,64 @@
           },
           {
             "type": "web_form",
-            "url": "https://www.nativo.com/interest-based-ads#your-rights",
+            "url": "https://www.nativo.com/privacy-portal",
             "required_fields": [
-              "full_name",
               "email"
             ],
-            "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "steps": [
+              {
+                "action": "navigate",
+                "url": "https://www.nativo.com/privacy-portal",
+                "description": "Go to Nativo privacy portal"
+              },
+              {
+                "action": "select",
+                "value": "opt-out",
+                "description": "Select opt-out of sale/sharing of personal information"
+              },
+              {
+                "action": "input",
+                "value": "{email}",
+                "description": "Enter email address"
+              },
+              {
+                "action": "submit",
+                "description": "Submit opt-out request"
+              }
+            ],
+            "template_id": null
           }
         ],
-        "difficulty": "medium",
-        "estimated_minutes": 10,
+        "difficulty": "easy",
+        "estimated_minutes": 5,
         "processing_days": 30,
         "legal_max_days": 45,
-        "notes": "Registered California data broker. Imported from CPPA registry."
+        "notes": "Nativo is a native advertising technology platform that serves personalized content ads. Collects device identifiers and browsing data for ad targeting. Cookie-based opt-out available. Honors Global Privacy Control signal. Registered California data broker."
       },
       "legal": {
         "ccpa": true,
-        "gdpr": false,
+        "gdpr": true,
         "registered_broker": {
           "california": true
         },
         "state_laws": [
-          "california"
+          "california",
+          "virginia",
+          "colorado",
+          "connecticut"
         ]
       },
       "timing": {
         "typical_removal_days": 30,
-        "relisting_likelihood": "medium",
-        "recheck_interval_days": 180
+        "relisting_likelihood": "high",
+        "recheck_interval_days": 30
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-06-10",
+        "verified_by": "web_research",
+        "confidence": 0.75,
+        "notes": "Merged duplicate entries (data-aggregator + other) 2026-06-10. Sources: nativo.com/privacy-policy, California Data Broker Registry (CPPA)."
       }
     },
     {
@@ -35187,7 +35207,7 @@
       ],
       "scan": {
         "scannable": false,
-        "reason": "B2B data aggregator. No consumer-facing search. Oracle shut down Advertising services Sept 2024 but Data Cloud opt-out portal remains."
+        "reason": "DEFUNCT \u2014 Oracle decommissioned the entire Oracle Advertising division (BlueKai, Datalogix, Moat, Grapeshot) in Sept 2024. The opt-out portal now redirects to a contracts page with only an 'Oracle Advertising End-of-Life FAQs' PDF."
       },
       "optout": {
         "methods": [
@@ -35198,22 +35218,13 @@
               "full_name",
               "email"
             ]
-          },
-          {
-            "type": "email",
-            "email_to": "secalert_us@oracle.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
           }
         ],
         "difficulty": "medium",
         "estimated_minutes": 5,
         "processing_days": 30,
         "legal_max_days": 45,
-        "notes": "Oracle shut down Oracle Advertising services in Sept 2024 but the Data Cloud opt-out portal at datacloudoptout.oracle.com remains operational. Acquired BlueKai and Datalogix."
+        "notes": "Opt-out portal is no longer functional \u2014 datacloudoptout.oracle.com/optout 301-redirects to oracle.com/contracts/data-services/ (Oracle Advertising End-of-Life FAQs). Kept for reference."
       },
       "legal": {
         "ccpa": true,
@@ -35238,10 +35249,11 @@
       },
       "meta": {
         "added": "2026-02-25",
-        "last_verified": "2026-02-25",
+        "last_verified": "2026-06-10",
         "verified_by": "web_research",
-        "confidence": 0.8,
-        "notes": "Source: California Data Broker Registry, Oracle privacy portal. Oracle Advertising decommissioned Sept 2024 but Data Cloud opt-out still active."
+        "confidence": 0.9,
+        "defunct": true,
+        "notes": "DEFUNCT \u2014 Oracle Advertising (BlueKai/Datalogix/Moat/Grapeshot) decommissioned Sept 2024. Verified 2026-06-10: datacloudoptout.oracle.com/optout redirects to oracle.com/contracts/data-services/ which only hosts an End-of-Life FAQ PDF. Previous email contact secalert_us@oracle.com was a security-alert address, not a privacy contact \u2014 removed."
       }
     },
     {
@@ -37787,7 +37799,6 @@
       "scan": {
         "scannable": false,
         "method": "none",
-        "search_url": null,
         "notes": "Pipl has changed its business model to B2B only. No public search interface."
       },
       "optout": {
@@ -45937,27 +45948,34 @@
     },
     {
       "id": "social-catfish",
-      "name": "SocialCatfish",
+      "name": "Social Catfish",
       "domain": "socialcatfish.com",
-      "category": "people-search",
+      "category": "social-scraper",
       "data_types": [
         "name",
-        "address",
-        "phone",
         "email",
+        "phone",
+        "address",
         "social-media",
-        "photos"
+        "photos",
+        "age",
+        "relatives"
       ],
       "aliases": [],
       "scan": {
         "scannable": true,
         "method": "web_search",
-        "search_url": "https://socialcatfish.com/search/#byname",
+        "search_url": "https://socialcatfish.com/search/",
         "detection": [
           {
-            "method": "selector_present",
-            "value": ".result-card",
+            "method": "text_match",
+            "value": "results found",
             "means": "listed"
+          },
+          {
+            "method": "text_match",
+            "value": "No results",
+            "means": "not_listed"
           }
         ],
         "anti_bot": {
@@ -45974,7 +45992,7 @@
             "required_fields": [
               "full_name",
               "email",
-              "listing_url"
+              "state"
             ],
             "steps": [
               {
@@ -45983,9 +46001,9 @@
                 "description": "Go to Social Catfish opt-out page"
               },
               {
-                "action": "input",
-                "value": "{listing_url}",
-                "description": "Paste the URL of your Social Catfish record"
+                "action": "select",
+                "value": "{state}",
+                "description": "Select your state"
               },
               {
                 "action": "input",
@@ -45998,59 +46016,57 @@
                 "description": "Enter your email address"
               },
               {
-                "action": "click",
+                "action": "submit",
                 "description": "Submit opt-out request"
               },
               {
                 "action": "verify_email",
-                "description": "Check email for confirmation link and click it"
+                "description": "Check email for confirmation from Social Catfish"
               }
-            ],
-            "template_id": null
+            ]
           },
           {
             "type": "email",
-            "email_to": "info@socialcatfish.com",
+            "email_to": "NVOptOut@socialcatfish.com",
             "required_fields": [
               "full_name",
-              "email",
-              "listing_url"
+              "email"
             ],
             "template_id": "ccpa_maximum"
           }
         ],
-        "difficulty": "medium",
-        "estimated_minutes": 10,
+        "difficulty": "easy",
+        "estimated_minutes": 5,
         "processing_days": 15,
         "legal_max_days": 45,
-        "notes": "Record URLs of your data first, then submit for removal. Can also email NVOptOut@socialcatfish.com for Nevada residents. Phone: (844) 422-8347. Processing takes up to 3 weeks."
+        "notes": "State selection required. Confirmation emails sent after submission. Social Catfish will delete all verifiable related information within 15 days and take steps to prevent reacquisition."
       },
       "legal": {
         "ccpa": true,
         "gdpr": false,
         "registered_broker": {
-          "california": true,
-          "vermont": false
+          "california": true
         },
         "state_laws": [
           "california",
           "virginia",
           "colorado",
+          "connecticut",
           "texas",
           "oregon"
         ]
       },
       "timing": {
-        "typical_removal_days": 21,
+        "typical_removal_days": 15,
         "relisting_likelihood": "medium",
-        "recheck_interval_days": 30
+        "recheck_interval_days": 60
       },
       "meta": {
-        "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
         "verified_by": "web_research",
         "confidence": 0.85,
-        "notes": "Reverse image search and people search. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"
+        "notes": "Source: socialcatfish.com/opt-out, Big Ass Data Broker Opt-Out List. People search and reverse lookup service that aggregates social media profiles, public records, and online data."
       }
     },
     {
@@ -50224,8 +50240,6 @@
       "aliases": [],
       "scan": {
         "scannable": false,
-        "method": null,
-        "search_url": null,
         "notes": "Truecaller does not offer a public web search. Data is accessible via the Truecaller app only."
       },
       "optout": {
@@ -55634,31 +55648,22 @@
       "id": "zoominfo",
       "name": "ZoomInfo",
       "domain": "zoominfo.com",
-      "category": "people-search",
+      "category": "social-scraper",
       "data_types": [
         "name",
         "email",
         "phone",
         "employment",
-        "address"
+        "social-media",
+        "address",
+        "education"
       ],
-      "aliases": [],
+      "aliases": [
+        "privacyrequest.zoominfo.com"
+      ],
       "scan": {
-        "scannable": true,
-        "method": "web_search",
-        "search_url": "https://www.zoominfo.com/p/{first_name}-{last_name}",
-        "detection": [
-          {
-            "method": "selector_present",
-            "value": ".profile-card",
-            "means": "listed"
-          }
-        ],
-        "anti_bot": {
-          "captcha": false,
-          "cloudflare": true,
-          "rate_limit_per_minute": 2
-        }
+        "scannable": false,
+        "reason": "B2B sales intelligence platform. Requires paid subscription to search."
       },
       "optout": {
         "methods": [
@@ -55666,39 +55671,43 @@
             "type": "web_form",
             "url": "https://privacyrequest.zoominfo.com/remove/verify",
             "required_fields": [
-              "full_name",
-              "email"
+              "email",
+              "phone"
             ],
             "steps": [
               {
                 "action": "navigate",
                 "url": "https://privacyrequest.zoominfo.com/remove/verify",
-                "description": "Go to ZoomInfo privacy request page"
+                "description": "Go to ZoomInfo Privacy Center removal page"
               },
               {
                 "action": "input",
                 "value": "{email}",
-                "description": "Enter your email address (business or personal)"
-              },
-              {
-                "action": "click",
-                "description": "Click to verify your email"
-              },
-              {
-                "action": "verify_email",
-                "description": "Check email for verification code"
+                "description": "Enter your email address"
               },
               {
                 "action": "input",
-                "value": "{full_name}",
-                "description": "Enter your name and details"
+                "value": "{phone}",
+                "description": "Enter your phone number"
               },
               {
                 "action": "click",
-                "description": "Submit removal request"
+                "description": "Click 'Request Removal' to receive verification code"
+              },
+              {
+                "action": "verify_email",
+                "description": "Check email for 6-digit verification code from ZoomInfo"
+              },
+              {
+                "action": "input",
+                "value": "{verification_code}",
+                "description": "Enter the 6-digit code"
+              },
+              {
+                "action": "click",
+                "description": "Click Confirm to complete removal"
               }
-            ],
-            "template_id": null
+            ]
           },
           {
             "type": "email",
@@ -55708,20 +55717,24 @@
               "email"
             ],
             "template_id": "ccpa_maximum"
+          },
+          {
+            "type": "phone",
+            "phone_number": "833-901-0859",
+            "notes": "ZoomInfo privacy request phone line"
           }
         ],
         "difficulty": "medium",
         "estimated_minutes": 10,
         "processing_days": 30,
         "legal_max_days": 45,
-        "notes": "Business/professional data broker. Focuses on B2B contact information. Email privacy@zoominfo.com for CCPA requests."
+        "notes": "Requires email verification with 6-digit code. Full name is optional on removal form. Profile removed from website and subscription products. Opt-out shared with ZoomInfo customers. Heavily scrapes LinkedIn."
       },
       "legal": {
         "ccpa": true,
         "gdpr": true,
         "registered_broker": {
-          "california": true,
-          "vermont": true
+          "california": true
         },
         "state_laws": [
           "california",
@@ -55734,15 +55747,15 @@
       },
       "timing": {
         "typical_removal_days": 30,
-        "relisting_likelihood": "high",
-        "recheck_interval_days": 30
+        "relisting_likelihood": "medium",
+        "recheck_interval_days": 60
       },
       "meta": {
-        "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "added": "2026-02-25",
+        "last_verified": "2026-02-25",
         "verified_by": "web_research",
         "confidence": 0.9,
-        "notes": "Major B2B data broker. Source: Big Ass Data Broker Opt-Out List, State of Surveillance Master List"
+        "notes": "Source: privacyrequest.zoominfo.com, zoominfo.com/trust-center/your-privacy, California Data Broker Registry. Largest B2B contact database. Scrapes LinkedIn, company websites, SEC filings, job boards. Claims GDPR and CCPA compliance."
       }
     },
     {

@@ -12,8 +12,6 @@ data_types:
 
 scan:
   scannable: false
-  method: null
-  search_url: null
   notes: "Truecaller does not offer a public web search. Data is accessible via the Truecaller app only."
 
 optout:
