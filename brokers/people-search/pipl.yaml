@@ -19,7 +19,6 @@ data_types:
 scan:
   scannable: false
   method: none
-  search_url: null
   notes: "Pipl has changed its business model to B2B only. No public search interface."
 
 optout:

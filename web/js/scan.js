@@ -45,7 +45,7 @@ function buildSearchUrl(template, pii) {
 function getScannableBrokers() {
     const reg = Queue.getRegistryData();
     if (!reg || !reg.brokers) return [];
-    return reg.brokers.filter(b => b.scan && b.scan.scannable && b.scan.search_url);
+    return reg.brokers.filter(b => !b.meta?.defunct && b.scan && b.scan.scannable && b.scan.search_url);
 }
 
 function render(container) {

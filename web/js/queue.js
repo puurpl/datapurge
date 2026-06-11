@@ -55,6 +55,7 @@ function getEmailableBrokers() {
     if (!registryData) return [];
     return registryData.brokers
         .filter(b => {
+            if (b.meta?.defunct) return false;
             const m = getEmailMethod(b);
             return m && m.email_to && isValidEmail(m.email_to);
         })
@@ -68,7 +69,7 @@ function getEmailableBrokers() {
 
 function getNonEmailBrokers() {
     if (!registryData) return [];
-    return registryData.brokers.filter(b => !getEmailMethod(b));
+    return registryData.brokers.filter(b => !b.meta?.defunct && !getEmailMethod(b));
 }
 
 function getAllBrokerEmails() {
@@ -1149,8 +1150,9 @@ export const Queue = {
                 <div class="empty-state">
                     <h3>Unable to load broker data</h3>
                     <p>Please check your connection and reload the page.</p>
-                    <button class="btn btn-outline mt-2" onclick="location.reload()">Reload</button>
+                    <button class="btn btn-outline mt-2" data-action="reload">Reload</button>
                 </div>`;
+            container.querySelector('[data-action="reload"]').addEventListener('click', () => location.reload());
             return;
         }
 

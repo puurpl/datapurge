@@ -34,22 +34,22 @@
         "financial",
         "social-scraper",
         "public-records",
+        "employment",
+        "health",
+        "insurance",
+        "political",
+        "real-estate",
+        "tenant-screening",
+        "vehicle",
         "other"
       ]
     },
     "data_types": {
       "type": "array",
+      "description": "Kebab-case labels for the kinds of data the broker holds (open vocabulary; e.g. name, address, dob, location-history, purchase-history, online-activity, demographics)",
       "items": {
         "type": "string",
-        "enum": [
-          "name", "address", "phone", "email", "age", "dob",
-          "relatives", "associates", "employment", "education",
-          "social-media", "photos", "criminal-records", "court-records",
-          "property-records", "financial", "location-history",
-          "ip-address", "device-ids", "purchase-history",
-          "political-affiliation", "religious-affiliation",
-          "health-inferences", "income-estimates"
-        ]
+        "pattern": "^[a-z][a-z0-9-]*$"
       }
     },
     "scan": {
@@ -112,7 +112,7 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["email", "web_form", "api", "postal", "phone"]
+                "enum": ["email", "web_form", "api", "postal", "phone", "account_action"]
               },
               "url": {"type": "string"},
               "email_to": {"type": "string"},
@@ -132,7 +132,13 @@
                   "properties": {
                     "action": {
                       "type": "string",
-                      "enum": ["navigate", "input", "click", "select", "wait_for", "verify_email", "captcha"]
+                      "enum": [
+                        "navigate", "input", "click", "select", "submit",
+                        "wait_for", "verify_email", "captcha", "solve_captcha",
+                        "upload", "checkbox", "confirm", "copy_url", "redirect",
+                        "redirect_notice", "scroll_to_footer", "select_listing",
+                        "select_reason", "search_and_select", "open_app", "sms_verify"
+                      ]
                     },
                     "selector": {"type": "string"},
                     "value": {"type": "string"},
@@ -142,8 +148,12 @@
                 }
               },
               "template_id": {
-                "type": "string",
+                "type": ["string", "null"],
                 "description": "Which legal template to use for this method"
+              },
+              "notes": {
+                "type": "string",
+                "description": "Free-form notes about this opt-out method"
               }
             }
           }
@@ -198,6 +208,10 @@
         "last_verified": {"type": "string", "format": "date"},
         "verified_by": {"type": "string"},
         "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "defunct": {
+          "type": "boolean",
+          "description": "Broker no longer operates; excluded from email queue and scans, kept for reference"
+        },
         "notes": {"type": "string"}
       }
     }

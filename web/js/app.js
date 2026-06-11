@@ -9,6 +9,7 @@ import { Brokers } from './brokers.js';
 import { Scan } from './scan.js';
 import { Progress } from './progress.js';
 import { Share } from './share.js';
+import { PWA } from './pwa.js';
 
 const US_STATES = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -340,10 +341,15 @@ function showErrorBanner(message) {
         banner.className = 'error-banner';
         document.body.prepend(banner);
     }
-    banner.innerHTML = `
-        <span>${esc(message)}</span>
-        <button onclick="this.parentElement.remove()" class="btn btn-ghost btn-sm">&times;</button>
-    `;
+    // CSP (script-src 'self') blocks inline handlers — build the button in JS
+    banner.textContent = '';
+    const text = document.createElement('span');
+    text.textContent = message;
+    const close = document.createElement('button');
+    close.className = 'btn btn-ghost btn-sm';
+    close.textContent = '×';
+    close.addEventListener('click', () => banner.remove());
+    banner.append(text, close);
 }
 
 // --- Boot ---
@@ -361,10 +367,8 @@ async function boot() {
         showErrorBanner('Some data failed to load. Parts of the app may not work correctly. Try reloading.');
     }
 
-    // Register service worker for PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
+    // PWA: service worker, install banner, offline pill, update toast
+    PWA.init();
 
     // Cross-tab sync: re-render current view when another tab changes data
     window.addEventListener('datapurge-storage-sync', () => {

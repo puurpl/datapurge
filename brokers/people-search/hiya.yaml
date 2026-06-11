@@ -11,8 +11,6 @@ data_types:
 
 scan:
   scannable: false
-  method: null
-  search_url: null
   notes: "Hiya does not offer a public web search. Caller ID data is accessible through the Hiya app and integrated Samsung phone features."
 
 optout:

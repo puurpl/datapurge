@@ -367,14 +367,8 @@ def main():
             skipped_no_contact += 1
             continue
 
-        # Ensure directory exists
-        cat_dir = BROKERS_DIR / category.replace("-", "-")
-        # Map category to directory name
-        dir_map = {
-            "data-aggregator": "data-aggregators",
-        }
-        dir_name = dir_map.get(category, category)
-        cat_dir = BROKERS_DIR / dir_name
+        # Directory name matches the category slug exactly
+        cat_dir = BROKERS_DIR / category
         cat_dir.mkdir(parents=True, exist_ok=True)
 
         # Write file

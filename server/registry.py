@@ -10,7 +10,7 @@ import yaml
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
-from datetime import datetime, date
+from datetime import date
 
 
 @dataclass
@@ -25,6 +25,12 @@ class BrokerOptoutMethod:
     requires_listing_url: bool = False
     steps: list = field(default_factory=list)
     template_id: Optional[str] = None
+    notes: Optional[str] = None
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "BrokerOptoutMethod":
+        """Tolerate unknown keys in broker YAML method definitions."""
+        return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
 
 
 @dataclass
@@ -53,19 +59,19 @@ class Broker:
     def primary_method(self) -> Optional[BrokerOptoutMethod]:
         methods = self.optout.get("methods", [])
         if methods:
-            return BrokerOptoutMethod(**methods[0])
+            return BrokerOptoutMethod.from_dict(methods[0])
         return None
 
     @property
     def email_method(self) -> Optional[BrokerOptoutMethod]:
         for m in self.optout.get("methods", []):
             if m["type"] == "email":
-                return BrokerOptoutMethod(**m)
+                return BrokerOptoutMethod.from_dict(m)
         return None
 
     @property
     def all_methods(self) -> list:
-        return [BrokerOptoutMethod(**m) for m in self.optout.get("methods", [])]
+        return [BrokerOptoutMethod.from_dict(m) for m in self.optout.get("methods", [])]
 
     @property
     def last_verified(self) -> Optional[date]:
@@ -77,6 +83,10 @@ class Broker:
     @property
     def confidence(self) -> float:
         return self.meta.get("confidence", 0.0)
+
+    @property
+    def is_defunct(self) -> bool:
+        return bool(self.meta.get("defunct", False))
 
     @property
     def supports_ccpa(self) -> bool:
@@ -193,11 +203,11 @@ class BrokerRegistry:
     def get_emailable(self) -> list[Broker]:
         """Get all brokers that accept email opt-out requests.
         This is the core list for the web visitor email drip."""
-        return [b for b in self.list_all() if b.email_method]
+        return [b for b in self.list_all() if b.email_method and not b.is_defunct]
 
     def get_scannable(self) -> list[Broker]:
         """Get all brokers with public search capability."""
-        return [b for b in self.list_all() if b.scannable]
+        return [b for b in self.list_all() if b.scannable and not b.is_defunct]
 
     def get_stale(self, days: int = 7) -> list[Broker]:
         """Get brokers not verified within the given number of days."""
@@ -229,14 +239,24 @@ class BrokerRegistry:
         }
 
     def export_json(self, path: str | Path = None) -> str:
-        """Export the full registry as JSON (for API/client sync)."""
+        """Export the full registry as JSON (for API/client sync).
+
+        Deterministic: the stamp derives from broker content (latest
+        last_verified date), not wall-clock time, so unchanged data
+        exports byte-identically and doesn't churn git or cache hashes."""
+        last = max(
+            (str(b.meta.get("last_verified") or "1970-01-01") for b in self.list_all()),
+            default="1970-01-01",
+        )
         data = {
-            "version": datetime.now().strftime("%Y%m%d"),
-            "updated_at": datetime.now().isoformat(),
+            "version": last.replace("-", ""),
+            "updated_at": last,
             "broker_count": self.count(),
             "brokers": [b.to_dict() for b in self.list_all()],
         }
         json_str = json.dumps(data, indent=2, default=str)
         if path:
-            Path(path).write_text(json_str)
+            path = Path(path)
+            if not path.exists() or path.read_text() != json_str:
+                path.write_text(json_str)
         return json_str

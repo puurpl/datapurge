@@ -1,9 +1,11 @@
 id: nativo
-name: Nativo
+name: Nativo, Inc.
 domain: nativo.com
 aliases: []
-category: other
+category: data-aggregator
 data_types:
+  - name
+  - email
   - device-ids
   - ip-address
   - purchase-history
@@ -14,6 +16,10 @@ scan:
 
 optout:
   methods:
+    - type: email
+      email_to: "privacy@nativo.com"
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
     - type: web_form
       url: "https://www.nativo.com/privacy-portal"
       required_fields: [email]
@@ -34,7 +40,7 @@ optout:
   estimated_minutes: 5
   processing_days: 30
   legal_max_days: 45
-  notes: "Nativo is a native advertising technology platform that serves personalized content ads. Collects device identifiers and browsing data for ad targeting. Cookie-based opt-out available. Honors Global Privacy Control signal."
+  notes: "Nativo is a native advertising technology platform that serves personalized content ads. Collects device identifiers and browsing data for ad targeting. Cookie-based opt-out available. Honors Global Privacy Control signal. Registered California data broker."
 
 legal:
   ccpa: true
@@ -50,7 +56,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
+  last_verified: "2026-06-10"
   verified_by: web_research
   confidence: 0.75
-  notes: "Native advertising technology platform. Source: nativo.com/privacy-policy."
+  notes: "Merged duplicate entries (data-aggregator + other) 2026-06-10. Sources: nativo.com/privacy-policy, California Data Broker Registry (CPPA)."
