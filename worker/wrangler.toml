@@ -12,7 +12,7 @@ crons = ["0 8 * * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "datapurge-drip"
-database_id = "" # Set after `wrangler d1 create datapurge-drip`
+database_id = "83d3cd04-6d98-40dd-a85c-8bf0a1fbc2ec"
 
 [vars]
 FROM_EMAIL = "DataPurge <noreply@datapurge.iamnottheproduct.com>"
