@@ -1,5 +1,5 @@
 /**
- * DataPurge Brokers — Searchable broker directory
+ * DataPurge Brokers - Searchable broker directory
  */
 
 let allBrokers = [];

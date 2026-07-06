@@ -1,5 +1,5 @@
 /**
- * DataPurge Share — Embed instructions & sharing options
+ * DataPurge Share - Embed instructions & sharing options
  */
 
 function esc(str) {
@@ -28,13 +28,13 @@ const DONATE_URL = 'https://buymeacoffee.com/puurpl';
 const IFRAME_SNIPPET = `<iframe
   src="${SITE_URL}/embed.html"
   style="width: 100%; height: 700px; border: 1px solid #e2e8f0; border-radius: 12px;"
-  title="DataPurge — Data Broker Opt-Out Tool"
+  title="DataPurge - Data Broker Opt-Out Tool"
   allow="clipboard-write"
   loading="lazy">
 </iframe>`;
 
 const SHARE_TEXT = 'Remove your personal data from 700+ data brokers for free. DataPurge generates legally-backed opt-out emails.';
-const SHARE_TITLE = 'DataPurge — Free Data Broker Opt-Out Tool';
+const SHARE_TITLE = 'DataPurge - Free Data Broker Opt-Out Tool';
 
 export const Share = {
     render(container) {
@@ -93,7 +93,7 @@ export const Share = {
 
                 <h4 class="mt-2 mb-1">iframe Embed (Recommended)</h4>
                 <p class="text-sm text-secondary mb-1">
-                    Paste this into your HTML. Your visitors' data stays in their browser —
+                    Paste this into your HTML. Your visitors' data stays in their browser -
                     the iframe's same-origin policy prevents your site from accessing it.
                 </p>
                 <div class="embed-code-block">
@@ -155,7 +155,7 @@ export const Share = {
                 </div>
                 <p class="text-sm text-secondary mb-1">
                     Prefer to serve from your own domain? Download a single HTML file that
-                    pulls assets from our CDN — always up to date, nothing to maintain.
+                    pulls assets from our CDN - always up to date, nothing to maintain.
                 </p>
                 <div class="btn-group">
                     <a href="${SITE_URL}/datapurge-embed.html" class="btn btn-outline btn-sm"
@@ -178,7 +178,7 @@ export const Share = {
                         <li><strong>Attribution required.</strong> Keep the "Powered by DataPurge" footer visible.</li>
                         <li><strong>Don't modify legal templates.</strong> The opt-out email text must remain intact.</li>
                         <li><strong>Don't misrepresent.</strong> Say "powered by DataPurge", not "our tool".</li>
-                        <li><strong>Don't intercept data.</strong> The iframe protects user PII — don't circumvent it.</li>
+                        <li><strong>Don't intercept data.</strong> The iframe protects user PII - don't circumvent it.</li>
                         <li><strong>Keep it free.</strong> Don't paywall access to the opt-out tool.</li>
                     </ul>
                     <p class="mt-1">

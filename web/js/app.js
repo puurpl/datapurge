@@ -1,5 +1,5 @@
 /**
- * DataPurge App — Main entry point, router, view initialization
+ * DataPurge App - Main entry point, router, view initialization
  */
 
 import { Store } from './store.js';
@@ -208,7 +208,7 @@ function renderSetup(container) {
                         <summary class="text-sm text-secondary">Optional: add more identifying info</summary>
                         <div class="callout mt-1" style="text-align: left; padding: 1rem;">
                             <p class="text-sm text-secondary" style="max-width: none;">
-                                <strong>Less is more.</strong> Email is an open protocol — additional PII
+                                <strong>Less is more.</strong> Email is an open protocol - additional PII
                                 (phone, address, DOB) in your opt-out email could expose data the broker
                                 didn't already have. Name + email is legally sufficient for a deletion request.
                                 Only add more if you want to help brokers match your specific records.
@@ -217,7 +217,7 @@ function renderSetup(container) {
                         <div class="form-group mt-1">
                             <label class="form-label" for="email_aliases">Additional Email Addresses</label>
                             <textarea class="form-input" id="email_aliases" rows="2"
-                                placeholder="One per line — e.g. alias@example.com">${esc((existing?.email_aliases || []).join('\n'))}</textarea>
+                                placeholder="One per line - e.g. alias@example.com">${esc((existing?.email_aliases || []).join('\n'))}</textarea>
                             <div class="form-hint">If you use different emails for different services, list them here so brokers can match all your records.</div>
                         </div>
                         <div class="form-row mt-1">
@@ -341,7 +341,7 @@ function showErrorBanner(message) {
         banner.className = 'error-banner';
         document.body.prepend(banner);
     }
-    // CSP (script-src 'self') blocks inline handlers — build the button in JS
+    // CSP (script-src 'self') blocks inline handlers - build the button in JS
     banner.textContent = '';
     const text = document.createElement('span');
     text.textContent = message;

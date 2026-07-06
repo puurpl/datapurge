@@ -1,5 +1,5 @@
 /**
- * DataPurge Scan — Search for your data on broker sites
+ * DataPurge Scan - Search for your data on broker sites
  *
  * Shows scannable brokers with personalized search links
  * built from the user's profile (first_name, last_name, state).
@@ -94,7 +94,7 @@ function render(container) {
             <span class="privacy-notice-icon">&#128270;</span>
             <div>
                 <strong>How this works:</strong> Each link opens the broker's own public search page
-                with your name pre-filled. Your data stays in your browser — we just build the URL.
+                with your name pre-filled. Your data stays in your browser - we just build the URL.
             </div>
         </div>
 

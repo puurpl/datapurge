@@ -1,6 +1,6 @@
 // PWA lifecycle: service worker registration, install prompt, offline
 // indicator, update notification. All DOM is built with createElement +
-// addEventListener — the CSP (script-src 'self') forbids inline handlers.
+// addEventListener - the CSP (script-src 'self') forbids inline handlers.
 
 const DISMISS_KEY = 'datapurge_install_dismissed';
 
@@ -51,8 +51,8 @@ function showInstallBanner(mode) {
     title.textContent = 'Install DataPurge';
     const desc = document.createElement('p');
     desc.textContent = mode === 'ios'
-        ? 'Tap the Share button, then "Add to Home Screen" to use DataPurge as an app — works offline.'
-        : 'Add DataPurge to your device for quick access — works offline, your data stays local.';
+        ? 'Tap the Share button, then "Add to Home Screen" to use DataPurge as an app - works offline.'
+        : 'Add DataPurge to your device for quick access - works offline, your data stays local.';
     text.append(title, desc);
 
     const actions = document.createElement('div');
@@ -99,7 +99,7 @@ function initOfflineIndicator() {
     pill.id = 'offline-pill';
     pill.className = 'offline-pill';
     pill.setAttribute('role', 'status');
-    pill.textContent = 'Offline — your data is saved locally';
+    pill.textContent = 'Offline - your data is saved locally';
     document.body.appendChild(pill);
 
     const update = () => pill.classList.toggle('show', !navigator.onLine);
@@ -129,7 +129,7 @@ function showUpdateToast() {
 function registerSW() {
     if (!('serviceWorker' in navigator)) return;
 
-    // On first install clients.claim() fires controllerchange too —
+    // On first install clients.claim() fires controllerchange too -
     // only an existing controller means an actual update happened.
     const hadController = !!navigator.serviceWorker.controller;
     navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
