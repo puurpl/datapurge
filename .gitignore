@@ -32,6 +32,9 @@ letters/
 # Generated (root only — web/data/*.json is tracked)
 /registry.json
 
+# Wrangler / Cloudflare build cache
+.wrangler/
+
 # OS
 .DS_Store
 Thumbs.db
