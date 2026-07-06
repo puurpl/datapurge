@@ -1,5 +1,5 @@
 /**
- * DataPurge Progress — Monitoring pipeline, deadline tracking, verification
+ * DataPurge Progress - Monitoring pipeline, deadline tracking, verification
  */
 
 import { Store } from './store.js';
@@ -157,7 +157,7 @@ function scheduleDeadlineNotifications(entries, brokers) {
         const msUntilWarning = msUntilDeadline - 86400000;
         if (msUntilWarning > 0 && msUntilWarning < 86400000) {
             setTimeout(() => {
-                new Notification('DataPurge — Deadline Tomorrow', {
+                new Notification('DataPurge - Deadline Tomorrow', {
                     body: `${broker.name} must respond by tomorrow. If they don't, you can file a noncompliance notice.`,
                     icon: '/icon.svg',
                 });
@@ -167,7 +167,7 @@ function scheduleDeadlineNotifications(entries, brokers) {
         // Notify when deadline passes if within next 24 hours
         if (msUntilDeadline > 0 && msUntilDeadline < 86400000) {
             setTimeout(() => {
-                new Notification('DataPurge — Deadline Passed', {
+                new Notification('DataPurge - Deadline Passed', {
                     body: `${broker.name} has exceeded their legal response deadline. Send a noncompliance notice.`,
                     icon: '/icon.svg',
                 });
@@ -266,7 +266,7 @@ export const Progress = {
             ${overdue.length > 0 ? `
             <div class="card mt-2 card-alert">
                 <div class="card-header">
-                    <div class="card-title">Overdue — Send Noncompliance Notices</div>
+                    <div class="card-title">Overdue - Send Noncompliance Notices</div>
                 </div>
                 <p class="text-sm text-secondary mb-1">
                     These brokers have exceeded their legal response deadline.
@@ -279,7 +279,7 @@ export const Progress = {
                         <div class="progress-item progress-item-overdue">
                             <div>
                                 <span class="progress-item-name">${esc(e.broker.name)}</span>
-                                <span class="text-sm text-muted"> &mdash; ${e.daysAgo} days (deadline: ${e.deadline})</span>
+                                <span class="text-sm text-muted"> - ${e.daysAgo} days (deadline: ${e.deadline})</span>
                             </div>
                             <div class="progress-item-actions">
                                 <button class="btn btn-danger btn-sm btn-noncompliance" data-broker-id="${esc(e.id)}">
@@ -320,7 +320,7 @@ export const Progress = {
                         <div class="progress-item">
                             <div>
                                 <span class="progress-item-name">${esc(e.broker.name)}</span>
-                                <span class="text-sm text-muted"> &mdash; ${remaining} days remaining</span>
+                                <span class="text-sm text-muted"> - ${remaining} days remaining</span>
                             </div>
                             <div class="progress-bar-mini">
                                 <div class="progress-bar-fill" style="width:${pct}%"></div>
@@ -440,7 +440,7 @@ export const Progress = {
                             return `<div class="progress-item">
                                 <div>
                                     <span class="progress-item-name">${esc(name)}</span>
-                                    ${emailTo ? `<span class="text-sm text-muted"> &mdash; ${esc(emailTo)}</span>` : ''}
+                                    ${emailTo ? `<span class="text-sm text-muted"> - ${esc(emailTo)}</span>` : ''}
                                     ${statusBadge}
                                 </div>
                                 <span class="progress-item-date">${dateStr}</span>
@@ -486,7 +486,7 @@ export const Progress = {
                     window.open(nc.mailto, '_blank');
                     showToast(`Noncompliance notice opened for ${broker.name}`);
                 } else {
-                    showToast('Could not generate notice — check your info');
+                    showToast('Could not generate notice - check your info');
                 }
             });
         });
@@ -503,7 +503,7 @@ export const Progress = {
                 if (complaint) {
                     const text = `Subject: ${complaint.subject}\n\n${complaint.body}`;
                     navigator.clipboard.writeText(text)
-                        .then(() => showToast('AG complaint copied to clipboard — paste into your AG\'s online complaint form'))
+                        .then(() => showToast('AG complaint copied to clipboard - paste into your AG\'s online complaint form'))
                         .catch(() => {
                             // Fallback: show in a textarea
                             const w = window.open('', '_blank');
@@ -512,7 +512,7 @@ export const Progress = {
                             }
                         });
                 } else {
-                    showToast('Could not generate complaint — check your info');
+                    showToast('Could not generate complaint - check your info');
                 }
             });
         });
@@ -525,11 +525,11 @@ export const Progress = {
                 const allNotices = overdue.map(e => {
                     const nc = buildNoncompliance(e.broker, e.progress);
                     if (!nc) return null;
-                    return `TO: ${nc.emailTo}\nSubject: ${nc.subject}\n\n${nc.body}\n\n${'—'.repeat(40)}`;
+                    return `TO: ${nc.emailTo}\nSubject: ${nc.subject}\n\n${nc.body}\n\n${'-'.repeat(40)}`;
                 }).filter(Boolean).join('\n\n');
                 navigator.clipboard.writeText(allNotices)
                     .then(() => showToast(`${overdue.length} noncompliance notices copied to clipboard`))
-                    .catch(() => showToast('Copy failed — try sending individually'));
+                    .catch(() => showToast('Copy failed - try sending individually'));
             });
         }
 
@@ -611,7 +611,7 @@ export const Progress = {
                     const nc = buildNoncompliance(broker, p);
                     if (nc) {
                         window.open(nc.mailto, '_blank');
-                        showToast(`Still listed — noncompliance notice opened for ${broker.name}`);
+                        showToast(`Still listed - noncompliance notice opened for ${broker.name}`);
                     }
                 }
                 Progress.render(container, registryData);
@@ -650,7 +650,7 @@ export const Progress = {
 
         // Export text
         container.querySelector('#btn-export-txt').addEventListener('click', () => {
-            const lines = ['DataPurge — Opt-Out Request Log', `Exported: ${new Date().toLocaleString()}`, ''];
+            const lines = ['DataPurge - Opt-Out Request Log', `Exported: ${new Date().toLocaleString()}`, ''];
             const sorted = entries.sort((a, b) => new Date(a[1].sentAt) - new Date(b[1].sentAt));
             sorted.forEach(([id, p]) => {
                 const broker = brokers.find(b => b.id === id);

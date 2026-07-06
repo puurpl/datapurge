@@ -1,5 +1,5 @@
 /**
- * DataPurge Queue — Mass BCC send + individual fallback
+ * DataPurge Queue - Mass BCC send + individual fallback
  *
  * Primary flow: one email, BCC all brokers, minimal PII.
  * Fallback: send individually if user prefers.
@@ -122,7 +122,7 @@ function showToast(message) {
 function copyToClipboard(text, successMsg) {
     navigator.clipboard.writeText(text)
         .then(() => showToast(successMsg))
-        .catch(() => showToast('Copy failed — try selecting the text manually'));
+        .catch(() => showToast('Copy failed - try selecting the text manually'));
 }
 
 function esc(str) {
@@ -146,10 +146,10 @@ function getLocationNotices() {
     if (pii.state === 'California') {
         notices.push(`
             <div class="callout callout-action" style="text-align: left;">
-                <h3 style="margin-bottom: 0.5rem;">&#127919; California DELETE Act — DROP</h3>
+                <h3 style="margin-bottom: 0.5rem;">&#127919; California DELETE Act - DROP</h3>
                 <p class="text-secondary" style="max-width: none;">
                     As a California resident, you can also use the state's official
-                    <strong>Delete Request and Opt-out Platform (DROP)</strong> — a single request
+                    <strong>Delete Request and Opt-out Platform (DROP)</strong> - a single request
                     that reaches <strong>500+ registered data brokers</strong>, backed by law.
                     Brokers must process your request within 45 days or face $200/day fines.
                 </p>
@@ -159,7 +159,7 @@ function getLocationNotices() {
                     </a>
                 </div>
                 <p class="text-sm text-secondary mt-1">
-                    Use DROP <strong>in addition to</strong> the emails below for maximum coverage —
+                    Use DROP <strong>in addition to</strong> the emails below for maximum coverage -
                     DROP covers registered brokers, our emails reach others that may not be registered.
                 </p>
             </div>
@@ -174,7 +174,7 @@ function getLocationNotices() {
                 GPC is a browser signal that automatically tells every website you visit
                 to <strong>stop selling or sharing your data</strong>.
                 ${gpcLegal
-                    ? `In <strong>${esc(pii.state)}</strong>, websites are <strong>legally required</strong> to honor this signal — companies have been fined over $1M for ignoring it.`
+                    ? `In <strong>${esc(pii.state)}</strong>, websites are <strong>legally required</strong> to honor this signal - companies have been fined over $1M for ignoring it.`
                     : 'Many companies honor it voluntarily, and legal mandates are expanding across states.'}
                 It works alongside the emails below for ongoing protection.
             </p>
@@ -198,11 +198,11 @@ function getLocationNotices() {
     if (pii.country && pii.country !== 'US' && euCountries.has(pii.country)) {
         notices.push(`
             <div class="callout" style="text-align: left;">
-                <h3 style="margin-bottom: 0.5rem;">&#127466;&#127482; GDPR — File a complaint if ignored</h3>
+                <h3 style="margin-bottom: 0.5rem;">&#127466;&#127482; GDPR - File a complaint if ignored</h3>
                 <p class="text-secondary" style="max-width: none;">
                     Under GDPR, brokers must respond to your erasure request within <strong>30 days</strong>.
                     If a broker ignores you, you can file a formal complaint with your national
-                    Data Protection Authority — this can result in significant fines against them.
+                    Data Protection Authority - this can result in significant fines against them.
                 </p>
                 <div class="mt-1">
                     <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" class="btn btn-outline" target="_blank" rel="noopener">
@@ -326,7 +326,7 @@ function renderDripSignup(container, mass) {
         return;
     }
 
-    // Coming soon state — show preview card without functional signup
+    // Coming soon state - show preview card without functional signup
     if (!DRIP_LIVE) {
         const card = document.createElement('div');
         card.className = 'card drip-signup-card mb-2';
@@ -340,13 +340,13 @@ function renderDripSignup(container, mass) {
             <p class="text-secondary mb-2" style="max-width: none;">
                 We're building a reminder service that sends you one email per day with
                 ready-to-send BCC batches covering 50&ndash;100 brokers at a time. You click
-                each button and send from your own email client &mdash; we never email
+                each button and send from your own email client - we never email
                 brokers for you. Once all ${mass.count} brokers are covered, the cycle
                 restarts every 45 days with follow-up compliance reminders.
             </p>
             <p class="text-secondary text-sm mb-2" style="max-width: none;">
                 We store your signup email, one copy of your filled opt-out text, and the broker
-                list &mdash; used only to build your reminder emails. Nothing else. See the
+                list - used only to build your reminder emails. Nothing else. See the
                 <a href="privacy.html">privacy policy</a>.
             </p>
             <button class="btn btn-primary" disabled style="width: 100%; opacity: 0.6; cursor: not-allowed;">
@@ -369,11 +369,11 @@ function renderDripSignup(container, mass) {
         </div>
         <p class="text-secondary mb-2" style="max-width: none;">
             We'll send you one email per day with ready-to-send BCC batches covering
-            50&ndash;100 brokers at a time &mdash; you click each button and send from your
+            50&ndash;100 brokers at a time - you click each button and send from your
             own email client. We never email brokers for you. Once all brokers are
             covered, the cycle restarts every 45 days with follow-up compliance
             reminders. We store your signup email, one copy of your filled opt-out
-            text, and the broker list &mdash; used only to build your reminder emails.
+            text, and the broker list - used only to build your reminder emails.
             See the <a href="privacy.html">privacy policy</a>.
         </p>
 
@@ -472,7 +472,7 @@ function renderDripSignup(container, mass) {
             };
             const nc = Templates.fill('noncompliance_notice', ncFields, genericBroker);
 
-            // Queue holds broker identity only — no PII
+            // Queue holds broker identity only - no PII
             const queue = emailableBrokers.map(broker => {
                 const method = getEmailMethod(broker);
                 return {
@@ -516,7 +516,7 @@ function renderDripSignup(container, mass) {
                 <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
                     Your first batch is on its way. We'll send you one email per day with
                     ready-to-send BCC batches covering 50&ndash;100 brokers each. You send every
-                    opt-out from your own email account &mdash; we never email brokers for you.
+                    opt-out from your own email account - we never email brokers for you.
                     Once all <strong>${queue.length}</strong> brokers are covered, the cycle
                     restarts every 45 days with compliance reminders.
                 </p>
@@ -525,10 +525,10 @@ function renderDripSignup(container, mass) {
                 <h3 style="margin-bottom: 0.5rem;">Check your inbox</h3>
                 <p class="text-secondary" style="max-width: 520px; margin: 0 auto;">
                     We've sent a confirmation link to <strong>${esc(email)}</strong>. Click it to
-                    start &mdash; your first batch of opt-out links arrives immediately after.
+                    start - your first batch of opt-out links arrives immediately after.
                     We'll then send one email per day until all <strong>${queue.length}</strong>
                     brokers are covered, restarting every 45 days with compliance reminders.
-                    You send every opt-out from your own email account &mdash; we never email
+                    You send every opt-out from your own email account - we never email
                     brokers for you.
                 </p>
             `;
@@ -548,12 +548,12 @@ function renderDropCallout(container) {
     const card = document.createElement('div');
     card.className = 'card mb-2';
     card.innerHTML = `
-        <h3 style="margin-bottom: 0.5rem;">&#127796; You're in California — start with DROP</h3>
+        <h3 style="margin-bottom: 0.5rem;">&#127796; You're in California - start with DROP</h3>
         <p class="text-secondary text-sm" style="max-width: none;">
             California's privacy regulator runs <strong>DROP</strong>: one free, verified request
             that orders every data broker registered in California to delete your data. Registered
             brokers must process DROP requests starting <strong>August 1, 2026</strong>, with 90 days
-            to act. Submit that first, then use the queue below for what DROP doesn't cover —
+            to act. Submit that first, then use the queue below for what DROP doesn't cover -
             unregistered brokers, disclosure of what they held, and your own dated paper trail.
         </p>
         <a href="https://privacy.ca.gov/drop/" target="_blank" rel="noopener" class="btn btn-outline btn-sm mt-1">Open privacy.ca.gov/drop</a>
@@ -607,7 +607,7 @@ function renderProviderPicker(container, mass) {
             <h3 style="margin-bottom: 0.75rem;">How this works</h3>
             <p class="text-secondary" style="max-width: none;">
                 We'll BCC <strong>${mass.count} data broker privacy addresses</strong> using
-                <strong>${esc(mass.templateName)}</strong> — the strongest legal template for your
+                <strong>${esc(mass.templateName)}</strong> - the strongest legal template for your
                 location. Every provider limits how many BCC recipients you can include per email,
                 so we'll split them into batches for you.
             </p>
@@ -615,7 +615,7 @@ function renderProviderPicker(container, mass) {
                 <strong>Worth knowing:</strong> a preemptive request shares the details in your
                 request with brokers that may not have had them. That's the trade-off for complete
                 coverage. To track who mishandles your request, consider adding a dedicated email
-                alias under <em>Additional Email Addresses</em> in your profile — it'll be included
+                alias under <em>Additional Email Addresses</em> in your profile - it'll be included
                 in the deletion demand, and you'll know exactly where any mail to it came from.
             </p>
         </div>
@@ -657,7 +657,7 @@ function renderProviderPicker(container, mass) {
                                 <tr style="border-bottom: 1px solid var(--color-border);">
                                     <td style="padding: 0.25rem 0.5rem;">${esc(p.name)}</td>
                                     <td style="text-align: right; padding: 0.25rem 0.5rem;">${p.maxBcc}</td>
-                                    <td style="text-align: right; padding: 0.25rem 0.5rem;">${p.dailyCap || '—'}</td>
+                                    <td style="text-align: right; padding: 0.25rem 0.5rem;">${p.dailyCap || '-'}</td>
                                     <td style="padding: 0.25rem 0.5rem;" class="text-secondary">${esc(p.note)}</td>
                                 </tr>
                             `).join('')}
@@ -775,7 +775,7 @@ function renderBatchSendFlow(container, mass, batchSize) {
                 ${totalEmails === 1
                     ? `One email, BCC'd to <strong>${mass.count} data broker privacy addresses</strong>.`
                     : `<strong>${totalEmails} emails</strong>, each with up to <strong>${batchSize} BCC recipients</strong> (${mass.count} total).`}
-                Using <strong>${esc(mass.templateName)}</strong> — the strongest template for your
+                Using <strong>${esc(mass.templateName)}</strong> - the strongest template for your
                 location. It cites every applicable law, withdraws consent, demands written
                 confirmation, and warns of regulatory action for non-compliance.
             </p>
@@ -826,7 +826,7 @@ ${esc(mass.body)}</div>
                         <span class="batch-number">${i + 1}</span>
                         <div>
                             <div class="batch-card-title">
-                                ${totalEmails === 1 ? `All ${b.count} brokers` : `EMAIL ${i + 1} OF ${totalEmails} — ${b.count} brokers`}
+                                ${totalEmails === 1 ? `All ${b.count} brokers` : `EMAIL ${i + 1} OF ${totalEmails} - ${b.count} brokers`}
                             </div>
                             <div class="batch-card-count">Addresses #${b.start}–${b.end}</div>
                         </div>
@@ -981,7 +981,7 @@ ${esc(mass.body)}</div>
     // Copy email body
     container.querySelector('#btn-copy-email').addEventListener('click', () => {
         const text = `Subject: ${mass.subject}\n\n${mass.body}`;
-        copyToClipboard(text, 'Email copied — paste into a new email');
+        copyToClipboard(text, 'Email copied - paste into a new email');
     });
 
     // Mark all sent
@@ -1219,7 +1219,7 @@ export const Queue = {
             container.innerHTML = `
                 <div class="empty-state">
                     <h3>No brokers with email opt-out available</h3>
-                    <p>Check back soon — our registry is growing.</p>
+                    <p>Check back soon - our registry is growing.</p>
                 </div>`;
             return;
         }

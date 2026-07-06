@@ -1,5 +1,5 @@
 /**
- * DataPurge Templates — Client-side template selection & interpolation
+ * DataPurge Templates - Client-side template selection & interpolation
  *
  * Replicates server/templates.py logic exactly.
  */

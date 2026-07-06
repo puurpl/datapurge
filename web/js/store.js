@@ -1,8 +1,8 @@
 /**
- * DataPurge Store — Multi-profile PII & progress storage
+ * DataPurge Store - Multi-profile PII & progress storage
  *
  * All data in localStorage (persists across sessions).
- * Multiple profiles supported — each has its own PII and progress.
+ * Multiple profiles supported - each has its own PII and progress.
  */
 
 const PROFILES_KEY = 'datapurge_profiles';
@@ -37,7 +37,7 @@ function showStorageWarning() {
     _storageWarningShown = true;
     const toast = document.getElementById('toast');
     if (toast) {
-        toast.textContent = 'Storage is full — some data may not be saved.';
+        toast.textContent = 'Storage is full - some data may not be saved.';
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 4000);
     }
@@ -47,7 +47,7 @@ function getAllProfiles() {
     try {
         return JSON.parse(safeGetItem(PROFILES_KEY) || '[]');
     } catch {
-        console.warn('Corrupt profile data — resetting.');
+        console.warn('Corrupt profile data - resetting.');
         return [];
     }
 }
@@ -96,7 +96,7 @@ function migrateIfNeeded() {
 
 migrateIfNeeded();
 
-// Cross-tab sync — refresh when another tab modifies localStorage
+// Cross-tab sync - refresh when another tab modifies localStorage
 if (typeof window !== 'undefined') {
     window.addEventListener('storage', (e) => {
         if (e.key === PROFILES_KEY || e.key === ACTIVE_KEY) {
@@ -296,7 +296,7 @@ export const Store = {
     importProgress(jsonString) {
         const data = JSON.parse(jsonString);
         if (typeof data !== 'object' || data === null || Array.isArray(data)) {
-            throw new Error('Invalid progress format — expected an object');
+            throw new Error('Invalid progress format - expected an object');
         }
         const profiles = getAllProfiles();
         const id = getActiveId();
@@ -309,7 +309,7 @@ export const Store = {
 
     importAll(jsonString) {
         const imported = JSON.parse(jsonString);
-        if (!Array.isArray(imported)) throw new Error('Invalid format — expected an array');
+        if (!Array.isArray(imported)) throw new Error('Invalid format - expected an array');
         const existing = getAllProfiles();
         const existingIds = new Set(existing.map(p => p.id));
         imported.forEach(p => {
