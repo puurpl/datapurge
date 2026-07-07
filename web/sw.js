@@ -1,4 +1,4 @@
-const CACHE_NAME = 'datapurge-80a4e27516';
+const CACHE_NAME = 'datapurge-90134b5124';
 const ASSETS = [
     '/',
     '/index.html',

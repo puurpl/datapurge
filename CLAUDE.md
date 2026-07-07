@@ -111,3 +111,26 @@ a user's data should be gone from every broker, not just the handful
 they happened to know about. Requests must always be genuine exercises
 of the user's own rights: documented, legally grounded, and tracked
 to completion.
+
+## Affiliate Links & Analytics
+
+- **Ledger:** Optery is the only ACTIVE tracking link (get.optery.com/DataPurge, PartnerStack,
+  30% recurring x12mo). All other reviewed vendors are plain homepage links tagged `potential`.
+- **DE-CORRELATION (hard rule):** this site's affiliate links and program accounts are UNIQUE to
+  datapurge/optout.iamnottheproduct.com. NEVER reuse a link, tracking ID, or affiliate account
+  from any other property (stateofsurveillance.org keeps Incogni; DeleteMe via CJ is the planned
+  addition HERE). The owner supplies each site's links from separate per-site accounts.
+- **NEVER alter an affiliate URL string** - tracking URLs are opaque tokens.
+- **Tagging convention (mirrors SOS):** monetized/vendor CTAs carry Plausible class tags
+  `plausible-event-name=Affiliate+Click plausible-event-vendor=<v>
+  plausible-event-status=active|potential plausible-event-location=<page>--<n>`; active links
+  also carry `rel="sponsored noopener"`. Pages with tagged CTAs load
+  `script.tagged-events.js`; `web/js/track.js` skips tagged anchors (double-count guard) and
+  still fires generic `Outbound Link` events for untagged outbound links.
+- **Plausible site = `datapurge.iamnottheproduct.com`** (data-domain; the live host
+  optout.iamnottheproduct.com reports into it). Goals: `Affiliate Click` (props
+  vendor/status/location) + `Outbound Link` (props service/destination/from).
+- **PRE-DEPLOY REQUIREMENT: run `python3 build.py`** after editing anything under web/ - it
+  re-stamps the service-worker CACHE_NAME; without it returning PWA users keep the old cached
+  services.html/track.js indefinitely. Push to GitHub main = production deploy (CF Pages).
+- Honest ratings are non-negotiable: red/orange verdicts never soften because a link pays.
