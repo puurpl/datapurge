@@ -1,7 +1,7 @@
 id: actioniq
 name: ActionIQ
 domain: actioniq.com
-aliases: []
+aliases: [Uniphore]
 category: data-aggregator
 data_types:
   - email
@@ -17,14 +17,21 @@ scan:
 optout:
   methods:
     - type: email
-      email_to: privacy@actioniq.com
+      email_to: privacy@uniphore.com
       required_fields: [full_name, email]
       template_id: ccpa_maximum
+      notes: "Successor privacy contact after Uniphore's December 2024 acquisition of ActionIQ; stated on Uniphore's live privacy policy as the channel for rights requests (or postal mail to Attn: General Counsel, 1001 Page Mill Road, Building 2, Palo Alto, CA 94304). Verified 2026-07-19."
+    - type: email
+      email_to: privacy@actioniq.com
+      status: bounces
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "550 no such user (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: actioniq.com redirects to uniphore.com/actioniq/ and this mailbox no longer exists; use privacy@uniphore.com."
   difficulty: easy
   estimated_minutes: 5
   processing_days: 30
   legal_max_days: 45
-  notes: "ActionIQ is an enterprise customer data platform (CDP). Acts as data processor — processes data on directions from enterprise data controllers. If you are a customer of one of ActionIQ's clients, contact that client directly for data requests. For ActionIQ-held data, email privacy@actioniq.com. Data purging conducted automatically daily."
+  notes: "ActionIQ is an enterprise customer data platform (CDP). Acts as data processor — processes data on directions from enterprise data controllers. If you are a customer of one of ActionIQ's clients, contact that client directly for data requests. For ActionIQ-held data, email privacy@uniphore.com. Data purging conducted automatically daily."
 
 legal:
   ccpa: true
@@ -41,7 +48,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
+  last_verified: "2026-07-19"
   verified_by: web_research
-  confidence: 0.65
-  notes: "Source: actioniq.com privacy policy, cookie policy. Enterprise CDP. Acts as data processor. NYC-based. Contact: privacy@actioniq.com."
+  confidence: 0.80
+  notes: "Source: actioniq.com privacy policy, cookie policy. Enterprise CDP. Acts as data processor. NYC-based. Acquired by Uniphore (announced 2024-12-05); actioniq.com redirects to uniphore.com/actioniq/ and rights requests now go to privacy@uniphore.com. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."

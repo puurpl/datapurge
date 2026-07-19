@@ -15,15 +15,17 @@ scan:
 
 optout:
   methods:
-    - type: email
-      email_to: "legal@clientcommand.com"
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
     - type: web_form
-      url: "https://www.clientcommand.com/client-command-privacy-notice/"
+      url: "https://privacyportal-cdn.onetrust.com/dsarwebform/555c3377-7eb2-4e7a-bf30-c408de4ab483/70df6685-8289-4d72-a9d7-9a736b3b837f.html"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "OneTrust privacy web form linked from Client Command's privacy notice; phone 888.786.6489 also listed. Verified 2026-07-19; replaces the prior privacy-notice page URL."
+    - type: email
+      email_to: "legal@clientcommand.com"
+      status: not_accepted
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Broker does not accept email requests: 'Please note, email is not a mechanism used by Client Command for privacy rights requests. To complete your request, you will need to use our online webform which can be found here: https://privacyportal-cdn.onetrust.com/dsarwebform/555c3377-7eb2-4e7a-bf30-c408de4ab483/70df6685-8289-4d72-a9d7-9a736b3b837f.html' Re-verified 2026-07-19."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +46,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."

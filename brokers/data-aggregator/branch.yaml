@@ -18,6 +18,12 @@ optout:
       email_to: privacy@branch.io
       required_fields: [full_name, email]
       template_id: ccpa_maximum
+      notes: "CCPA/other-states notice lists privacy@branch.io and (650) 209-6461 as accepted rights channels alongside the request portal. A May 2026 auto-reply steered a requester to the portal but did not refuse email. EU/UK requests are portal-preferred. Re-verified 2026-07-19."
+    - type: web_form
+      url: "https://preferences.branch.io/"
+      required_fields: [full_name, email]
+      template_id: null
+      notes: "DataGrail Privacy Request Center. Verified 2026-07-19; preferred channel for EU/UK requests."
   difficulty: easy
   estimated_minutes: 5
   processing_days: 30
@@ -39,7 +45,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
+  last_verified: "2026-07-19"
   verified_by: web_research
-  confidence: 0.65
-  notes: "Source: branch.io/ccpa, branch.io privacy policy. Mobile deep linking and attribution. Claims not to sell end user data. Contact: privacy@branch.io."
+  confidence: 0.80
+  notes: "Source: branch.io/ccpa, branch.io privacy policy. Mobile deep linking and attribution. Claims not to sell end user data. Contact: privacy@branch.io. User reported a portal-steer auto-reply 2026-05 (GitHub issue #2); email confirmed still accepted, contacts re-verified 2026-07-19."

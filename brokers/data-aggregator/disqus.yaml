@@ -15,15 +15,17 @@ scan:
 
 optout:
   methods:
-    - type: email
-      email_to: "privacy@disqus.com"
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
     - type: web_form
-      url: "https://www.disqus.com/data-sharing-settings/"
+      url: "https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/9a049fa1-37af-4598-a87a-d0df2e2d904b.html"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "OneTrust DSAR web form (delete / do-not-sell) linked from the Disqus privacy policy. Verified 2026-07-19; replaces the prior data-sharing-settings page URL."
+    - type: email
+      email_to: "privacy@disqus.com"
+      status: not_accepted
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Broker directs deletion requests to the web form: 'You may submit a deletion request by filling out the form here and completing the subsequent email verification: https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/9a049fa1-37af-4598-a87a-d0df2e2d904b.html' privacy@disqus.com is listed for general questions only. Re-verified 2026-07-19."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +46,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. Owned by Zeta Global since December 2017. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."

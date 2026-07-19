@@ -18,12 +18,12 @@ scan:
 optout:
   methods:
     - type: web_form
-      url: "https://www.demandbase.com/privacy/"
+      url: "https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab"
       required_fields: [full_name, email]
       steps:
         - action: navigate
-          url: "https://www.demandbase.com/privacy/"
-          description: "Go to Demandbase Privacy Notice page"
+          url: "https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab"
+          description: "Go to Demandbase Privacy Center rights request tab (Ketch)"
         - action: click
           description: "Click 'Do Not Sell My Info' or use the privacy rights request form"
         - action: input
@@ -34,10 +34,13 @@ optout:
           description: "Enter your email address"
         - action: submit
           description: "Submit privacy rights request"
+      notes: "Ketch privacy-center rights interface; CA residents may also call 1-866-777-5530. Verified 2026-07-19."
     - type: email
       email_to: privacy@demandbase.com
+      status: not_accepted
       required_fields: [full_name, email]
       template_id: ccpa_maximum
+      notes: "Broker directs rights requests to the web form: 'If you would like to exercise your rights, please submit your request here: https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab.' privacy@demandbase.com appears only for under-16 data reports. Re-verified 2026-07-19."
   difficulty: easy
   estimated_minutes: 5
   processing_days: 30
@@ -58,7 +61,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
+  last_verified: "2026-07-19"
   verified_by: web_research
   confidence: 0.85
-  notes: "Source: California Data Broker Registry (registration #550546), demandbase.com/privacy. B2B ABM platform headquartered at 680 Folsom, Suite 400, San Francisco, CA 94107. Uses IP-to-company mapping and intent signals."
+  notes: "Source: California Data Broker Registry (registration #550546), demandbase.com/privacy. B2B ABM platform headquartered at 680 Folsom, Suite 400, San Francisco, CA 94107. Uses IP-to-company mapping and intent signals. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."

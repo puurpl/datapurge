@@ -15,15 +15,17 @@ scan:
 
 optout:
   methods:
-    - type: email
-      email_to: "privacy@catalist.us"
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
     - type: web_form
-      url: "https://www.catalist.us/privacy-policy/"
+      url: "https://catalist.us/your-privacy-choices/"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "Native Gravity Forms privacy-request form (delete, opt-out, correct, access, appeal). Broker directs all rights requests here or to phone (800) 938-9516. Verified 2026-07-19."
+    - type: email
+      email_to: "privacy@catalist.us"
+      status: not_accepted
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Broker does not accept privacy requests by email. Privacy policy: 'Requests to exercise your privacy rights must be submitted by completing a Privacy Request Form at catalist.us/your-privacy-choices.' privacy@catalist.us handles general questions only. Re-verified 2026-07-19."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +46,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."

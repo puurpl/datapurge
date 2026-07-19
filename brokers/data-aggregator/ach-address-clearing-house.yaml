@@ -17,13 +17,14 @@ optout:
   methods:
     - type: email
       email_to: "Privacy@achcoop.com"
-      required_fields: [full_name, email]
+      required_fields: [full_name, email, address]
       template_id: ccpa_maximum
+      notes: "Email requests are processed only when they include a full US postal address; the broker does not retain email addresses or phone numbers and uses the postal address to verify identity. Broker reply 2026-05: a request without a full US postal address cannot be authenticated. Re-verified 2026-07-19."
     - type: web_form
-      url: "https://www.achcoop.com/privacy-policy"
+      url: "https://www.achcoop.com/do-not-sell-my-personal-info"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "Wix-hosted opt-out form; the broker verifies identity from a full US postal address and states it cannot process requests without a full address. Verified 2026-07-19; replaces the prior privacy-policy page URL."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +45,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. User-reported 2026-05 that email requests require a full US postal address (GitHub issue #2); contacts re-verified 2026-07-19."

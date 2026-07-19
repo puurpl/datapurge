@@ -15,15 +15,20 @@ scan:
 
 optout:
   methods:
-    - type: email
-      email_to: "tburnell@completemedicallists.com"
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
     - type: web_form
-      url: "https://www.completemedicallists.com/privacy.php"
+      url: "https://www.completemedicallists.com/ccpa.php"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "Self-hosted CCPA request form (delete, access, opt-out of sale, limit sensitive info, correct). Verified 2026-07-19; replaces the prior privacy.php page URL."
+    - type: phone
+      phone_number: "(877) 463-3232"
+      notes: "Toll-free line for verbal requests; leave the information requested on the form as a voice-mail message, per the broker's reply. Verified 2026-07-19."
+    - type: email
+      email_to: "tburnell@completemedicallists.com"
+      status: not_accepted
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Broker steers requests to the web form or phone, per its reply: 'please visit the following webpage and complete the form located at http://www.completemedicallists.com/ccpa.php or you may call toll free at (877) 463-3232 and leave the information requested on the form in a voice mail message.' Re-verified 2026-07-19: this address no longer appears on the site."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +49,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."

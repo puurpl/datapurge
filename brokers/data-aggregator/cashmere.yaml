@@ -15,15 +15,22 @@ scan:
 
 optout:
   methods:
-    - type: email
-      email_to: "privacy@cashmereai.com"
-      required_fields: [full_name, email]
-      template_id: ccpa_maximum
     - type: web_form
-      url: "https://docs.google.com/forms/d/e/1FAIpQLScOd8iS_-UBDvCCZlacasJEj3g-J-VSF-oVLnI9_v2rDA04Sg/viewform"
+      url: "https://docs.google.com/forms/d/e/1FAIpQLSe4JoVQ77TQeCtFv7Ti0STusa7zuYYWfdZtZAhRQVjZcGl4sg/viewform"
       required_fields: [full_name, email]
       template_id: null
-      notes: "CCPA rights page from CA Data Broker Registry filing." 
+      notes: "Currently-linked 'Cashmere Data Opt Out' Google Form. Verified 2026-07-19; replaces the prior Google Form URL."
+    - type: email
+      email_to: "security@cashmereai.com"
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Contact address for data-deletion queries per the live privacy policy (sections 5, 7, 11). Verified 2026-07-19."
+    - type: email
+      email_to: "privacy@cashmereai.com"
+      status: bounces
+      required_fields: [full_name, email]
+      template_id: ccpa_maximum
+      notes: "Google Group rejects posts: 'the group you tried to contact (privacy) may not exist, or you may not have permission to post' (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: this address no longer appears on the live site; use security@cashmereai.com."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 30
@@ -44,7 +51,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
-  verified_by: ca_data_broker_registry
-  confidence: 0.70
-  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details."
+  last_verified: "2026-07-19"
+  verified_by: web_research
+  confidence: 0.80
+  notes: "Source: California Data Broker Registry (CPPA). Auto-imported — verify opt-out details. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."

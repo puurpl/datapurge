@@ -29,10 +29,13 @@ optout:
           description: "Enter your email address"
         - action: submit
           description: "Submit privacy opt-out request"
+      notes: "OneTrust DSAR web form; verified 2026-07-19. The current data-privacy notice lists this form, postal mail, and phone 877-218-7776 as the only rights channels."
     - type: email
       email_to: dataprivacy@affinitysolutions.com
+      status: bounces
       required_fields: [full_name, email]
       template_id: ccpa_maximum
+      notes: "550 5.4.1 Recipient address rejected: Access denied (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: the current data-privacy notice lists no email channel, only the OneTrust web form, postal mail, and phone 877-218-7776."
   difficulty: medium
   estimated_minutes: 10
   processing_days: 15
@@ -54,7 +57,7 @@ timing:
 
 meta:
   added: "2026-02-26"
-  last_verified: "2026-02-26"
+  last_verified: "2026-07-19"
   verified_by: web_research
-  confidence: 0.75
-  notes: "Source: affinity.solutions/data-privacy-notice, OneTrust privacy portal, California and Texas data broker registrations. Consumer purchase intelligence company. Derives insights from 140M+ debit/credit card transactions. Registered as data broker in California and Texas."
+  confidence: 0.80
+  notes: "Source: affinity.solutions/data-privacy-notice, OneTrust privacy portal, California and Texas data broker registrations. Consumer purchase intelligence company. Derives insights from 140M+ debit/credit card transactions. Registered as data broker in California and Texas. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."
