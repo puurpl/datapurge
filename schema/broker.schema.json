@@ -155,6 +155,11 @@
               "notes": {
                 "type": "string",
                 "description": "Free-form notes about this opt-out method"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["bounces", "not_accepted"],
+                "description": "Present only when this method is known not to work. 'bounces' = undeliverable/rejected; 'not_accepted' = deliverable but the broker refuses to process requests via this channel. Flagged methods are kept for the record but excluded from the email queue. Explain in 'notes'."
               }
             }
           }

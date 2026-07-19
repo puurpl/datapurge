@@ -49,3 +49,74 @@ def test_known_defunct_brokers_flagged(registry):
         broker = registry.get(broker_id)
         assert broker is not None, f"{broker_id} missing from registry"
         assert broker.is_defunct, f"{broker_id} should be marked defunct"
+
+
+def test_flagged_email_methods_excluded(registry):
+    # User-reported dead/refused email channels (GH #1/#2) stay on record with
+    # a status flag but must never be treated as a usable email method.
+    flagged_ids = [
+        "affinity-solutions", "catalist", "disqus", "complete-medical-lists",
+        "client-command", "demandbase", "atdata", "blackbaud",
+    ]
+    emailable_ids = {b.id for b in registry.get_emailable()}
+    for broker_id in flagged_ids:
+        broker = registry.get(broker_id)
+        assert broker is not None, f"{broker_id} missing from registry"
+        raw_methods = broker.optout.get("methods", [])
+        flagged = [m for m in raw_methods if m.get("type") == "email" and m.get("status")]
+        assert flagged, f"{broker_id} should retain a flagged email method on record"
+        assert broker.email_method is None, f"{broker_id} should have no usable email method"
+        assert broker_id not in emailable_ids, f"{broker_id} should not be emailable"
+
+
+def test_replacement_emails_active(registry):
+    # Where the old address died/was refused, a verified successor address
+    # becomes the usable email method; the old one stays flagged on record.
+    replacements = {
+        "attribits": "compliance@allgoodmediagroup.com",
+        "cashmere": "security@cashmereai.com",
+        "actioniq": "privacy@uniphore.com",
+    }
+    for broker_id, expected in replacements.items():
+        broker = registry.get(broker_id)
+        assert broker is not None, f"{broker_id} missing from registry"
+        assert broker.email_method is not None, f"{broker_id} should have a usable email method"
+        assert broker.email_method.email_to == expected, (
+            f"{broker_id} email should be {expected}, got {broker.email_method.email_to}"
+        )
+        raw_methods = broker.optout.get("methods", [])
+        assert any(m.get("type") == "email" and m.get("status") for m in raw_methods), (
+            f"{broker_id} should still keep the flagged old email method on record"
+        )
+
+
+def test_status_flags_documented(registry):
+    # Every status-flagged method must use a known flag and explain itself.
+    valid = {"bounces", "not_accepted"}
+    problems = []
+    for broker in registry.brokers.values():
+        for m in broker.optout.get("methods", []):
+            status = m.get("status")
+            if not status:
+                continue
+            if status not in valid:
+                problems.append(f"{broker.id}: invalid status {status!r}")
+            if not (m.get("notes") or "").strip():
+                problems.append(f"{broker.id}: status {status!r} without notes")
+    assert not problems, "Status-flag issues:\n" + "\n".join(problems)
+
+
+def test_bisceince_typo_fixed(registry):
+    # The imported dpo@bisceince.com typo (dead domain) is corrected.
+    broker = registry.get("b-i-science-2009")
+    assert broker is not None
+    assert broker.email_method is not None
+    assert broker.email_method.email_to == "privacy@biscience.com"
+
+
+def test_ach_stays_emailable(registry):
+    # ACH accepts email when a full postal address is included; stays queued.
+    emailable_ids = {b.id for b in registry.get_emailable()}
+    assert "ach-address-clearing-house" in emailable_ids
+    broker = registry.get("ach-address-clearing-house")
+    assert "address" in broker.email_method.required_fields

@@ -97,8 +97,13 @@ function renderBrokerCard(broker) {
                     ${broker.optout?.legal_max_days ? `<p><strong>Legal deadline:</strong> ${broker.optout.legal_max_days} days</p>` : ''}
                     ${broker.timing?.typical_removal_days ? `<p><strong>Typical removal:</strong> ${broker.timing.typical_removal_days} days</p>` : ''}
                     ${broker.optout?.methods ? broker.optout.methods.map(m => {
-                        if (m.type === 'email') return `<p><strong>Email:</strong> <a href="mailto:${esc(m.email_to)}">${esc(m.email_to)}</a></p>`;
+                        if (m.type === 'email') {
+                            if (m.status === 'bounces') return `<p><strong>Email:</strong> <s>${esc(m.email_to)}</s> (address bounces - do not use)</p>`;
+                            if (m.status === 'not_accepted') return `<p><strong>Email:</strong> ${esc(m.email_to)} (broker states email requests are not processed - use the web form)</p>`;
+                            return `<p><strong>Email:</strong> <a href="mailto:${esc(m.email_to)}">${esc(m.email_to)}</a></p>`;
+                        }
                         if (m.type === 'web_form') return `<p><strong>Web form:</strong> <a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.url)}</a></p>`;
+                        if (m.type === 'phone' && m.phone_number) return `<p><strong>Phone:</strong> <a href="tel:${esc(m.phone_number.replace(/[^+0-9]/g, ''))}">${esc(m.phone_number)}</a></p>`;
                         return '';
                     }).join('') : ''}
                     ${broker.optout?.notes ? `<p class="mt-1 text-muted">${esc(broker.optout.notes)}</p>` : ''}

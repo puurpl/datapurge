@@ -44,7 +44,7 @@ const CATEGORY_LABELS = {
 
 function getEmailMethod(broker) {
     if (!broker.optout || !broker.optout.methods) return null;
-    return broker.optout.methods.find(m => m.type === 'email') || null;
+    return broker.optout.methods.find(m => m.type === 'email' && !m.status) || null;
 }
 
 function isValidEmail(email) {
@@ -70,6 +70,51 @@ function getEmailableBrokers() {
 function getNonEmailBrokers() {
     if (!registryData) return [];
     return registryData.brokers.filter(b => !b.meta?.defunct && !getEmailMethod(b));
+}
+
+// Best manual opt-out link for a broker with no usable email method:
+// first working web_form, else a phone number, else the broker homepage.
+function bestManualLink(broker) {
+    const methods = (broker.optout && broker.optout.methods) || [];
+    const form = methods.find(m => m.type === 'web_form' && !m.status && m.url);
+    if (form) return { href: form.url, label: 'Open form', external: true };
+    const phone = methods.find(m => m.type === 'phone' && !m.status && m.phone_number);
+    if (phone) return { href: `tel:${phone.phone_number.replace(/[^+0-9]/g, '')}`, label: phone.phone_number, external: false };
+    return { href: `https://${broker.domain}`, label: broker.domain, external: true };
+}
+
+function renderManualOptoutList(nonEmailBrokers) {
+    if (!nonEmailBrokers.length) return '';
+    const n = nonEmailBrokers.length;
+    const sorted = [...nonEmailBrokers].sort((a, b) => {
+        const pa = CATEGORY_PRIORITY[a.category] ?? 99;
+        const pb = CATEGORY_PRIORITY[b.category] ?? 99;
+        if (pa !== pb) return pa - pb;
+        return a.name.localeCompare(b.name);
+    });
+    const rows = sorted.map(b => {
+        const link = bestManualLink(b);
+        const cat = CATEGORY_LABELS[b.category] || b.category;
+        return `
+            <div class="queue-item">
+                <div>
+                    <span class="queue-item-name">${esc(b.name)}</span>
+                    <span class="badge badge-category" style="margin-left: 0.5rem;">${esc(cat)}</span>
+                </div>
+                <a href="${esc(link.href)}"${link.external ? ' target="_blank" rel="noopener"' : ''}>${esc(link.label)}</a>
+            </div>
+        `;
+    }).join('');
+    return `
+        <details class="callout mt-2" style="text-align: left;">
+            <summary class="text-sm text-secondary" style="cursor: pointer;">
+                <strong>${n} broker${n > 1 ? 's' : ''}</strong> require manual opt-out (web form or phone) - show the list.
+            </summary>
+            <div class="mt-1">
+                ${rows}
+            </div>
+        </details>
+    `;
 }
 
 function getAllBrokerEmails() {
@@ -674,14 +719,7 @@ function renderProviderPicker(container, mass) {
             </div>
         </div>
 
-        ${nonEmailBrokers.length > 0 ? `
-        <div class="callout mt-2" style="text-align: left;">
-            <p class="text-sm text-secondary" style="max-width: none;">
-                <strong>${nonEmailBrokers.length} broker${nonEmailBrokers.length > 1 ? 's' : ''}</strong> require manual opt-out
-                (web form or phone). Check the <a href="#brokers">Brokers</a> directory for details.
-            </p>
-        </div>
-        ` : ''}
+        ${renderManualOptoutList(nonEmailBrokers)}
 
         <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
             <div class="flex items-center justify-between mb-1">
@@ -887,14 +925,7 @@ ${esc(mass.body)}</div>
             <button class="btn btn-success" id="btn-mark-all-sent" style="width:100%;">Mark All ${mass.count} Brokers as Sent</button>
         </div>
 
-        ${nonEmailBrokers.length > 0 ? `
-        <div class="callout mt-2" style="text-align: left;">
-            <p class="text-sm text-secondary" style="max-width: none;">
-                <strong>${nonEmailBrokers.length} broker${nonEmailBrokers.length > 1 ? 's' : ''}</strong> require manual opt-out
-                (web form or phone). Check the <a href="#brokers">Brokers</a> directory for details.
-            </p>
-        </div>
-        ` : ''}
+        ${renderManualOptoutList(nonEmailBrokers)}
 
         <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
             <div class="flex items-center justify-between mb-1">

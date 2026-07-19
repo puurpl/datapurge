@@ -26,6 +26,7 @@ class BrokerOptoutMethod:
     steps: list = field(default_factory=list)
     template_id: Optional[str] = None
     notes: Optional[str] = None
+    status: Optional[str] = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "BrokerOptoutMethod":
@@ -65,7 +66,7 @@ class Broker:
     @property
     def email_method(self) -> Optional[BrokerOptoutMethod]:
         for m in self.optout.get("methods", []):
-            if m["type"] == "email":
+            if m["type"] == "email" and not m.get("status"):
                 return BrokerOptoutMethod.from_dict(m)
         return None
 

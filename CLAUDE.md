@@ -62,6 +62,11 @@ The JS `selectBestTemplate()` in `web/js/templates.js` mirrors `server/templates
 Broker YAML files go in `brokers/{category}/`. See `schema/broker.schema.json`.
 Key fields: `id`, `optout.methods[]`, `legal`, `timing`, `scan`.
 
+A method may carry a `status` of `bounces` or `not_accepted` to record that the channel
+is known not to work (undeliverable vs. broker refuses that channel); flagged methods stay
+in the file for the record but are excluded from the email queue, so keep at least one
+working method as `methods[0]` and explain the flag in the method `notes`.
+
 After adding/modifying brokers, run `python3 build.py` to regenerate `web/data/registry.json`.
 
 ## Store Architecture (web/js/store.js)

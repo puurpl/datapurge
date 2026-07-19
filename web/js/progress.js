@@ -62,7 +62,7 @@ function buildNoncompliance(broker, sentEntry) {
     const filled = Templates.fill('noncompliance_notice', templateFields, broker);
     if (!filled) return null;
 
-    const emailTo = broker.optout?.methods?.find(m => m.type === 'email')?.email_to;
+    const emailTo = broker.optout?.methods?.find(m => m.type === 'email' && !m.status)?.email_to;
     if (!emailTo) return null;
 
     return {
