@@ -1,6 +1,6 @@
 {
-  "version": "20260610",
-  "updated_at": "2026-06-10",
+  "version": "20260719",
+  "updated_at": "2026-07-19",
   "broker_count": 721,
   "brokers": [
     {
@@ -596,19 +596,21 @@
             "email_to": "Privacy@achcoop.com",
             "required_fields": [
               "full_name",
-              "email"
+              "email",
+              "address"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "Email requests are processed only when they include a full US postal address; the broker does not retain email addresses or phone numbers and uses the postal address to verify identity. Broker reply 2026-05: a request without a full US postal address cannot be authenticated. Re-verified 2026-07-19."
           },
           {
             "type": "web_form",
-            "url": "https://www.achcoop.com/privacy-policy",
+            "url": "https://www.achcoop.com/do-not-sell-my-personal-info",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Wix-hosted opt-out form; the broker verifies identity from a full US postal address and states it cannot process requests without a full address. Verified 2026-07-19; replaces the prior privacy-policy page URL."
           }
         ],
         "difficulty": "medium",
@@ -634,10 +636,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported 2026-05 that email requests require a full US postal address (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -1228,7 +1230,9 @@
         "purchase-history",
         "location-history"
       ],
-      "aliases": [],
+      "aliases": [
+        "Uniphore"
+      ],
       "scan": {
         "scannable": false,
         "reason": "B2B customer data platform (CDP). No consumer-facing search. Acts as data processor for enterprise clients. Processes customer data for audience segmentation and activation."
@@ -1237,19 +1241,31 @@
         "methods": [
           {
             "type": "email",
-            "email_to": "privacy@actioniq.com",
+            "email_to": "privacy@uniphore.com",
             "required_fields": [
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "Successor privacy contact after Uniphore's December 2024 acquisition of ActionIQ; stated on Uniphore's live privacy policy as the channel for rights requests (or postal mail to Attn: General Counsel, 1001 Page Mill Road, Building 2, Palo Alto, CA 94304). Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@actioniq.com",
+            "status": "bounces",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "550 no such user (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: actioniq.com redirects to uniphore.com/actioniq/ and this mailbox no longer exists; use privacy@uniphore.com."
           }
         ],
         "difficulty": "easy",
         "estimated_minutes": 5,
         "processing_days": 30,
         "legal_max_days": 45,
-        "notes": "ActionIQ is an enterprise customer data platform (CDP). Acts as data processor \u2014 processes data on directions from enterprise data controllers. If you are a customer of one of ActionIQ's clients, contact that client directly for data requests. For ActionIQ-held data, email privacy@actioniq.com. Data purging conducted automatically daily."
+        "notes": "ActionIQ is an enterprise customer data platform (CDP). Acts as data processor \u2014 processes data on directions from enterprise data controllers. If you are a customer of one of ActionIQ's clients, contact that client directly for data requests. For ActionIQ-held data, email privacy@uniphore.com. Data purging conducted automatically daily."
       },
       "legal": {
         "ccpa": true,
@@ -1272,10 +1288,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "last_verified": "2026-07-19",
         "verified_by": "web_research",
-        "confidence": 0.65,
-        "notes": "Source: actioniq.com privacy policy, cookie policy. Enterprise CDP. Acts as data processor. NYC-based. Contact: privacy@actioniq.com."
+        "confidence": 0.8,
+        "notes": "Source: actioniq.com privacy policy, cookie policy. Enterprise CDP. Acts as data processor. NYC-based. Acquired by Uniphore (announced 2024-12-05); actioniq.com redirects to uniphore.com/actioniq/ and rights requests now go to privacy@uniphore.com. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -2251,16 +2267,19 @@
                 "action": "submit",
                 "description": "Submit privacy opt-out request"
               }
-            ]
+            ],
+            "notes": "OneTrust DSAR web form; verified 2026-07-19. The current data-privacy notice lists this form, postal mail, and phone 877-218-7776 as the only rights channels."
           },
           {
             "type": "email",
             "email_to": "dataprivacy@affinitysolutions.com",
+            "status": "bounces",
             "required_fields": [
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "550 5.4.1 Recipient address rejected: Access denied (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: the current data-privacy notice lists no email channel, only the OneTrust web form, postal mail, and phone 877-218-7776."
           }
         ],
         "difficulty": "medium",
@@ -2290,10 +2309,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "last_verified": "2026-07-19",
         "verified_by": "web_research",
-        "confidence": 0.75,
-        "notes": "Source: affinity.solutions/data-privacy-notice, OneTrust privacy portal, California and Texas data broker registrations. Consumer purchase intelligence company. Derives insights from 140M+ debit/credit card transactions. Registered as data broker in California and Texas."
+        "confidence": 0.8,
+        "notes": "Source: affinity.solutions/data-privacy-notice, OneTrust privacy portal, California and Texas data broker registrations. Consumer purchase intelligence company. Derives insights from 140M+ debit/credit card transactions. Registered as data broker in California and Texas. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -4579,23 +4598,25 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "privacy@atdata.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://www.atdata.com/ccpa-form",
+            "url": "https://instantdata.atdata.com/optout",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Native opt-out form (email, name, street, city, state, country, zip); phone 833-293-0973 also accepted. Verified 2026-07-19; replaces the prior ccpa-form URL."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@atdata.com",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker does not process requests by email: 'Requests sent to privacy@atdata.com will not be processed. Please submit all requests to our data privacy form (above) or by phone.' Re-verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -4621,10 +4642,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -4718,12 +4739,24 @@
         "methods": [
           {
             "type": "email",
-            "email_to": "compliance@attribits.com",
+            "email_to": "compliance@allgoodmediagroup.com",
             "required_fields": [
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "Current compliance contact named on both the privacy policy and do-not-sell pages: 'please contact us at compliance@allgoodmediagroup.com.' Phone 307-461-5810 also listed. Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "compliance@attribits.com",
+            "status": "bounces",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "550 no such user (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: the live site moved its compliance contact off-domain to compliance@allgoodmediagroup.com."
           },
           {
             "type": "web_form",
@@ -4733,7 +4766,7 @@
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Page contains no actual form - static instructions naming compliance@allgoodmediagroup.com and phone 307-461-5810. Verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -4759,10 +4792,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.75,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -5428,12 +5461,13 @@
         "methods": [
           {
             "type": "email",
-            "email_to": "dpo@bisceince.com",
+            "email_to": "privacy@biscience.com",
             "required_fields": [
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "The broker's own privacy policy publishes its DPO contact with a transposed-letter typo in the domain, so that dpo@ address is undeliverable; its CCPA page and the policy's complaint-contact line instead give privacy@biscience.com, the working DSAR address used here. Corrected 2026-07-19."
           },
           {
             "type": "web_form",
@@ -5443,7 +5477,7 @@
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "CCPA page has no fillable form - policy text, a mailto link, and a downloadable Data Subject Request Form PDF. Verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -5469,10 +5503,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported delivery failure 2026-05 (GitHub issue #1) traced to a typo in the opt-out address; corrected and re-verified 2026-07-19."
       }
     },
     {
@@ -6520,15 +6554,6 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "privacy@blackbaud.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
             "url": "https://www.blackbaud.com/company/data-subject-rights-request",
             "required_fields": [
@@ -6536,7 +6561,18 @@
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "OneTrust DSAR web form; the North America privacy policy also accepts requests by phone +1 844-532-0022. Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@blackbaud.com",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker does not process rights requests by email: 'Your email to this inbox will not be considered a valid submission of a privacy rights request, and the recipients of emails to this address do not have the ability to action any such requests.' privacy@blackbaud.com is reserved for policy questions and appeals. Re-verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -6562,10 +6598,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -6939,7 +6975,18 @@
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "CCPA/other-states notice lists privacy@branch.io and (650) 209-6461 as accepted rights channels alongside the request portal. A May 2026 auto-reply steered a requester to the portal but did not refuse email. EU/UK requests are portal-preferred. Re-verified 2026-07-19."
+          },
+          {
+            "type": "web_form",
+            "url": "https://preferences.branch.io/",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": null,
+            "notes": "DataGrail Privacy Request Center. Verified 2026-07-19; preferred channel for EU/UK requests."
           }
         ],
         "difficulty": "easy",
@@ -6969,10 +7016,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "last_verified": "2026-07-19",
         "verified_by": "web_research",
-        "confidence": 0.65,
-        "notes": "Source: branch.io/ccpa, branch.io privacy policy. Mobile deep linking and attribution. Claims not to sell end user data. Contact: privacy@branch.io."
+        "confidence": 0.8,
+        "notes": "Source: branch.io/ccpa, branch.io privacy policy. Mobile deep linking and attribution. Claims not to sell end user data. Contact: privacy@branch.io. User reported a portal-steer auto-reply 2026-05 (GitHub issue #2); email confirmed still accepted, contacts re-verified 2026-07-19."
       }
     },
     {
@@ -8524,23 +8571,35 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "privacy@cashmereai.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://docs.google.com/forms/d/e/1FAIpQLScOd8iS_-UBDvCCZlacasJEj3g-J-VSF-oVLnI9_v2rDA04Sg/viewform",
+            "url": "https://docs.google.com/forms/d/e/1FAIpQLSe4JoVQ77TQeCtFv7Ti0STusa7zuYYWfdZtZAhRQVjZcGl4sg/viewform",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Currently-linked 'Cashmere Data Opt Out' Google Form. Verified 2026-07-19; replaces the prior Google Form URL."
+          },
+          {
+            "type": "email",
+            "email_to": "security@cashmereai.com",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Contact address for data-deletion queries per the live privacy policy (sections 5, 7, 11). Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@cashmereai.com",
+            "status": "bounces",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Google Group rejects posts: 'the group you tried to contact (privacy) may not exist, or you may not have permission to post' (user report 2026-05, GitHub issue #1). Re-verified 2026-07-19: this address no longer appears on the live site; use security@cashmereai.com."
           }
         ],
         "difficulty": "medium",
@@ -8566,10 +8625,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported delivery failure 2026-05 (GitHub issue #1); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -8761,23 +8820,25 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "privacy@catalist.us",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://www.catalist.us/privacy-policy/",
+            "url": "https://catalist.us/your-privacy-choices/",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Native Gravity Forms privacy-request form (delete, opt-out, correct, access, appeal). Broker directs all rights requests here or to phone (800) 938-9516. Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@catalist.us",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker does not accept privacy requests by email. Privacy policy: 'Requests to exercise your privacy rights must be submitted by completing a Privacy Request Form at catalist.us/your-privacy-choices.' privacy@catalist.us handles general questions only. Re-verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -8803,10 +8864,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -10501,23 +10562,25 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "legal@clientcommand.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://www.clientcommand.com/client-command-privacy-notice/",
+            "url": "https://privacyportal-cdn.onetrust.com/dsarwebform/555c3377-7eb2-4e7a-bf30-c408de4ab483/70df6685-8289-4d72-a9d7-9a736b3b837f.html",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "OneTrust privacy web form linked from Client Command's privacy notice; phone 888.786.6489 also listed. Verified 2026-07-19; replaces the prior privacy-notice page URL."
+          },
+          {
+            "type": "email",
+            "email_to": "legal@clientcommand.com",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker does not accept email requests: 'Please note, email is not a mechanism used by Client Command for privacy rights requests. To complete your request, you will need to use our online webform which can be found here: https://privacyportal-cdn.onetrust.com/dsarwebform/555c3377-7eb2-4e7a-bf30-c408de4ab483/70df6685-8289-4d72-a9d7-9a736b3b837f.html' Re-verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -10543,10 +10606,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -11288,23 +11351,30 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "tburnell@completemedicallists.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://www.completemedicallists.com/privacy.php",
+            "url": "https://www.completemedicallists.com/ccpa.php",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "Self-hosted CCPA request form (delete, access, opt-out of sale, limit sensitive info, correct). Verified 2026-07-19; replaces the prior privacy.php page URL."
+          },
+          {
+            "type": "phone",
+            "phone_number": "(877) 463-3232",
+            "notes": "Toll-free line for verbal requests; leave the information requested on the form as a voice-mail message, per the broker's reply. Verified 2026-07-19."
+          },
+          {
+            "type": "email",
+            "email_to": "tburnell@completemedicallists.com",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker steers requests to the web form or phone, per its reply: 'please visit the following webpage and complete the form located at http://www.completemedicallists.com/ccpa.php or you may call toll free at (877) 463-3232 and leave the information requested on the form in a voice mail message.' Re-verified 2026-07-19: this address no longer appears on the site."
           }
         ],
         "difficulty": "medium",
@@ -11330,10 +11400,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -14922,7 +14992,7 @@
         "methods": [
           {
             "type": "web_form",
-            "url": "https://www.demandbase.com/privacy/",
+            "url": "https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab",
             "required_fields": [
               "full_name",
               "email"
@@ -14930,8 +15000,8 @@
             "steps": [
               {
                 "action": "navigate",
-                "url": "https://www.demandbase.com/privacy/",
-                "description": "Go to Demandbase Privacy Notice page"
+                "url": "https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab",
+                "description": "Go to Demandbase Privacy Center rights request tab (Ketch)"
               },
               {
                 "action": "click",
@@ -14951,16 +15021,19 @@
                 "action": "submit",
                 "description": "Submit privacy rights request"
               }
-            ]
+            ],
+            "notes": "Ketch privacy-center rights interface; CA residents may also call 1-866-777-5530. Verified 2026-07-19."
           },
           {
             "type": "email",
             "email_to": "privacy@demandbase.com",
+            "status": "not_accepted",
             "required_fields": [
               "full_name",
               "email"
             ],
-            "template_id": "ccpa_maximum"
+            "template_id": "ccpa_maximum",
+            "notes": "Broker directs rights requests to the web form: 'If you would like to exercise your rights, please submit your request here: https://www.demandbase.com/privacy-center.html?ketch_preferences_tab=rightsTab.' privacy@demandbase.com appears only for under-16 data reports. Re-verified 2026-07-19."
           }
         ],
         "difficulty": "easy",
@@ -14989,10 +15062,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
+        "last_verified": "2026-07-19",
         "verified_by": "web_research",
         "confidence": 0.85,
-        "notes": "Source: California Data Broker Registry (registration #550546), demandbase.com/privacy. B2B ABM platform headquartered at 680 Folsom, Suite 400, San Francisco, CA 94107. Uses IP-to-company mapping and intent signals."
+        "notes": "Source: California Data Broker Registry (registration #550546), demandbase.com/privacy. B2B ABM platform headquartered at 680 Folsom, Suite 400, San Francisco, CA 94107. Uses IP-to-company mapping and intent signals. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
@@ -15684,23 +15757,25 @@
       "optout": {
         "methods": [
           {
-            "type": "email",
-            "email_to": "privacy@disqus.com",
-            "required_fields": [
-              "full_name",
-              "email"
-            ],
-            "template_id": "ccpa_maximum"
-          },
-          {
             "type": "web_form",
-            "url": "https://www.disqus.com/data-sharing-settings/",
+            "url": "https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/9a049fa1-37af-4598-a87a-d0df2e2d904b.html",
             "required_fields": [
               "full_name",
               "email"
             ],
             "template_id": null,
-            "notes": "CCPA rights page from CA Data Broker Registry filing."
+            "notes": "OneTrust DSAR web form (delete / do-not-sell) linked from the Disqus privacy policy. Verified 2026-07-19; replaces the prior data-sharing-settings page URL."
+          },
+          {
+            "type": "email",
+            "email_to": "privacy@disqus.com",
+            "status": "not_accepted",
+            "required_fields": [
+              "full_name",
+              "email"
+            ],
+            "template_id": "ccpa_maximum",
+            "notes": "Broker directs deletion requests to the web form: 'You may submit a deletion request by filling out the form here and completing the subsequent email verification: https://privacyportal-cdn.onetrust.com/dsarwebform/bc2d3301-11a5-4de5-b15e-ce796187a352/9a049fa1-37af-4598-a87a-d0df2e2d904b.html' privacy@disqus.com is listed for general questions only. Re-verified 2026-07-19."
           }
         ],
         "difficulty": "medium",
@@ -15726,10 +15801,10 @@
       },
       "meta": {
         "added": "2026-02-26",
-        "last_verified": "2026-02-26",
-        "verified_by": "ca_data_broker_registry",
-        "confidence": 0.7,
-        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details."
+        "last_verified": "2026-07-19",
+        "verified_by": "web_research",
+        "confidence": 0.8,
+        "notes": "Source: California Data Broker Registry (CPPA). Auto-imported \u2014 verify opt-out details. Owned by Zeta Global since December 2017. User-reported email refusal 2026-05 (GitHub issue #2); contacts re-verified 2026-07-19."
       }
     },
     {
