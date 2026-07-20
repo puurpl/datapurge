@@ -1,0 +1,20 @@
+{
+    "name": "datapurge-relay",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "description": "DataPurge Reply Mailbox - inbound alias relay Worker (email/fetch/scheduled)",
+    "main": "src/index.js",
+    "scripts": {
+        "db:migrate:local": "wrangler d1 execute datapurge-relay --local --file=schema.sql",
+        "db:migrate:prod": "wrangler d1 execute datapurge-relay --remote --file=schema.sql",
+        "deploy": "wrangler deploy",
+        "test": "node --test test/*.test.js"
+    },
+    "dependencies": {
+        "postal-mime": "^2.4.4"
+    },
+    "devDependencies": {
+        "wrangler": "^3.90.0"
+    }
+}

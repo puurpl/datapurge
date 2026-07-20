@@ -1,0 +1,42 @@
+name = "datapurge-relay"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+
+# REPLACE-AT-DEPLOY: uncomment and point the API at the purchased relay domain
+# (e.g. api.purgereply.com). Inbound mail is wired separately via Email Routing
+# catch-all -> this Worker; see README launch checklist.
+# routes = [
+#     { pattern = "api.REPLACE-RELAY-DOMAIN.example", custom_domain = true }
+# ]
+
+[triggers]
+crons = ["0 9 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "datapurge-relay"
+# REPLACE-AT-DEPLOY: run `wrangler d1 create datapurge-relay` and paste the id.
+database_id = "REPLACE-AT-DEPLOY"
+
+# Outbound relay + confirmation mail. An unrestricted send_email binding (no
+# allowed_destination_addresses) is required because we send to arbitrary user
+# inboxes via Email Sending. Onboard the domain to Email Sending first.
+[[send_email]]
+name = "EMAIL"
+
+[vars]
+# REPLACE-RELAY-DOMAIN.example: the purchased relay domain. Used in alias/From
+# addresses (u-slug@RELAY_DOMAIN) and the noreply@ confirmation sender.
+RELAY_DOMAIN = "REPLACE-RELAY-DOMAIN.example"
+SITE_URL = "https://optout.iamnottheproduct.com"
+REGISTRY_URL = "https://optout.iamnottheproduct.com/data/registry.json"
+MONTHLY_RELAY_CAP = "300"
+# SKIP_PAYMENT=1 bypasses Stripe (claim -> confirm email directly). Keep "0" in
+# production; useful for staging without a Stripe account.
+SKIP_PAYMENT = "0"
+
+# Secrets (set via `wrangler secret put <NAME>`, never in this file):
+#   STRIPE_SECRET_KEY      - Stripe restricted/secret API key
+#   STRIPE_WEBHOOK_SECRET  - signing secret for the checkout/subscription webhook
+#   STRIPE_PRICE_ID        - the recurring subscription Price id
+#   ADMIN_KEY              - shared key for POST /api/admin/refresh-domains
