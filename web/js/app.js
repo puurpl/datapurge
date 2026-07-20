@@ -10,6 +10,7 @@ import { Scan } from './scan.js';
 import { Progress } from './progress.js';
 import { Share } from './share.js';
 import { PWA } from './pwa.js';
+import { Relay } from './relay.js';
 
 const US_STATES = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -252,9 +253,15 @@ function renderSetup(container) {
                         </div>
                     </details>
                 </form>
+
+                ${isEditing ? '<div id="relay-profile-card" class="mt-3"></div>' : ''}
             </div>
         </div>
     `;
+
+    // Reply Mailbox card (dark preview, or claim / active management when live)
+    const relayCard = container.querySelector('#relay-profile-card');
+    if (relayCard) Relay.renderProfileCard(relayCard);
 
     // Profile list interactions
     container.querySelectorAll('.profile-list-btn').forEach(btn => {
@@ -369,6 +376,10 @@ async function boot() {
 
     // PWA: service worker, install banner, offline pill, update toast
     PWA.init();
+
+    // Reply Mailbox: capture and store any #relay=alias:secret confirmation token,
+    // then strip it from the URL, before the router reads the hash. No-op otherwise.
+    Relay.captureFragmentToken();
 
     // Cross-tab sync: re-render current view when another tab changes data
     window.addEventListener('datapurge-storage-sync', () => {

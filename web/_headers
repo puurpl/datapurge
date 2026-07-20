@@ -1,19 +1,22 @@
+# Reply Mailbox (dark): the api.REPLACE-RELAY-DOMAIN.example host in the connect-src
+# directives below is a placeholder, swapped for the real api.<relay-domain> at launch.
+
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com https://api.REPLACE-RELAY-DOMAIN.example; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 
 /embed.html
   ! X-Frame-Options
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com; font-src 'self'; frame-ancestors *; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com https://api.REPLACE-RELAY-DOMAIN.example; font-src 'self'; frame-ancestors *; base-uri 'self'; form-action 'self'
   X-Content-Type-Options: nosniff
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 /index.html
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://drip.datapurge.iamnottheproduct.com https://api.REPLACE-RELAY-DOMAIN.example; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 
 # Allow cross-origin loading for self-hosted embeds
 /js/*

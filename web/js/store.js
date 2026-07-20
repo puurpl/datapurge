@@ -271,6 +271,59 @@ export const Store = {
         saveAllProfiles(profiles);
     },
 
+    // --- Reply Mailbox integration ---
+
+    // Make a relay alias the profile's opt-out contact email. The alias flows out
+    // to brokers as {email}; the previous real address is unshifted into
+    // email_aliases (deduped) so it still reaches brokers as {additional_emails}
+    // and they can match their existing records. Templates need no changes.
+    applyRelayAlias(alias) {
+        if (!alias) return;
+        const profiles = getAllProfiles();
+        const id = getActiveId();
+        const profile = profiles.find(p => p.id === id);
+        if (!profile || !profile.pii) return;
+
+        const pii = profile.pii;
+        const prevEmail = pii.email;
+        if (prevEmail && prevEmail !== alias) {
+            const aliases = Array.isArray(pii.email_aliases) ? pii.email_aliases : [];
+            // Real address first, then any prior aliases; drop dupes and the alias itself.
+            const rest = aliases.filter(e => e && e !== prevEmail && e !== alias);
+            pii.email_aliases = [prevEmail, ...rest];
+        }
+        pii.email = alias;
+        saveAllProfiles(profiles);
+    },
+
+    // Fold relay reply rows into progress. Only annotates brokers we have actually
+    // contacted (mirrors updateProgress semantics) and never touches `status`, so a
+    // manually 'verified' broker is never downgraded - the user confirms removal
+    // themselves. Stores the latest reply type for badges/nudges in progress.js.
+    mergeRelayReplies(rows) {
+        if (!Array.isArray(rows) || rows.length === 0) return;
+        const profiles = getAllProfiles();
+        const id = getActiveId();
+        const profile = profiles.find(p => p.id === id);
+        if (!profile || !profile.progress) return;
+
+        let changed = false;
+        rows.forEach(row => {
+            if (!row || !row.broker_id) return;
+            const entry = profile.progress[row.broker_id];
+            if (!entry) return; // only annotate brokers we've contacted
+            // Reply ids are monotonic; skip rows already merged so a retried
+            // sync after a partial failure can't inflate replyCount.
+            if (row.id != null && entry.lastReplyId != null && row.id <= entry.lastReplyId) return;
+            entry.respondedAt = row.received_at || new Date().toISOString();
+            entry.lastReplyType = row.classification || 'unrelated';
+            entry.replyCount = (entry.replyCount || 0) + 1;
+            if (row.id != null) entry.lastReplyId = row.id;
+            changed = true;
+        });
+        if (changed) saveAllProfiles(profiles);
+    },
+
     isSent(brokerId) {
         return !!this.getProgress()[brokerId];
     },

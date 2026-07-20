@@ -56,8 +56,9 @@
                 <p class="text-secondary mt-1 mb-2">
                     Everything you type into DataPurge stays in your browser. The site has no
                     accounts, no analytics scripts, no tracking pixels, and no third-party
-                    embeds. The only personal data we ever hold is what you explicitly give
-                    the optional email reminder service - and you can delete that at any time.
+                    embeds. The only personal data we ever hold is what you explicitly hand to
+                    the optional services you choose to sign up for - the email reminder service
+                    or the Reply Mailbox - and you can delete that at any time.
                 </p>
 
                 <h2 class="mt-3">Using the app</h2>
@@ -106,6 +107,48 @@
                     opt-out text, broker queue, and send history. We keep only your email
                     address, marked inactive, so we never email you again. If you want even
                     that removed, open a GitHub issue or contact us and we'll erase it.
+                </p>
+
+                <h2 class="mt-3">The optional Reply Mailbox service</h2>
+                <p class="text-secondary mt-1">
+                    The Reply Mailbox is a separate, paid, opt-in service. It gives you a private
+                    inbox alias to hand data brokers instead of your own address. The alias becomes
+                    the contact address brokers keep on file and type into their request forms, and
+                    it is where their replies, verification requests, and any marketing-list abuse
+                    land - with pause and block controls and a private evidence trail. It exists so
+                    that maintaining your privacy while contacting data collectors does not mean
+                    exposing your personal inbox to them.
+                </p>
+                <p class="text-secondary mt-1">
+                    Subscribing is two things at once, and both are true: it is a working private
+                    mail tool, and it is a contribution to the project's fight against blanket
+                    surveillance. It keeps DataPurge free for everyone, and it covers running costs
+                    and time rather than turning a profit.
+                </p>
+                <p class="text-secondary mt-1">
+                    For each broker reply we store the subject line, a classification (for example
+                    acknowledged, verification required, or completed), timestamps, and the sealed
+                    message body. The body is encrypted to a key generated in your browser and never
+                    sent to us, so stored bodies are readable only by you - we and our infrastructure
+                    hold ciphertext only. We keep these records as your evidence trail until you
+                    delete them; deleting your alias erases the alias and every stored reply and its
+                    evidence.
+                </p>
+                <p class="text-secondary mt-1">
+                    Relay traffic is carried by Cloudflare Email Routing and Email Sending. Cloudflare
+                    retains roughly 31 days of from/to/subject metadata for that mail, is contractually
+                    barred from using message content for anything beyond delivering the service, and
+                    full-body preview storage is disabled on our sending domain. This is the accurate,
+                    narrower claim: with preview disabled, Cloudflare keeps no message bodies beyond
+                    transient processing, and what we store is readable only by you.
+                </p>
+                <p class="text-secondary mt-1">
+                    As with the reminder service, the Reply Mailbox only ever emails <strong>you</strong>.
+                    We never email brokers on your behalf. One honest caveat: when you send opt-out
+                    emails yourself (for example the mass BCC batches), those still go out from your own
+                    email client and show your own sending address as the From. The alias governs where
+                    brokers write back and what they keep on file, and anything you submit through a
+                    broker's web form using the alias exposes nothing personal.
                 </p>
 
                 <h2 class="mt-3">Infrastructure</h2>

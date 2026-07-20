@@ -8,6 +8,7 @@
 import { Store } from './store.js';
 import { Templates } from './templates.js';
 import { Share } from './share.js';
+import { Relay } from './relay.js';
 
 let registryData = null;
 
@@ -83,6 +84,25 @@ function bestManualLink(broker) {
     return { href: `https://${broker.domain}`, label: broker.domain, external: true };
 }
 
+// When a Reply Mailbox alias is active, tell the user to paste it as the contact
+// email in each web/phone form so replies land in the alias, not their inbox.
+// Silent (empty) while the feature is dark or not yet active.
+function relayAliasNote() {
+    if (!Relay.isActive()) return '';
+    const alias = Relay.getActiveAlias();
+    if (!alias) return '';
+    return `
+        <div class="callout" style="text-align: left; margin-bottom: 0.75rem;">
+            <p class="text-sm" style="max-width: none;">
+                <strong>Using your Reply Mailbox?</strong> Paste
+                <code>${esc(alias)}</code> as your contact email in each of these forms.
+                Broker replies and verification requests then land in your alias instead of
+                your personal inbox.
+            </p>
+        </div>
+    `;
+}
+
 function renderManualOptoutList(nonEmailBrokers) {
     if (!nonEmailBrokers.length) return '';
     const n = nonEmailBrokers.length;
@@ -111,6 +131,7 @@ function renderManualOptoutList(nonEmailBrokers) {
                 <strong>${n} broker${n > 1 ? 's' : ''}</strong> require manual opt-out (web form or phone) - show the list.
             </summary>
             <div class="mt-1">
+                ${relayAliasNote()}
                 ${rows}
             </div>
         </details>
@@ -659,10 +680,9 @@ function renderProviderPicker(container, mass) {
             <p class="text-sm text-secondary mt-1" style="max-width: none;">
                 <strong>Worth knowing:</strong> a preemptive request shares the details in your
                 request with brokers that may not have had them. That's the trade-off for complete
-                coverage. To track who mishandles your request, consider adding a dedicated email
-                alias under <em>Additional Email Addresses</em> in your profile - it'll be included
-                in the deletion demand, and you'll know exactly where any mail to it came from.
+                coverage.
             </p>
+            <div id="relay-entry-point" class="mt-1"></div>
         </div>
 
         <div class="card mt-2">
@@ -731,6 +751,10 @@ function renderProviderPicker(container, mass) {
             </p>
         </div>
     `;
+
+    // Reply Mailbox entry point (dark preview, or the active alias to paste)
+    const relayEntry = container.querySelector('#relay-entry-point');
+    if (relayEntry) Relay.renderQueueEntryPoint(relayEntry);
 
     // Provider button clicks
     container.querySelectorAll('.btn-provider').forEach(btn => {

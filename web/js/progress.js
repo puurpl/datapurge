@@ -4,11 +4,24 @@
 
 import { Store } from './store.js';
 import { Templates } from './templates.js';
+import { Relay } from './relay.js';
 
 function esc(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+// Reply Mailbox badge for a progress entry, styled like the existing badges.
+function relayReplyBadge(p) {
+    if (!p || !p.lastReplyType) return '';
+    const type = p.lastReplyType;
+    let cls = 'badge-outline';
+    if (type === 'verification_required') cls = 'badge-medium';
+    else if (type === 'completed') cls = 'badge-sent';
+    else if (type === 'bounce_ndr') cls = 'badge-overdue';
+    else if (type === 'ack') cls = 'badge-category';
+    return `<span class="badge ${cls}">${esc(Relay.classificationLabel(type))}</span>`;
 }
 
 function showToast(message) {
@@ -178,6 +191,10 @@ function scheduleDeadlineNotifications(entries, brokers) {
 
 export const Progress = {
     render(container, registryData) {
+        // Fire-and-forget: pull any new broker replies from the Reply Mailbox into
+        // progress. Silent no-op while the feature is dark or not yet active.
+        Relay.syncReplies();
+
         const progress = Store.getProgress();
         const entries = Object.entries(progress);
         const sentCount = entries.length;
@@ -231,6 +248,12 @@ export const Progress = {
         const notifGranted = notifSupported && Notification.permission === 'granted';
         const notifDenied = notifSupported && Notification.permission === 'denied';
 
+        // Brokers whose Reply Mailbox reply asks for verification or confirms removal
+        // get an emphasized nudge toward the manual verify flow below.
+        const replyNudges = entries.filter(([, p]) =>
+            p.lastReplyType === 'verification_required' || p.lastReplyType === 'completed'
+        );
+
         container.innerHTML = `
             <h2 class="mb-2">Monitoring & Progress</h2>
 
@@ -252,6 +275,24 @@ export const Progress = {
                     <div class="label">Remaining</div>
                 </div>
             </div>
+
+            ${replyNudges.length > 0 ? `
+            <div class="callout callout-action mt-2" style="text-align: left;">
+                <h3 style="margin-bottom: 0.5rem;">Broker replies need your attention</h3>
+                <p class="text-secondary" style="max-width: none;">
+                    ${replyNudges.length} broker${replyNudges.length > 1 ? 's have' : ' has'} written back to your
+                    Reply Mailbox asking for verification or confirming removal. Confirm the outcome,
+                    and once your data is gone, mark it removed in <strong>Verify Removal</strong> below.
+                </p>
+                <ul class="text-secondary text-sm mt-1" style="max-width: none;">
+                    ${replyNudges.map(([id, p]) => {
+                        const broker = brokers.find(b => b.id === id);
+                        const name = broker ? broker.name : id;
+                        return `<li>${esc(name)} - ${esc(Relay.classificationLabel(p.lastReplyType))}</li>`;
+                    }).join('')}
+                </ul>
+            </div>
+            ` : ''}
 
             ${notifSupported && !notifGranted && !notifDenied && entries.length > 0 ? `
             <div class="callout mt-2" style="text-align: left; padding: 1rem;">
@@ -442,6 +483,7 @@ export const Progress = {
                                     <span class="progress-item-name">${esc(name)}</span>
                                     ${emailTo ? `<span class="text-sm text-muted"> - ${esc(emailTo)}</span>` : ''}
                                     ${statusBadge}
+                                    ${relayReplyBadge(p)}
                                 </div>
                                 <span class="progress-item-date">${dateStr}</span>
                             </div>`;
