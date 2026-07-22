@@ -91,16 +91,16 @@ function brokersWithAddress(registryData) {
 
 // Sender block from the profile's mailing address, with a bracketed hint when
 // the profile has no street address on file yet.
+// Assumes a complete return address - rendering is hard-gated on hasFullAddress()
+// so no placeholder text can ever reach a printed or previewed letter.
 function senderBlock(pii) {
-    const lines = [pii.full_name || '[Your full name]'];
     const cityLine = [pii.city, pii.state].filter(Boolean).join(', ');
     const cityStateZip = [cityLine, pii.zip].filter(Boolean).join(' ').trim();
-    if (pii.street) lines.push(pii.street);
-    if (cityStateZip) lines.push(cityStateZip);
-    if (!pii.street && !cityStateZip) {
-        lines.push('[Add your mailing address in your profile so it prints here]');
-    }
-    return lines.join('\n');
+    return [pii.full_name, pii.street, cityStateZip].filter(Boolean).join('\n');
+}
+
+function hasFullAddress(pii) {
+    return !!(pii && pii.full_name && pii.street && pii.city && pii.state && pii.zip);
 }
 
 // Post-process the filled body to open a hand-signature gap: insert three blank
@@ -302,8 +302,9 @@ function guidanceHtml() {
 }
 
 function letterRowHtml(broker, pii, fields, { showCheckbox, included, mailed }) {
-    const built = buildLetter(broker, pii, fields);
-    const previewText = built ? built.text : '(letter unavailable)';
+    const built = hasFullAddress(pii) ? buildLetter(broker, pii, fields) : null;
+    const previewText = built ? built.text
+        : 'Add your street, city, state and ZIP in your profile to preview this letter.';
     const address = getPostalAddress(broker) || '';
     const id = esc(broker.id);
     const checkbox = showCheckbox
@@ -360,7 +361,7 @@ export const Letters = {
         }
 
         let scope = 'unreachable';
-        const hasAddr = !!(pii.street || pii.city || pii.zip);
+        const hasAddr = hasFullAddress(pii);
 
         const rerender = () => {
             let printable, noAddress, rows;
@@ -399,11 +400,10 @@ export const Letters = {
 
                 ${!hasAddr ? `
                 <div class="callout callout-action mt-2" style="text-align: left;">
-                    <h3 style="margin-bottom: 0.5rem;">Add your mailing address</h3>
+                    <h3 style="margin-bottom: 0.5rem;">Add your mailing address to print letters</h3>
                     <p class="text-secondary" style="max-width: none;">
-                        Your profile has no street address on file, so the sender block prints a placeholder.
-                        Add your street, city, state and ZIP in your <a href="#setup">profile</a> so it appears
-                        on every letter. You can still print now and write your return address by hand.
+                        Letters need your return address in the sender block. Add your street, city,
+                        state and ZIP in your <a href="#setup">profile</a> and this page will unlock.
                     </p>
                 </div>
                 ` : ''}
@@ -443,9 +443,9 @@ export const Letters = {
                                No letters to print in this scope yet. ${focusId ? '' : "Switch scope, or add a broker with a mailing address using the search below."}
                            </p>`}
                     <div class="btn-group mt-1" style="flex-wrap: wrap; gap: 0.5rem;">
-                        <button class="btn btn-primary" id="btn-print-letters" ${n === 0 ? 'disabled' : ''}>Print ${n} ${noun}</button>
-                        <button class="btn btn-outline" id="btn-download-letters" ${n === 0 ? 'disabled' : ''}>Download letters (.html)</button>
-                        <button class="btn btn-success" id="btn-mark-mailed" ${n === 0 ? 'disabled' : ''}>Mark ${n} ${noun} as mailed</button>
+                        <button class="btn btn-primary" id="btn-print-letters" ${n === 0 || !hasAddr ? 'disabled' : ''}>Print ${n} ${noun}</button>
+                        <button class="btn btn-outline" id="btn-download-letters" ${n === 0 || !hasAddr ? 'disabled' : ''}>Download letters (.html)</button>
+                        <button class="btn btn-success" id="btn-mark-mailed" ${n === 0 || !hasAddr ? 'disabled' : ''}>Mark ${n} ${noun} as mailed</button>
                     </div>
                 </div>
 
