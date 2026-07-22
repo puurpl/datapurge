@@ -47,3 +47,13 @@ test('a truncated payload is rejected', async () => {
     const { privateJwk } = await generateRecipientKeypair();
     await assert.rejects(() => open(b64encode(new Uint8Array(10)), privateJwk));
 });
+
+test('seal accepts a base64url-encoded public key (app upload format)', async () => {
+    const kp = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+    const raw = new Uint8Array(await crypto.subtle.exportKey('raw', kp.publicKey));
+    const b64url = Buffer.from(raw).toString('base64url');
+    assert.match(b64url, /[-_]|^[A-Za-z0-9]+$/);
+    const sealed = await seal('base64url probe', b64url);
+    const jwk = await crypto.subtle.exportKey('jwk', kp.privateKey);
+    assert.equal(await open(sealed, jwk), 'base64url probe');
+});

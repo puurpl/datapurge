@@ -80,12 +80,12 @@ const NDR_BODY = /(\b550[ -]|\b5\.\d\.\d\b|recipient address rejected|mailbox (i
 const FORM_STEER = [
     /complete the (online )?form/i,
     /\b(web ?form|online form)\b/i,
-    /(submit|make|file|log|logged)[^.]{0,40}(request|opt.?out)[^.]{0,40}(through|via|using|at|on)[^.]{0,25}(form|portal|website|web site|online|page)/i,
+    /(submit|make|file|log|logged)[^.]{0,40}(request|opt.?out)[^.]{0,40}(through|via|using|at|on)[^.]{0,25}(\bform\b|portal|website|web site|online|page)/i,
     /privacy (portal|request center|request centre|request portal|request page)/i,
     /\brequest (center|centre|portal)\b/i,
-    /(fill (out|in)|complete)[^.]{0,25}(the )?(form|webform)/i,
+    /(fill (out|in)|complete)[^.]{0,25}(the )?\b(form|webform)\b/i,
     /(do not|don't|cannot|can't|unable to|won't|are unable to)[^.]{0,40}(accept|process)[^.]{0,40}(e-?mail|via e-?mail)/i,
-    /must be (submitted|made|completed)[^.]{0,25}(through|via|using|on)[^.]{0,25}(our|the)[^.]{0,25}(form|portal|website|web site)/i,
+    /must be (submitted|made|completed)[^.]{0,25}(through|via|using|on)[^.]{0,25}(our|the)[^.]{0,25}(\bform\b|portal|website|web site)/i,
     /(located|found|available) at (https?:|www\.)/i,
     /use our (web ?form|online form|portal|form|request form)/i,
 ];

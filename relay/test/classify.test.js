@@ -172,3 +172,14 @@ test('DSAR_VENDOR_DOMAINS contains the expected vendors', () => {
         assert.ok(DSAR_VENDOR_DOMAINS.includes(d), `missing ${d}`);
     }
 });
+
+test('completion notice with "information" after "completed" is not a form steer', () => {
+    const verdict = classify({
+        subject: 'Your request has been completed',
+        text: 'Your personal information has been deleted from our systems. This confirms your request is complete.',
+        html: '',
+        from: 'privacy@example.com',
+        contentType: 'text/plain',
+    });
+    assert.equal(verdict, 'completed');
+});

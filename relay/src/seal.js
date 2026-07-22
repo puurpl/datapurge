@@ -37,7 +37,11 @@ export function b64encode(bytes) {
 }
 
 export function b64decode(b64) {
-    const bin = atob(String(b64));
+    // Accept both standard base64 and base64url (the app uploads public keys
+    // base64url-encoded); atob only understands the standard alphabet.
+    let s = String(b64).replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    const bin = atob(s);
     const out = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
     return out;

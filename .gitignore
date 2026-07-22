@@ -38,3 +38,7 @@ letters/
 # OS
 .DS_Store
 Thumbs.db
+
+# Relay worker local dev
+relay/node_modules/
+relay/.dev.vars

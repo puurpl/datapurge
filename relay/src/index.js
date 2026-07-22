@@ -292,7 +292,9 @@ async function persistReply(env, o) {
                 subject: o.subject,
                 received_at: o.receivedAt,
             }), o.pubkey);
-        } catch {
+        } catch (e) {
+            // Never store plaintext as a fallback; log id-only so the gap is visible.
+            console.error('seal failed', o.aliasId, e && e.name ? e.name : 'error');
             sealed = null;
         }
     }
@@ -383,34 +385,48 @@ async function handleClaim(request, env, cors) {
     }
 
     const existing = await env.DB.prepare(
-        "SELECT id FROM aliases WHERE real_email = ? AND status != 'deleted'",
+        "SELECT id, slug, status, confirm_token FROM aliases WHERE real_email = ? AND status != 'deleted'",
     ).bind(email).first();
-    if (existing) {
+    if (existing && existing.status !== 'pending') {
         return jsonResponse({ error: 'This email already has a reply mailbox' }, 409, cors);
     }
 
-    let slug = makeSlug();
-    for (let i = 0; i < 6; i++) {
-        const clash = await env.DB.prepare('SELECT 1 FROM aliases WHERE slug = ?').bind(slug).first();
-        if (!clash) break;
+    let aliasId, slug, confirmToken;
+    if (existing) {
+        // Idempotent retry on a pending claim: reuse the row (and its token)
+        // instead of a 409 that would strand the user until the 7-day purge,
+        // e.g. when the first confirmation email failed to send or got lost.
+        aliasId = existing.id;
+        slug = existing.slug;
+        confirmToken = existing.confirm_token;
+        await env.DB.prepare('UPDATE aliases SET pubkey = ? WHERE id = ?').bind(pubkey, aliasId).run();
+    } else {
         slug = makeSlug();
+        for (let i = 0; i < 6; i++) {
+            const clash = await env.DB.prepare('SELECT 1 FROM aliases WHERE slug = ?').bind(slug).first();
+            if (!clash) break;
+            slug = makeSlug();
+        }
+        aliasId = globalThis.crypto.randomUUID();
+        confirmToken = globalThis.crypto.randomUUID();
+        const now = new Date().toISOString();
+        await env.DB.prepare(
+            `INSERT INTO aliases
+             (id, slug, real_email, pubkey, status, strict_mode, confirm_token, created_at, relay_month, relay_count_month)
+             VALUES (?, ?, ?, ?, 'pending', 0, ?, ?, ?, 0)`,
+        ).bind(aliasId, slug, email, pubkey, confirmToken, now, currentMonth()).run();
     }
-
-    const aliasId = globalThis.crypto.randomUUID();
-    const confirmToken = globalThis.crypto.randomUUID();
-    const now = new Date().toISOString();
-
-    await env.DB.prepare(
-        `INSERT INTO aliases
-         (id, slug, real_email, pubkey, status, strict_mode, confirm_token, created_at, relay_month, relay_count_month)
-         VALUES (?, ?, ?, ?, 'pending', 0, ?, ?, ?, 0)`,
-    ).bind(aliasId, slug, email, pubkey, confirmToken, now, currentMonth()).run();
 
     const apiBase = new URL(request.url).origin;
     const confirmUrl = `${apiBase}/api/confirm?token=${confirmToken}`;
 
     if (env.SKIP_PAYMENT === '1') {
-        await sendConfirmEmail(env, email, slug, confirmUrl);
+        try {
+            await sendConfirmEmail(env, email, slug, confirmUrl);
+        } catch {
+            // Row stays pending; the claim is idempotent so the user just retries.
+            return jsonResponse({ error: 'Could not send the confirmation email. Please try again.' }, 502, cors);
+        }
         return jsonResponse({ status: 'pending_confirm' }, 200, cors);
     }
 
@@ -748,11 +764,20 @@ async function refreshBrokerDomains(env) {
     const data = await resp.json();
 
     const pairs = new Map(); // domain -> broker_id
+    const domainShaped = (s) => /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/.test(s);
+    // Aliases first: lower precedence, and only ones that look like domains
+    // (broker aliases also carry company names, e.g. "Uniphore").
     for (const b of data.brokers || []) {
-        if (b.domain) pairs.set(String(b.domain).toLowerCase(), b.id);
         for (const a of b.aliases || []) {
-            if (a) pairs.set(String(a).toLowerCase(), b.id);
+            const dom = String(a || '').toLowerCase().trim();
+            if (dom && domainShaped(dom) && !pairs.has(dom)) pairs.set(dom, b.id);
         }
+    }
+    // Primary domains overwrite alias claims: when one broker's alias is another
+    // broker's primary domain (towerdata lists atdata.com), the primary owner wins.
+    for (const b of data.brokers || []) {
+        const dom = String(b.domain || '').toLowerCase().trim();
+        if (dom && domainShaped(dom)) pairs.set(dom, b.id);
     }
     // Static DSAR-vendor allowlist (NULL broker_id = known but not a broker).
     for (const d of DSAR_VENDOR_DOMAINS) {
