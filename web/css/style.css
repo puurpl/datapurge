@@ -1472,3 +1472,37 @@ h4 { font-size: 1rem; font-weight: 600; }
 .source-list a { color: var(--color-text-secondary); }
 
 .last-reviewed { font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 2rem; font-style: italic; }
+
+/* ==========================================================
+   Printable letters
+   ========================================================== */
+
+/* The print root is an off-screen staging area for the letters. It stays hidden
+   on screen; the @media print rules below reveal it and hide everything else,
+   but only while <body class="printing-letters"> is set, so printing any other
+   view is never hijacked by stale letter content. */
+#letters-print-root { display: none; }
+
+@media print {
+    body.printing-letters > *:not(#letters-print-root) { display: none !important; }
+    body.printing-letters #letters-print-root { display: block; }
+
+    body.printing-letters #letters-print-root .letter {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.45;
+        color: #000;
+        white-space: pre-wrap;
+        break-after: page;
+        page-break-after: always;
+    }
+    body.printing-letters #letters-print-root .letter:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    @page {
+        size: Letter;
+        margin: 1in;
+    }
+}

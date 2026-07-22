@@ -2,6 +2,8 @@
  * DataPurge Brokers - Searchable broker directory
  */
 
+import { Store } from './store.js';
+
 let allBrokers = [];
 
 const CATEGORY_LABELS = {
@@ -50,7 +52,7 @@ function methodIcon(type) {
     switch (type) {
         case 'email': return '&#9993;';
         case 'web_form': return '&#127760;';
-        case 'postal': return '&#9993;';
+        case 'postal': return '&#128238;';
         case 'phone': return '&#9742;';
         default: return '&#8226;';
     }
@@ -59,6 +61,26 @@ function methodIcon(type) {
 function getMethodTypes(broker) {
     if (!broker.optout || !broker.optout.methods) return [];
     return broker.optout.methods.map(m => m.type);
+}
+
+// A working (non-flagged) postal address on file, or null.
+function getPostalAddress(broker) {
+    const methods = (broker.optout && broker.optout.methods) || [];
+    const m = methods.find(x => x.type === 'postal' && !x.status && x.postal_address);
+    return m ? m.postal_address : null;
+}
+
+function showToast(message) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
 function renderBrokerCard(broker) {
@@ -103,10 +125,17 @@ function renderBrokerCard(broker) {
                             return `<p><strong>Email:</strong> <a href="mailto:${esc(m.email_to)}">${esc(m.email_to)}</a></p>`;
                         }
                         if (m.type === 'web_form') return `<p><strong>Web form:</strong> <a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.url)}</a></p>`;
+                        if (m.type === 'postal' && m.postal_address) return `<p><strong>Mail:</strong> ${esc(m.postal_address)}</p>`;
                         if (m.type === 'phone' && m.phone_number) return `<p><strong>Phone:</strong> <a href="tel:${esc(m.phone_number.replace(/[^+0-9]/g, ''))}">${esc(m.phone_number)}</a></p>`;
                         return '';
                     }).join('') : ''}
                     ${broker.optout?.notes ? `<p class="mt-1 text-muted">${esc(broker.optout.notes)}</p>` : ''}
+                    ${getPostalAddress(broker) ? `
+                    <label class="letter-pref-toggle" style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer; margin-top: 0.75rem;">
+                        <input type="checkbox" class="letter-pref-checkbox" data-broker-id="${esc(broker.id)}" ${Store.getLetterPrefs()[broker.id] === 'include' ? 'checked' : ''}>
+                        <span>Include in printed letters</span>
+                    </label>
+                    ` : ''}
                 </div>
             </div>
         </div>
@@ -168,6 +197,8 @@ export const Brokers = {
             grid.querySelectorAll('.broker-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     if (e.target.closest('a')) return;
+                    // Don't collapse the card when toggling the letters preference.
+                    if (e.target.closest('.letter-pref-toggle')) return;
                     const id = card.dataset.brokerId;
                     const details = card.querySelector('.broker-card-details');
                     if (!details) return;
@@ -180,6 +211,17 @@ export const Brokers = {
                         details.classList.add('open');
                         expandedId = id;
                     }
+                });
+            });
+
+            grid.querySelectorAll('.letter-pref-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    const id = cb.dataset.brokerId;
+                    // Checked forces the broker into printed letters; unchecked clears
+                    // the override so it follows the letters-mode scope default.
+                    Store.setLetterPref(id, cb.checked ? 'include' : null);
+                    showToast(cb.checked ? 'Added to printed letters' : 'Removed from printed letters');
                 });
             });
         }

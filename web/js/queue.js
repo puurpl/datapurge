@@ -9,6 +9,7 @@ import { Store } from './store.js';
 import { Templates } from './templates.js';
 import { Share } from './share.js';
 import { Relay } from './relay.js';
+import { Letters } from './letters.js';
 
 let registryData = null;
 
@@ -74,11 +75,14 @@ function getNonEmailBrokers() {
 }
 
 // Best manual opt-out link for a broker with no usable email method:
-// first working web_form, else a phone number, else the broker homepage.
+// first working web_form, else a mailing address (print a letter), else a phone
+// number, else the broker homepage.
 function bestManualLink(broker) {
     const methods = (broker.optout && broker.optout.methods) || [];
     const form = methods.find(m => m.type === 'web_form' && !m.status && m.url);
     if (form) return { href: form.url, label: 'Open form', external: true };
+    const postal = methods.find(m => m.type === 'postal' && !m.status && m.postal_address);
+    if (postal) return { action: 'print-letter', brokerId: broker.id, label: 'Print letter' };
     const phone = methods.find(m => m.type === 'phone' && !m.status && m.phone_number);
     if (phone) return { href: `tel:${phone.phone_number.replace(/[^+0-9]/g, '')}`, label: phone.phone_number, external: false };
     return { href: `https://${broker.domain}`, label: broker.domain, external: true };
@@ -115,27 +119,50 @@ function renderManualOptoutList(nonEmailBrokers) {
     const rows = sorted.map(b => {
         const link = bestManualLink(b);
         const cat = CATEGORY_LABELS[b.category] || b.category;
+        const action = link.action === 'print-letter'
+            ? `<button class="btn-link" data-print-letter="${esc(b.id)}" style="background:none; border:none; color:var(--color-primary); cursor:pointer; padding:0; text-decoration:underline; font:inherit;">${esc(link.label)}</button>`
+            : `<a href="${esc(link.href)}"${link.external ? ' target="_blank" rel="noopener"' : ''}>${esc(link.label)}</a>`;
         return `
             <div class="queue-item">
                 <div>
                     <span class="queue-item-name">${esc(b.name)}</span>
                     <span class="badge badge-category" style="margin-left: 0.5rem;">${esc(cat)}</span>
                 </div>
-                <a href="${esc(link.href)}"${link.external ? ' target="_blank" rel="noopener"' : ''}>${esc(link.label)}</a>
+                ${action}
             </div>
         `;
     }).join('');
     return `
         <details class="callout mt-2" style="text-align: left;">
             <summary class="text-sm text-secondary" style="cursor: pointer;">
-                <strong>${n} broker${n > 1 ? 's' : ''}</strong> require manual opt-out (web form or phone) - show the list.
+                <strong>${n} broker${n > 1 ? 's' : ''}</strong> require manual opt-out (web form, mail, or phone) - show the list.
             </summary>
             <div class="mt-1">
                 ${relayAliasNote()}
+                <div class="mb-1">
+                    <button class="btn btn-outline btn-sm" id="btn-print-letters-manual">Print letters instead</button>
+                </div>
                 ${rows}
             </div>
         </details>
     `;
+}
+
+// Wire the manual opt-out list controls (present in both the provider picker and
+// the batch-send flow): the "Print letters instead" button and each broker's
+// "Print letter" action, all of which open the letters mode in this container.
+function attachManualListListeners(container) {
+    const printAll = container.querySelector('#btn-print-letters-manual');
+    if (printAll) printAll.addEventListener('click', () => renderLettersMode(container));
+    container.querySelectorAll('[data-print-letter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            renderLettersMode(container, { focusBrokerId: btn.getAttribute('data-print-letter') });
+        });
+    });
+}
+
+function renderLettersMode(container, opts = {}) {
+    Letters.render(container, registryData, opts);
 }
 
 function getAllBrokerEmails() {
@@ -743,11 +770,15 @@ function renderProviderPicker(container, mass) {
 
         <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
             <div class="flex items-center justify-between mb-1">
-                <h3>Prefer to send individually?</h3>
-                <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
+                <h3>Prefer another way to send?</h3>
+                <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+                    <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
+                    <button class="btn btn-outline btn-sm" id="btn-letters-mode">Print postal letters</button>
+                </div>
             </div>
             <p class="text-sm text-secondary">
-                Send one-by-one with broker-specific templates for a stronger paper trail.
+                Send one-by-one with broker-specific templates for a stronger paper trail,
+                or print letters to mail the brokers that only accept postal requests.
             </p>
         </div>
     `;
@@ -785,6 +816,14 @@ function renderProviderPicker(container, mass) {
     container.querySelector('#btn-individual-mode').addEventListener('click', () => {
         renderIndividualMode(container);
     });
+
+    // Switch to printable letters
+    container.querySelector('#btn-letters-mode').addEventListener('click', () => {
+        renderLettersMode(container);
+    });
+
+    // Manual opt-out list controls (print-letter actions)
+    attachManualListListeners(container);
 }
 
 function renderBatchSendFlow(container, mass, batchSize) {
@@ -953,11 +992,15 @@ ${esc(mass.body)}</div>
 
         <div class="mt-3" style="border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
             <div class="flex items-center justify-between mb-1">
-                <h3>Prefer to send individually?</h3>
-                <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
+                <h3>Prefer another way to send?</h3>
+                <div class="btn-group" style="flex-wrap: wrap; gap: 0.5rem;">
+                    <button class="btn btn-outline btn-sm" id="btn-individual-mode">Switch to Individual Mode</button>
+                    <button class="btn btn-outline btn-sm" id="btn-letters-mode">Print postal letters</button>
+                </div>
             </div>
             <p class="text-sm text-secondary">
-                Send one-by-one with broker-specific templates for a stronger paper trail.
+                Send one-by-one with broker-specific templates for a stronger paper trail,
+                or print letters to mail the brokers that only accept postal requests.
             </p>
         </div>
 
@@ -1052,6 +1095,14 @@ ${esc(mass.body)}</div>
     container.querySelector('#btn-individual-mode').addEventListener('click', () => {
         renderIndividualMode(container);
     });
+
+    // Switch to printable letters
+    container.querySelector('#btn-letters-mode').addEventListener('click', () => {
+        renderLettersMode(container);
+    });
+
+    // Manual opt-out list controls (print-letter actions)
+    attachManualListListeners(container);
 
     // Render broker list
     const listEl = container.querySelector('#broker-list');
@@ -1255,6 +1306,11 @@ export const Queue = {
     /** Shared access to loaded registry for other modules */
     getRegistryData() {
         return registryData;
+    },
+
+    /** Thin accessor: brokers the email queue cannot reach (used by letters mode). */
+    getNonEmailBrokers() {
+        return getNonEmailBrokers();
     },
 
     render(container) {

@@ -249,7 +249,10 @@ export const Store = {
         return profile ? (profile.progress || {}) : {};
     },
 
-    markSent(brokerId) {
+    // Record a broker as contacted. `extra` is merged into the progress entry so
+    // callers can annotate the channel used, e.g. Store.markSent(id, { sentVia: 'letter' }).
+    // Existing callers pass only the id and keep the previous behaviour unchanged.
+    markSent(brokerId, extra) {
         const profiles = getAllProfiles();
         const id = getActiveId();
         const profile = profiles.find(p => p.id === id);
@@ -258,6 +261,7 @@ export const Store = {
         profile.progress[brokerId] = {
             sentAt: new Date().toISOString(),
             status: 'sent',
+            ...(extra && typeof extra === 'object' ? extra : {}),
         };
         saveAllProfiles(profiles);
     },
@@ -268,6 +272,31 @@ export const Store = {
         const profile = profiles.find(p => p.id === id);
         if (!profile || !profile.progress || !profile.progress[brokerId]) return;
         Object.assign(profile.progress[brokerId], updates);
+        saveAllProfiles(profiles);
+    },
+
+    // --- Printable-letter preferences (on active profile) ---
+
+    // Per-broker overrides for the printable-letters scope, kept beside pii/progress:
+    // 'include' forces a broker into the printed set, 'exclude' drops one the scope
+    // would otherwise include. Any other value clears the override so the broker
+    // follows the current scope default.
+    getLetterPrefs() {
+        const profile = getActiveProfile();
+        return profile ? (profile.letterPrefs || {}) : {};
+    },
+
+    setLetterPref(brokerId, value) {
+        const profiles = getAllProfiles();
+        const id = getActiveId();
+        const profile = profiles.find(p => p.id === id);
+        if (!profile) return;
+        if (!profile.letterPrefs) profile.letterPrefs = {};
+        if (value === 'include' || value === 'exclude') {
+            profile.letterPrefs[brokerId] = value;
+        } else {
+            delete profile.letterPrefs[brokerId];
+        }
         saveAllProfiles(profiles);
     },
 
@@ -373,6 +402,7 @@ export const Store = {
                     label: String(p.label || 'Imported Profile'),
                     pii: (typeof p.pii === 'object' && p.pii) ? p.pii : {},
                     progress: (typeof p.progress === 'object' && p.progress) ? p.progress : {},
+                    letterPrefs: (typeof p.letterPrefs === 'object' && p.letterPrefs) ? p.letterPrefs : {},
                     createdAt: p.createdAt || new Date().toISOString(),
                 });
             }

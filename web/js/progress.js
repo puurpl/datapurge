@@ -478,10 +478,16 @@ export const Progress = {
                                 : p.status === 'still_listed'
                                     ? '<span class="badge badge-overdue">Still Listed</span>'
                                     : '';
+                            const mailedBadge = p.sentVia === 'letter'
+                                ? '<span class="badge badge-category">Mailed</span>'
+                                : '';
                             return `<div class="progress-item">
                                 <div>
                                     <span class="progress-item-name">${esc(name)}</span>
-                                    ${emailTo ? `<span class="text-sm text-muted"> - ${esc(emailTo)}</span>` : ''}
+                                    ${p.sentVia === 'letter'
+                                        ? '<span class="text-sm text-muted"> - by post</span>'
+                                        : emailTo ? `<span class="text-sm text-muted"> - ${esc(emailTo)}</span>` : ''}
+                                    ${mailedBadge}
                                     ${statusBadge}
                                     ${relayReplyBadge(p)}
                                 </div>
@@ -705,7 +711,8 @@ export const Progress = {
                 let status = '';
                 if (p.status === 'verified') status = ' [VERIFIED REMOVED]';
                 else if (p.status === 'still_listed') status = ' [STILL LISTED]';
-                lines.push(`- ${dateStr}: Sent opt-out request to ${name} (${domain}) via ${email}${status}`);
+                const via = p.sentVia === 'letter' ? 'letter' : email;
+                lines.push(`- ${dateStr}: Sent opt-out request to ${name} (${domain}) via ${via}${status}`);
             });
             lines.push('', `Total: ${entries.length} requests sent`);
             lines.push(`Verified removed: ${verified.length}`);
