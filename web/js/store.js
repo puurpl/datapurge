@@ -341,12 +341,15 @@ export const Store = {
             if (!row || !row.broker_id) return;
             const entry = profile.progress[row.broker_id];
             if (!entry) return; // only annotate brokers we've contacted
-            // Reply ids are monotonic; skip rows already merged so a retried
-            // sync after a partial failure can't inflate replyCount.
-            if (row.id != null && entry.lastReplyId != null && row.id <= entry.lastReplyId) return;
+            // Reply ids are UUIDs, so ordering comes from the server timestamps:
+            // skip rows at or before this broker's last merged received_at so a
+            // retried sync after a partial failure can't inflate replyCount.
+            if (row.received_at && entry.lastReplyAt && row.received_at < entry.lastReplyAt) return;
+            if (row.received_at && entry.lastReplyAt === row.received_at && entry.lastReplyId === row.id) return;
             entry.respondedAt = row.received_at || new Date().toISOString();
             entry.lastReplyType = row.classification || 'unrelated';
             entry.replyCount = (entry.replyCount || 0) + 1;
+            if (row.received_at) entry.lastReplyAt = row.received_at;
             if (row.id != null) entry.lastReplyId = row.id;
             changed = true;
         });
