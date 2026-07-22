@@ -15,12 +15,11 @@
  */
 
 import PostalMime from 'postal-mime';
-import { EmailMessage } from 'cloudflare:email';
 import { classify, extractDomain, DSAR_VENDOR_DOMAINS } from './classify.js';
 import { seal, b64encode } from './seal.js';
+import { sendViaTem, parseTemNotification, decideTemAction } from './tem.js';
 
 const ENC = new TextEncoder();
-const MAX_ATTACH_BYTES = 4 * 1024 * 1024; // 4 MB total, else stub the attachments
 const REPLIES_PAGE_MAX = 500;
 
 // Maps a classification to the specific broker_stats counter (replies++ always).
@@ -122,105 +121,6 @@ function jsonResponse(data, status = 200, cors) {
 }
 
 // ===================================================================
-// MIME builder (for relayed copies and confirmation mail)
-// ===================================================================
-
-function boundary() {
-    return globalThis.crypto.randomUUID().replace(/-/g, '');
-}
-
-function b64wrap(b64) {
-    return b64.replace(/(.{76})/g, '$1\r\n');
-}
-
-// RFC 2047 encode a header value if it contains non-ASCII.
-function encodeHeaderValue(v) {
-    const s = String(v == null ? '' : v);
-    if (/^[\x00-\x7F]*$/.test(s)) return s.replace(/[\r\n]+/g, ' ');
-    return `=?UTF-8?B?${b64encode(ENC.encode(s))}?=`;
-}
-
-function renderBody(text, html) {
-    const textB64 = b64wrap(b64encode(ENC.encode(String(text || ''))));
-    if (!html) {
-        return {
-            headers: ['Content-Type: text/plain; charset="UTF-8"', 'Content-Transfer-Encoding: base64'],
-            content: `${textB64}\r\n`,
-        };
-    }
-    const bnd = `alt_${boundary()}`;
-    const htmlB64 = b64wrap(b64encode(ENC.encode(String(html))));
-    const content =
-        `--${bnd}\r\nContent-Type: text/plain; charset="UTF-8"\r\nContent-Transfer-Encoding: base64\r\n\r\n${textB64}\r\n` +
-        `--${bnd}\r\nContent-Type: text/html; charset="UTF-8"\r\nContent-Transfer-Encoding: base64\r\n\r\n${htmlB64}\r\n` +
-        `--${bnd}--\r\n`;
-    return { headers: [`Content-Type: multipart/alternative; boundary="${bnd}"`], content };
-}
-
-function buildRawEmail(opts) {
-    const {
-        fromHeader, toHeader, replyTo, subject, references, inReplyTo, messageId,
-        text, html, attachments,
-    } = opts;
-
-    const header = [];
-    header.push(`From: ${fromHeader}`);
-    header.push(`To: ${toHeader}`);
-    if (replyTo) header.push(`Reply-To: ${replyTo}`);
-    header.push(`Subject: ${encodeHeaderValue(subject || '(no subject)')}`);
-    header.push(`Date: ${new Date().toUTCString()}`);
-    header.push(`Message-ID: ${messageId}`);
-    if (inReplyTo) header.push(`In-Reply-To: ${inReplyTo}`);
-    if (references) header.push(`References: ${references}`);
-    header.push('MIME-Version: 1.0');
-
-    const attach = (attachments || []).filter(Boolean);
-    const body = renderBody(text, html);
-
-    if (attach.length === 0) {
-        header.push(...body.headers);
-        return `${header.join('\r\n')}\r\n\r\n${body.content}`;
-    }
-
-    const mixed = `mixed_${boundary()}`;
-    header.push(`Content-Type: multipart/mixed; boundary="${mixed}"`);
-    let out = `--${mixed}\r\n${body.headers.join('\r\n')}\r\n\r\n${body.content}\r\n`;
-    for (const att of attach) {
-        const data = toU8(att.content);
-        const fname = encodeHeaderValue(att.filename || 'attachment');
-        out += `--${mixed}\r\n`;
-        out += `Content-Type: ${att.mimeType || 'application/octet-stream'}; name="${fname}"\r\n`;
-        out += 'Content-Transfer-Encoding: base64\r\n';
-        out += `Content-Disposition: ${att.disposition || 'attachment'}; filename="${fname}"\r\n\r\n`;
-        out += `${b64wrap(b64encode(data))}\r\n`;
-    }
-    out += `--${mixed}--\r\n`;
-    return `${header.join('\r\n')}\r\n\r\n${out}`;
-}
-
-async function sendMail(env, opts) {
-    const raw = buildRawEmail({
-        fromHeader: opts.fromHeader || opts.fromAddr,
-        toHeader: opts.to,
-        replyTo: opts.replyTo,
-        subject: opts.subject,
-        references: opts.references,
-        inReplyTo: opts.inReplyTo,
-        messageId: `<${globalThis.crypto.randomUUID()}@${env.RELAY_DOMAIN}>`,
-        text: opts.text,
-        html: opts.html,
-        attachments: opts.attachments,
-    });
-    const msg = new EmailMessage(opts.fromAddr, opts.to, raw);
-    await env.EMAIL.send(msg);
-}
-
-function isPermanentBounce(err) {
-    const m = String((err && err.message) || '').toLowerCase();
-    return /permanent|550|5\.\d\.\d|does not exist|no such|not verified|rejected|invalid recipient|mailbox unavailable|address not found/.test(m);
-}
-
-// ===================================================================
 // Inbound email handler
 // ===================================================================
 
@@ -307,31 +207,23 @@ async function handleInboundEmail(message, env, ctx) {
     const senderName = (parsed.from && parsed.from.name) || senderDomain || 'sender';
     const cleanName = senderName.replace(/["\\\r\n]/g, '').trim() || senderDomain || 'sender';
     const aliasAddr = `${alias.slug}@${env.RELAY_DOMAIN}`;
-    const fromHeader = `"${cleanName} via DataPurge" <${aliasAddr}>`;
     const replyToAddr = (parsed.from && parsed.from.address) || fromAddr;
     const relaySubject = `[DataPurge/${classification}] ${subject || '(no subject)'}`;
     const origReferences = message.headers.get('References') || parsed.references || '';
     const references = [origReferences, origMessageId].filter(Boolean).join(' ').trim() || undefined;
     const inReplyTo = origMessageId || parsed.inReplyTo || undefined;
 
-    // Attachment budget.
-    let attachments = (parsed.attachments || []).map((a) => ({
+    // Attachments pass through the TEM policy (MIME whitelist + 2 MB budget)
+    // inside sendViaTem, which appends any strip/drop notes to the body.
+    const attachments = (parsed.attachments || []).map((a) => ({
         filename: a.filename, mimeType: a.mimeType, content: toU8(a.content), disposition: a.disposition,
     }));
-    const totalBytes = attachments.reduce((n, a) => n + (a.content ? a.content.byteLength : 0), 0);
-    let attachStub = '';
-    if (totalBytes >= MAX_ATTACH_BYTES) {
-        attachments = [];
-        attachStub = '\r\n\r\nNote: attachments from the original message were removed because it '
-            + 'exceeded the relay size limit. Contact the sender directly if you need them.';
-    }
 
     const footerText = `\r\n\r\n-- \r\nRelayed by DataPurge to your private alias. Classification: `
         + `${classification}. Manage, pause, or block senders at ${env.SITE_URL}/app.html`;
-    const bodyText = `${parsed.text || (parsed.html ? '' : '(no text content)')}${attachStub}${footerText}`;
+    const bodyText = `${parsed.text || (parsed.html ? '' : '(no text content)')}${footerText}`;
     const bodyHtml = parsed.html
         ? `${parsed.html}<hr><p style="color:#64748b;font-size:12px">`
-            + `${attachStub ? `${escHtml(attachStub.trim())} ` : ''}`
             + `Relayed by DataPurge to your private alias. Classification: ${escHtml(classification)}. `
             + `Manage, pause, or block senders at `
             + `<a href="${env.SITE_URL}/app.html">${env.SITE_URL}/app.html</a></p>`
@@ -339,10 +231,11 @@ async function handleInboundEmail(message, env, ctx) {
 
     let relayed = 1;
     let relayStatus = 'relayed';
+    let temEmailId = null;
     try {
-        await sendMail(env, {
-            fromAddr: aliasAddr,
-            fromHeader,
+        const res = await sendViaTem(env, {
+            fromName: `${cleanName} via DataPurge`,
+            fromEmail: aliasAddr,
             to: alias.real_email,
             replyTo: replyToAddr,
             subject: relaySubject,
@@ -352,15 +245,12 @@ async function handleInboundEmail(message, env, ctx) {
             html: bodyHtml,
             attachments,
         });
-    } catch (err) {
+        temEmailId = res.temEmailId;
+    } catch {
+        // id + status only - never the error object (it can carry the address).
+        // A 2xx here means QUEUED; a real bounce arrives later on the webhook.
         relayed = 0;
         relayStatus = 'send_failed';
-        if (isPermanentBounce(err)) {
-            relayStatus = 'permanent_bounce';
-            await env.DB.prepare("UPDATE aliases SET status = 'paused' WHERE id = ? AND status = 'active'")
-                .bind(alias.id).run();
-        }
-        // id + status only - never the error object (it can carry the address).
         console.error('relay send failed', alias.id, relayStatus);
     }
 
@@ -376,6 +266,7 @@ async function handleInboundEmail(message, env, ctx) {
         msgidHash,
         relayed,
         relayStatus,
+        temEmailId,
         pubkey: alias.pubkey,
         month,
         monthCount,
@@ -408,11 +299,11 @@ async function persistReply(env, o) {
 
     await env.DB.prepare(
         `INSERT OR IGNORE INTO reply_log
-         (id, alias_id, broker_id, sender_domain, classification, subject, body_sealed, msgid_hash, received_at, relayed, relay_status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (id, alias_id, broker_id, sender_domain, classification, subject, body_sealed, msgid_hash, received_at, relayed, relay_status, tem_email_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).bind(
         globalThis.crypto.randomUUID(), o.aliasId, o.brokerId, o.senderDomain, o.classification,
-        o.subject, sealed, o.msgidHash, o.receivedAt, o.relayed, o.relayStatus,
+        o.subject, sealed, o.msgidHash, o.receivedAt, o.relayed, o.relayStatus, o.temEmailId || null,
     ).run();
 
     if (o.relayed) {
@@ -567,9 +458,9 @@ async function sendConfirmEmail(env, toEmail, slug, confirmUrl) {
         + 'Confirm and activate</a></p>'
         + '<p style="color:#94a3b8;font-size:12px">If this was not you, ignore this email - nothing else will be '
         + 'sent, and the request is deleted automatically after 7 days.</p></body></html>';
-    await sendMail(env, {
-        fromAddr: `noreply@${env.RELAY_DOMAIN}`,
-        fromHeader: `DataPurge <noreply@${env.RELAY_DOMAIN}>`,
+    await sendViaTem(env, {
+        fromName: 'DataPurge',
+        fromEmail: `noreply@${env.RELAY_DOMAIN}`,
         to: toEmail,
         subject: 'Confirm your DataPurge reply mailbox',
         text,
@@ -644,6 +535,92 @@ async function verifyStripeSig(payload, header, secret) {
     if (!Number.isFinite(ts) || Math.abs(Date.now() / 1000 - ts) > 300) return false;
     const expected = await hmacSha256Hex(secret, `${t}.${payload}`);
     return constantTimeEqual(expected, v1);
+}
+
+// ===================================================================
+// Scaleway TEM delivery webhook
+// ===================================================================
+
+// Scaleway Topics-and-Events (SNS-style) carries no HMAC signature, so the
+// endpoint is gated by a shared token in the query string and confirms the
+// subscription hands-free. We only ever fetch a SubscribeURL on a Scaleway
+// host (SSRF guard). The route always answers 200 fast; DB work runs after.
+function isAllowedSubscribeUrl(u) {
+    try {
+        const url = new URL(String(u));
+        if (url.protocol !== 'https:') return false;
+        const host = url.hostname.toLowerCase();
+        return host === 'scaleway.com' || host.endsWith('.scaleway.com');
+    } catch {
+        return false;
+    }
+}
+
+async function applyTemAction(env, action) {
+    if (!action || action.kind === 'ignore') return;
+
+    if (action.kind === 'mark') {
+        if (!action.emailId) return;
+        await env.DB.prepare('UPDATE reply_log SET relay_status = ? WHERE tem_email_id = ?')
+            .bind(action.status, action.emailId).run();
+        // type + email id only (a TEM message id, never an address).
+        console.log('tem webhook', action.kind, action.status, action.emailId);
+        return;
+    }
+
+    if (action.kind === 'bounce') {
+        if (!action.emailId) return;
+        const row = await env.DB.prepare('SELECT alias_id FROM reply_log WHERE tem_email_id = ?')
+            .bind(action.emailId).first();
+        await env.DB.prepare(
+            "UPDATE reply_log SET relay_status = 'permanent_bounce', relayed = 0 WHERE tem_email_id = ?",
+        ).bind(action.emailId).run();
+        if (row && row.alias_id) {
+            await env.DB.prepare("UPDATE aliases SET status = 'paused' WHERE id = ? AND status = 'active'")
+                .bind(row.alias_id).run();
+        }
+        console.log('tem webhook', action.kind, action.emailId);
+        return;
+    }
+
+    if (action.kind === 'blocklist') {
+        // Pause by recipient address - covers confirm-mail bounces that never
+        // produced a reply_log row. Pendings age out via the 7-day purge.
+        if (!action.email) return;
+        await env.DB.prepare("UPDATE aliases SET status = 'paused' WHERE real_email = ? AND status = 'active'")
+            .bind(action.email).run();
+        // never log the address itself.
+        console.log('tem webhook', action.kind);
+    }
+}
+
+async function handleTemWebhook(request, env, ctx) {
+    const token = new URL(request.url).searchParams.get('k') || '';
+    if (!env.TEM_WEBHOOK_TOKEN || !constantTimeEqual(token, env.TEM_WEBHOOK_TOKEN)) {
+        return jsonResponse({ error: 'Forbidden' }, 403);
+    }
+
+    let bodyJson;
+    try {
+        bodyJson = await request.json();
+    } catch {
+        return jsonResponse({ received: true }, 200);
+    }
+
+    const note = parseTemNotification(bodyJson);
+
+    if (note.kind === 'subscription_confirmation') {
+        if (isAllowedSubscribeUrl(note.subscribeUrl)) {
+            ctx.waitUntil(fetch(note.subscribeUrl).then(() => {}).catch(() => {}));
+        }
+        return jsonResponse({ received: true }, 200);
+    }
+
+    if (note.kind === 'notification' && note.event) {
+        ctx.waitUntil(applyTemAction(env, decideTemAction(note.event)));
+    }
+
+    return jsonResponse({ received: true }, 200);
 }
 
 async function handleConfirm(request, env) {
@@ -842,6 +819,9 @@ export default {
             }
             if (path === '/api/stripe/webhook' && request.method === 'POST') {
                 return await handleStripeWebhook(request, env);
+            }
+            if (path === '/api/tem/webhook' && request.method === 'POST') {
+                return await handleTemWebhook(request, env, ctx);
             }
             if (path === '/api/confirm' && request.method === 'GET') {
                 return await handleConfirm(request, env);

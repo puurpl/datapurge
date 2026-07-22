@@ -18,24 +18,28 @@ database_name = "datapurge-relay"
 # REPLACE-AT-DEPLOY: run `wrangler d1 create datapurge-relay` and paste the id.
 database_id = "REPLACE-AT-DEPLOY"
 
-# Outbound relay + confirmation mail. An unrestricted send_email binding (no
-# allowed_destination_addresses) is required because we send to arbitrary user
-# inboxes via Email Sending. Onboard the domain to Email Sending first.
-[[send_email]]
-name = "EMAIL"
+# Outbound relay + confirmation mail go through Scaleway Transactional Email
+# (TEM) over its HTTPS API - no Workers send_email binding, no Workers Paid tier.
+# Cloudflare Email Routing (catch-all -> this Worker) still handles inbound only.
 
 [vars]
 # REPLACE-RELAY-DOMAIN.example: the purchased relay domain. Used in alias/From
-# addresses (u-slug@RELAY_DOMAIN) and the noreply@ confirmation sender.
+# addresses (u-slug@RELAY_DOMAIN) and the noreply@ confirmation sender. Must be
+# a verified sender domain in Scaleway TEM.
 RELAY_DOMAIN = "REPLACE-RELAY-DOMAIN.example"
 SITE_URL = "https://optout.iamnottheproduct.com"
 REGISTRY_URL = "https://optout.iamnottheproduct.com/data/registry.json"
 MONTHLY_RELAY_CAP = "300"
+# Scaleway TEM region. fr-par is the only region that serves the TEM API today.
+TEM_REGION = "fr-par"
 # SKIP_PAYMENT=1 bypasses Stripe (claim -> confirm email directly). Keep "0" in
 # production; useful for staging without a Stripe account.
 SKIP_PAYMENT = "0"
 
 # Secrets (set via `wrangler secret put <NAME>`, never in this file):
+#   SCW_SECRET_KEY         - Scaleway IAM secret key, scoped to TEM only
+#   SCW_PROJECT_ID         - Scaleway project id that owns the TEM domain
+#   TEM_WEBHOOK_TOKEN      - shared token for POST /api/tem/webhook?k=<token>
 #   STRIPE_SECRET_KEY      - Stripe restricted/secret API key
 #   STRIPE_WEBHOOK_SECRET  - signing secret for the checkout/subscription webhook
 #   STRIPE_PRICE_ID        - the recurring subscription Price id

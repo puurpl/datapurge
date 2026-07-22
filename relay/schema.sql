@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS reply_log (
     msgid_hash TEXT,                        -- sha256 of Message-ID for dedup
     received_at TEXT NOT NULL,
     relayed INTEGER NOT NULL DEFAULT 0,
-    relay_status TEXT,                      -- relayed|paused|blocked|strict_drop|over_cap|send_failed|permanent_bounce|parse_error
+    relay_status TEXT,                      -- relayed|paused|blocked|strict_drop|over_cap|send_failed|permanent_bounce|parse_error|delivered|deferred|spam_flagged|blocklisted
+    tem_email_id TEXT,                      -- Scaleway TEM message id (emails[0].id); NULL for drops. Webhook upgrades relay_status by this key.
     FOREIGN KEY (alias_id) REFERENCES aliases(id)
 );
 
@@ -78,4 +79,6 @@ CREATE INDEX IF NOT EXISTS idx_blocked_alias ON blocked_senders(alias_id, sender
 CREATE INDEX IF NOT EXISTS idx_reply_log_alias ON reply_log(alias_id, received_at);
 -- Dedup: at most one stored row per (alias, source Message-ID).
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reply_log_msgid ON reply_log(alias_id, msgid_hash);
+-- TEM delivery webhook looks rows up by the queued message id.
+CREATE INDEX IF NOT EXISTS idx_reply_log_tem ON reply_log(tem_email_id);
 CREATE INDEX IF NOT EXISTS idx_broker_stats_broker ON broker_stats(broker_id, month);
