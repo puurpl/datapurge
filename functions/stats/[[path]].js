@@ -10,7 +10,7 @@ export async function onRequest(context) {
   if (path === "/stats/api/event") {
     const fwd = new Request(INSTANCE + "/api/event", request);
     fwd.headers.delete("cookie");
-    const ip = request.headers.get("CF-Connecting-IP"); if (ip) fwd.headers.set("X-Forwarded-For", ip);
+    const ip = request.headers.get("CF-Connecting-IP"); if (ip) { fwd.headers.set("X-Forwarded-For", ip); fwd.headers.set("X-Plausible-IP", ip); }
     return fetch(fwd);
   }
   return new Response("Not found", { status: 404 });
